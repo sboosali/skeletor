@@ -1,0 +1,311 @@
+cabal-version:       2.2
+                     -- for indefinite-modules and "common stanzas".
+
+----------------------------------------
+
+name:                __PACKAGE__
+version:             0.0
+
+-- x-revision:          0
+
+----------------------------------------
+
+synopsis:
+ __SYNOPSIS__
+
+description:
+ __DESCRIPTION__
+
+build-type:          Simple
+
+license:             GPL-3.0-or-later
+license-file:        LICENSE.txt
+copyright:           2018 Spiros Boosalis
+
+author:              Spiros Boosalis
+maintainer:          samboosalis@gmail.com
+
+category:            Accessibility
+stability:           provisional
+tested-with:
+            GHC == 8.4.3
+            -- `-XDerivingStrategies` requires GHC>=8.2
+--          , GHC == 8.6.2
+
+----------------------------------------
+-- (EXTRA) FILES
+----------------------------------------
+
+data-files:
+  data/*.txt
+
+extra-source-files:
+ LICENSE.txt
+ .gitignore
+ Makefile
+ scripts/sboo/*.sh
+
+----------------------------------------
+-- REPOSITORY
+----------------------------------------
+
+homepage:            http://github.com/sboosali/__PACKAGE__#readme
+bug-reports:         http://github.com/sboosali/__PACKAGE__/issues
+
+source-repository head
+  type:     git
+  location: git://github.com/sboosali/__PACKAGE__.git
+  subdir:   __PACKAGE__
+
+-- source-repository this
+--   type:     git
+--   location: https://github.com/sboosali/__PACKAGE__/tree/v0.1
+--   subdir:   __PACKAGE__
+
+----------------------------------------
+-- FLAGS
+----------------------------------------
+
+-- flag ...
+--   default:     False
+--   description: Enable ...
+--   manual:      True
+
+----------------------------------------
+-- COMMON_STANZAS
+----------------------------------------
+common haskell2020
+
+ default-language:
+   Haskell2010
+
+ ------------------------------
+ ------------------------------
+ ghc-options:
+
+  --------------------
+  -- warning groups
+  --------------------
+
+  -Wall
+
+  --------------------
+  -- disabled warnings
+  --------------------
+
+  -Wno-unticked-promoted-constructors
+
+  --------------------
+  -- enabled warnings
+  --------------------
+
+  -- enable
+  -Wincomplete-uni-patterns
+  -Wincomplete-record-updates
+  -Widentities
+  -Wmissing-methods
+  -fwarn-tabs
+ 
+  --------------------
+  -- typed-holes
+  --------------------
+
+  -- use `typed-holes`, not `undefined`, during development
+
+  -fdefer-typed-holes
+  -Wtyped-holes
+
+  --------------------
+  -- (miscellaneous warnings)
+  --------------------
+
+  -- raise a warning into an error
+  -- -Werror=missing-fields
+
+ if impl(ghc >= 8.0)
+    ghc-options:
+
+        --------------------
+        -- warning groups
+        --------------------     
+
+        -Wcompat
+      
+        --------------------
+        -- enabled warnings
+        --------------------
+
+        -Wnoncanonical-monad-instances
+        -Wnoncanonical-monadfail-instances
+
+ ------------------------------
+ ------------------------------
+
+ default-extensions:
+
+   --------------------
+   -- "controversial"
+   --------------------
+   NoImplicitPrelude
+
+   --------------------
+   -- `deriving`
+   --------------------
+   AutoDeriveTypeable
+   DeriveDataTypeable
+   DeriveGeneric
+   DeriveFunctor
+   DeriveFoldable
+   DeriveTraversable
+   DeriveLift
+   StandaloneDeriving
+
+   DerivingStrategies
+   DeriveAnyClass
+   GeneralizedNewtypeDeriving
+
+   --------------------
+   -- syntax
+   --------------------
+   PackageImports
+   LambdaCase
+   EmptyCase
+   TypeOperators
+   PostfixOperators
+   BangPatterns
+   KindSignatures
+   NamedFieldPuns
+   RecordWildCards
+   TupleSections
+   MultiWayIf
+   DoAndIfThenElse
+   EmptyDataDecls
+   InstanceSigs
+   
+   --------------------
+   -- typeclasses
+   --------------------
+   MultiParamTypeClasses
+   FlexibleContexts
+   FlexibleInstances
+   TypeFamilies
+   FunctionalDependencies
+
+   --------------------
+   -- patterns
+   --------------------
+   ViewPatterns
+   PatternSynonyms
+
+   --------------------
+   -- (miscellaneous)
+   --------------------
+   ScopedTypeVariables
+
+ other-extensions:
+
+   --------------------
+   -- macros
+   --------------------
+   TemplateHaskell
+   -- QuasiQuotes
+
+   --------------------
+   -- syntax (of literals)
+   --------------------
+   OverloadedStrings
+   OverloadedLists
+
+   --------------------
+   -- (miscellaneous)
+   --------------------
+
+   -- RebindableSyntax
+   -- kinds:
+   -- DataKinds ConstraintKinds
+   -- harmful to inference:
+   -- GADTs RankNTypes
+   -- (miscellaneous)
+
+----------------------------------------
+-- LIBRARY
+----------------------------------------
+library
+
+ import: haskell2020
+
+ hs-source-dirs:
+  sources
+
+--TODO: signatures break repl.
+ -- signatures
+
+ ------------------------------
+ ------------------------------
+ exposed-modules:
+
+  __MODULE__
+  __MODULE__.Types
+
+ other-modules:
+
+  Internal.__MODULE__
+-- Paths_{__PACKAGE__}
+  Prelude.__MODULE__
+
+ ------------------------------
+ ------------------------------
+
+--TODO: signatures break repl.
+ -- signatures:
+ --  
+
+ ------------------------------
+ ------------------------------
+ build-depends:
+
+  --------------------
+  -- boot-libraries & standard-library packages,
+  --------------------
+    base >=4.10 && <5
+  , text
+  , bytestring
+  , transformers
+  , mtl
+  , containers
+
+  --------------------
+  -- extended(/unofficial) "standard-library" packages.
+  --------------------
+  , deepseq
+  , hashable
+  , unordered-containers
+
+   --------------------
+   -- my libraries.
+   --------------------
+  , spiros
+  , enumerate
+  , enumerate-function
+
+   --------------------
+   -- parsing libraries.
+   --------------------
+  , parsers
+  , trifecta
+  , charset
+
+   --------------------
+   -- lens libraries.
+   --------------------
+  , lens
+
+   --------------------
+   -- (miscellaneous libraries).
+   --------------------
+--  , 
+
+
+----------------------------------------
+-- 
+----------------------------------------

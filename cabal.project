@@ -1,0 +1,18 @@
+----------------------------------------
+packages:
+
+ ./__PACKAGE__
+
+----------------------------------------
+optional-packages:
+
+ ../spiros/
+ ../enumerate/enumerate
+ ../enumerate/enumerate-function
+
+----------------------------------------
+
+optimization: 0
+ --TODO: only for development
+
+----------------------------------------
