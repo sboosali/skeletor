@@ -296,9 +296,11 @@ library
   , charset
 
    --------------------
-   -- lens libraries.
+   -- records libraries.
    --------------------
   , lens
+  , generic-lens
+  , vinyl
 
    --------------------
    -- (miscellaneous libraries).

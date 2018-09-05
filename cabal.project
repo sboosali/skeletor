@@ -6,9 +6,17 @@ packages:
 ----------------------------------------
 optional-packages:
 
+ --------------------
+ -- my packages:
+ 
  ../spiros/
  ../enumerate/enumerate
  ../enumerate/enumerate-function
+
+ --------------------
+ -- my (frequent) forks:
+ 
+ ../Vinyl
 
 ----------------------------------------
 
