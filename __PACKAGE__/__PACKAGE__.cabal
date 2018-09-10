@@ -235,30 +235,27 @@ library
  import: haskell2020
 
  hs-source-dirs:
-  sources
-
---TODO: signatures break repl.
- -- signatures
+  library
+ --signatures
+ --(TODO: signatures break repl.)
 
  ------------------------------
  ------------------------------
  exposed-modules:
-
-  __MODULE__
-  __MODULE__.Types
+                 __MODULE__
+                 __MODULE__.Types
 
  other-modules:
-
-  Internal.__MODULE__
--- Paths_{__PACKAGE__}
-  Prelude.__MODULE__
+               Prelude__PACKAGE__
+            -- Paths___PACKAGE__
+               Internal.__MODULE__
 
  ------------------------------
  ------------------------------
 
---TODO: signatures break repl.
  -- signatures:
- --  
+
+ --(TODO: signatures break repl.)
 
  ------------------------------
  ------------------------------

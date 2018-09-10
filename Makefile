@@ -5,17 +5,30 @@
 .EXPORT_ALL_VARIABLES:
 
 ##################################################
-# Makefile Variables: Package
-################################################## Customize:
-# (i.e. Package-Specific / Component-Specific)
+# Makefile Customizeables:Customize 
+##################################################
 
 DefaultPackageName=__PACKAGE__
 #                          ^ [Customize]
 
-DefaultPackageVersion=0.0.0
+DefaultModule=__MODULE__
 #                          ^ [Customize]
 
-DefaultModule=__MODULE__
+DefaultProjectFile=./cabal.project
+#                          ^ [Customize]
+
+DefaultCompilerFlavor=ghc
+#                          ^ [Customize]
+
+DefaultCompilerVersion=8.4.3
+#                          ^ [Customize]
+
+##################################################
+# Makefile Variables: Package
+################################################## Customize:
+# (i.e. Package-Specific / Component-Specific)
+
+DefaultPackageVersion=0.0.0
 #                          ^ [Customize]
 
 DefaultLibraryTarget="lib:$(DefaultPackageName)"
@@ -29,11 +42,9 @@ DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
 # Makefile Variables: Haskell Compiler.
 ################################################## Customize:
 
-CompilerFlavor=ghc
-#                          ^ [Customize]
+CompilerFlavor=$(DefaultCompilerFlavor)
 
-CompilerVersion=8.4.3
-#                          ^ [Customize]
+CompilerVersion=$(DefaultCompilerVersion)
 
 CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
 #                          ^ [Derived]
@@ -42,8 +53,7 @@ CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
 # Makefile Variables: Project / `cabal-new`
 ##################################################
 
-ProjectFile=./cabal.project
-#                          ^ [Customize]
+ProjectFile=$(DefaultProjectFile)
 
 CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 #                          ^ [Derived]
