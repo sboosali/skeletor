@@ -4,7 +4,7 @@
 ##################################################
 {
 
- name = "project" + throw "./nix/project.nix";
+ name = __PACKAGE__
 
  root = ./..;
 

@@ -8,7 +8,12 @@
 
 -}
 
-module __MODULE__.Types where
+module Bench.__MODULE__ where
+
+--------------------------------------------------
+
+import __MODULE__
+--import Internal.__MODULE__
 
 --------------------------------------------------
 

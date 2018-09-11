@@ -8,7 +8,11 @@
 
 -}
 
-module __MODULE__.Types where
+module __MODULE__.Core where
+
+--------------------------------------------------
+
+import __MODULE__.Types
 
 --------------------------------------------------
 

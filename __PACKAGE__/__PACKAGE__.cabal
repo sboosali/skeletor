@@ -235,19 +235,23 @@ library
  import: haskell2020
 
  hs-source-dirs:
-  library
- --signatures
+                library
+                internals
+              --signatures
  --(TODO: signatures break repl.)
 
  ------------------------------
  ------------------------------
  exposed-modules:
                  __MODULE__
+                 
                  __MODULE__.Types
+                 __MODULE__.Core
+                 __MODULE__.Derived
 
  other-modules:
-               Prelude__PACKAGE__
-            -- Paths___PACKAGE__
+               Prelude___PACKAGE_UNDERSCORES__
+            -- Paths___PACKAGE_UNDERSCORES__
                Internal.__MODULE__
 
  ------------------------------
@@ -264,41 +268,46 @@ library
   --------------------
   -- boot-libraries & standard-library packages,
   --------------------
-    base >=4.10 && <5
-  , text
-  , bytestring
-  , transformers
-  , mtl
-  , containers
+
+               base >=4.10 && <5
+             , text
+             , bytestring
+             , transformers
+             , mtl
+             , containers
 
   --------------------
   -- extended(/unofficial) "standard-library" packages.
   --------------------
-  , deepseq
-  , hashable
-  , unordered-containers
+
+             , deepseq
+             , hashable
+             , unordered-containers
 
    --------------------
    -- my libraries.
    --------------------
-  , spiros
-  , enumerate
-  , enumerate-function
+
+             , spiros
+             , enumerate
 
    --------------------
    -- parsing libraries.
    --------------------
-  , parsers
-  , trifecta
-  , charset
+
+             , parsers
+             , trifecta
+             , charset
 
    --------------------
    -- records libraries.
    --------------------
-  , lens
-  , generic-lens
-  , vinyl
 
+             , lens
+             , generic-lens
+             , vinyl
+
+              
    --------------------
    -- (miscellaneous libraries).
    --------------------
@@ -306,5 +315,24 @@ library
 
 
 ----------------------------------------
--- 
+-- TESTS
+----------------------------------------
+
+test-suite test
+
+
+----------------------------------------
+-- EXECUTABLES
+----------------------------------------
+
+executable __PACKAGE__
+
+
+----------------------------------------
+-- OBJECTS
+----------------------------------------
+
+foreign-library __PACKAGE__
+
+
 ----------------------------------------
