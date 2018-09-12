@@ -1,14 +1,24 @@
 cabal-version:       2.2
-                     -- for "common stanzas".
+                     -- ^
+                     -- for CommonStanzas, i.e. ❲ common _ ❳.
 
-----------------------------------------
+build-type:          Simple
+
+--------------------------------------------------
 
 name:                __PACKAGE__
-version:             0.0
+version:             0.0.0
+                     -- ^ ❲ A.B.C.D ❳:
+                     --
+                     -- • ❲ A.B ❳ is the MajorVersion,
+                     -- • ❲ C ❳ is the MinorVersion,
+                     -- • ❲ D ❳ is a PatchVersion.
 
--- x-revision:          0
+-- x-revision:          1
 
-----------------------------------------
+--------------------------------------------------
+-- Metadata --------------------------------------
+--------------------------------------------------
 
 synopsis:
  __SYNOPSIS__
@@ -16,7 +26,9 @@ synopsis:
 description:
  __DESCRIPTION__
 
-build-type:          Simple
+category:            Data
+
+--------------------------------------------------
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
@@ -25,95 +37,107 @@ copyright:           2018 Spiros Boosalis
 author:              Spiros Boosalis
 maintainer:          samboosalis@gmail.com
 
-category:            Accessibility
+--------------------------------------------------
+
 stability:           provisional
 tested-with:
+            GHC == 8.2.2
+            -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
             GHC == 8.4.3
-            -- `-XDerivingStrategies` requires GHC>=8.2
---          , GHC == 8.6.2
+--          , GHC == 8.6.1
 
-----------------------------------------
--- (EXTRA) FILES
-----------------------------------------
-
-data-files:
-  data/*.txt
+--------------------------------------------------
+-- (Non-Code) Files ------------------------------
+--------------------------------------------------
 
 extra-source-files:
- LICENSE.txt
- .gitignore
- Makefile
- scripts/sboo/*.sh
+                   README.md
+                   LICENSE.txt
+                   .gitignore
+                   Makefile
+                   scripts/**/*.sh
+                   nix/**/*.sh
 
-----------------------------------------
+--------------------------------------------------
+                   
+-- data-files:
+--            data/*.txt
+
+--------------------------------------------------
 -- REPOSITORY
-----------------------------------------
+--------------------------------------------------
 
-homepage:            http://github.com/sboosali/__PACKAGE__#readme
-bug-reports:         http://github.com/sboosali/__PACKAGE__/issues
+homepage:            http://github.com/sboosali/__REPOSITORY__#readme
+bug-reports:         http://github.com/sboosali/__REPOSITORY__/issues
 
 source-repository head
   type:     git
-  location: git://github.com/sboosali/__PACKAGE__.git
+  location: git://github.com/sboosali/__REPOSITORY__.git
   subdir:   __PACKAGE__
 
 -- source-repository this
 --   type:     git
---   location: https://github.com/sboosali/__PACKAGE__/tree/v0.1
+--   location: https://github.com/sboosali/__REPOSITORY__/tree/v0.1.0
 --   subdir:   __PACKAGE__
 
-----------------------------------------
--- FLAGS
-----------------------------------------
+--------------------------------------------------
+-- Flags -----------------------------------------
+--------------------------------------------------
 
 -- flag ...
 --   default:     False
 --   description: Enable ...
 --   manual:      True
 
-----------------------------------------
--- COMMON_STANZAS
-----------------------------------------
-common haskell2020
+--------------------------------------------------
+-- Common Stanzas --------------------------------
+--------------------------------------------------
 
- default-language:
-   Haskell2010
+common sboo-haskell
 
  ------------------------------
+
+ default-language: Haskell2010
+ 
  ------------------------------
+ 
+ build-depends:
+               base >=4.10 && <5
+
+ ------------------------------
+
  ghc-options:
 
   --------------------
   -- warning groups
   --------------------
 
-  -Wall
+             -Wall
 
   --------------------
   -- disabled warnings
   --------------------
 
-  -Wno-unticked-promoted-constructors
+             -Wno-unticked-promoted-constructors
 
   --------------------
   -- enabled warnings
   --------------------
 
-  -- enable
-  -Wincomplete-uni-patterns
-  -Wincomplete-record-updates
-  -Widentities
-  -Wmissing-methods
-  -fwarn-tabs
- 
+  -- enable:
+
+             -Wmissing-methods
+             -fwarn-name-shadowing
+             -fwarn-tabs
+              
   --------------------
   -- typed-holes
   --------------------
 
   -- use `typed-holes`, not `undefined`, during development
 
-  -fdefer-typed-holes
-  -Wtyped-holes
+             -fdefer-typed-holes
+             -Wtyped-holes
 
   --------------------
   -- (miscellaneous warnings)
@@ -122,23 +146,47 @@ common haskell2020
   -- raise a warning into an error
   -- -Werror=missing-fields
 
+ ------------------------------
+ 
  if impl(ghc >= 8.0)
     ghc-options:
 
         --------------------
         -- warning groups
-        --------------------     
+        --------------------
 
-        -Wcompat
+                -Wcompat
       
         --------------------
         -- enabled warnings
         --------------------
 
-        -Wnoncanonical-monad-instances
-        -Wnoncanonical-monadfail-instances
+                -Wnoncanonical-monad-instances
+                -Wnoncanonical-monadfail-instances
+
+                -Wincomplete-record-updates
+                -Wincomplete-uni-patterns
+
+                -Widentities
+
+                -- -Wmissing-exported-signatures
+                -- -Whi-shadowing
 
  ------------------------------
+  
+ if impl(ghc >= 8.2)
+    ghc-options:
+
+        --------------------
+        -- enabled warnings
+        --------------------
+
+                -Wcpp-undef
+
+                -Wmissing-home-modules
+
+                -Wunbanged-strict-patterns
+
  ------------------------------
 
  default-extensions:
@@ -146,75 +194,77 @@ common haskell2020
    --------------------
    -- "controversial"
    --------------------
-   NoImplicitPrelude
+                    NoImplicitPrelude
 
    --------------------
    -- `deriving`
    --------------------
-   AutoDeriveTypeable
-   DeriveDataTypeable
-   DeriveGeneric
-   DeriveFunctor
-   DeriveFoldable
-   DeriveTraversable
-   DeriveLift
-   StandaloneDeriving
+                    AutoDeriveTypeable
+                    DeriveDataTypeable
+                    DeriveGeneric
+                    DeriveFunctor
+                    DeriveFoldable
+                    DeriveTraversable
+                    DeriveLift
+                    StandaloneDeriving
 
-   DerivingStrategies
-   DeriveAnyClass
-   GeneralizedNewtypeDeriving
+                    DerivingStrategies
+                    DeriveAnyClass
+                    GeneralizedNewtypeDeriving
 
    --------------------
    -- syntax
    --------------------
-   PackageImports
-   LambdaCase
-   EmptyCase
-   TypeOperators
-   PostfixOperators
-   BangPatterns
-   KindSignatures
-   NamedFieldPuns
-   RecordWildCards
-   TupleSections
-   MultiWayIf
-   DoAndIfThenElse
-   EmptyDataDecls
-   InstanceSigs
-   
+                    PackageImports
+                    LambdaCase
+                    EmptyCase
+                    TypeOperators
+                    PostfixOperators
+                    BangPatterns
+                    KindSignatures
+                    NamedFieldPuns
+                    RecordWildCards
+                    TupleSections
+                    MultiWayIf
+                    DoAndIfThenElse
+                    EmptyDataDecls
+                    InstanceSigs
+                       
    --------------------
    -- typeclasses
    --------------------
-   MultiParamTypeClasses
-   FlexibleContexts
-   FlexibleInstances
-   TypeFamilies
-   FunctionalDependencies
+                    MultiParamTypeClasses
+                    FlexibleContexts
+                    FlexibleInstances
+                    TypeFamilies
+                    FunctionalDependencies
 
    --------------------
    -- patterns
    --------------------
-   ViewPatterns
-   PatternSynonyms
+                    ViewPatterns
+                    PatternSynonyms
 
    --------------------
    -- (miscellaneous)
    --------------------
-   ScopedTypeVariables
+                    ScopedTypeVariables
+
+ ------------------------------
 
  other-extensions:
 
    --------------------
    -- macros
    --------------------
-   TemplateHaskell
+                  TemplateHaskell
    -- QuasiQuotes
 
    --------------------
    -- syntax (of literals)
    --------------------
-   OverloadedStrings
-   OverloadedLists
+                  OverloadedStrings
+                  OverloadedLists
 
    --------------------
    -- (miscellaneous)
@@ -227,12 +277,42 @@ common haskell2020
    -- GADTs RankNTypes
    -- (miscellaneous)
 
-----------------------------------------
--- LIBRARY
-----------------------------------------
+--------------------------------------------------
+
+common sboo-main
+
+ ------------------------------
+
+ ghc-options:
+ 
+   --------------------
+   -- Compilation -----
+   --------------------
+ 
+             -O2
+
+   --------------------
+   -- Runtime ---------
+   --------------------
+ 
+             -threaded
+             -rtsopts -with-rtsopts=-N             
+ 
+   --------------------
+   -- Warnings --------
+   --------------------
+ 
+             -Wno-missing-signatures
+             -fno-warn-type-defaults
+             
+ ------------------------------
+
+--------------------------------------------------
+-- Library ---------------------------------------
+--------------------------------------------------
 library
 
- import: haskell2020
+ import: sboo-haskell
 
  hs-source-dirs:
                 library
@@ -265,11 +345,17 @@ library
  ------------------------------
  build-depends:
 
+   --------------------
+   -- my libraries.
+   --------------------
+
+               spiros
+             , enumerate
+
   --------------------
   -- boot-libraries & standard-library packages,
   --------------------
 
-               base >=4.10 && <5
              , text
              , bytestring
              , transformers
@@ -283,13 +369,6 @@ library
              , deepseq
              , hashable
              , unordered-containers
-
-   --------------------
-   -- my libraries.
-   --------------------
-
-             , spiros
-             , enumerate
 
    --------------------
    -- parsing libraries.
@@ -314,25 +393,130 @@ library
 --  , 
 
 
-----------------------------------------
--- TESTS
-----------------------------------------
+--------------------------------------------------
+-- Tests -----------------------------------------
+--------------------------------------------------
 
-test-suite test
+test-suite unit
+  import: sboo-haskell
+  import: sboo-main
 
+  type:                exitcode-stdio-1.0
+  main-is:             UnitTests.hs
 
-----------------------------------------
--- EXECUTABLES
-----------------------------------------
+  hs-source-dirs:      tests/unit
+  other-modules:
+                Test.Unit.__MODULE__
 
-executable __PACKAGE__
+  -- build-tool-depends:
+  --                    hspec-discover:hspec-discover
 
+  build-depends:
+                __PACKAGE__
+              , tasty
+              , tasty-hunit
+              , HUnit
 
-----------------------------------------
--- OBJECTS
-----------------------------------------
+--------------------------------------------------
 
-foreign-library __PACKAGE__
+test-suite property
+  import: sboo-haskell
+  import: sboo-main
 
+  type:                exitcode-stdio-1.0
+  main-is:             PropertyTests.hs
 
-----------------------------------------
+  hs-source-dirs:      tests/property
+  other-modules:
+                Test.Property.__MODULE__
+
+  build-depends:
+                __PACKAGE__
+              , tasty
+              , tasty-hedgehog
+              , hedgehog
+
+--------------------------------------------------
+
+test-suite golden
+  import: sboo-haskell
+  import: sboo-main
+
+  type:                exitcode-stdio-1.0
+  main-is:             GoldenTests.hs
+
+  hs-source-dirs:      tests/golden
+  other-modules:
+                Test.Golden.__MODULE__
+
+  build-depends:
+                __PACKAGE__
+              , tasty
+              , tasty-golden
+              , golden
+
+--------------------------------------------------
+-- Executables -----------------------------------
+--------------------------------------------------
+
+executable example-__PACKAGE_
+  import: sboo-haskell
+  import: sboo-main
+
+  main-is:             Example.hs
+
+  hs-source-dirs:      executables/example
+  other-modules:
+                Example.__MODULE__
+
+  build-depends:
+                __PACKAGE__
+              , optparse-applicative
+
+--------------------------------------------------
+-- Benchmarks ------------------------------------
+--------------------------------------------------
+
+-- benchmark time
+
+--------------------------------------------------
+
+-- benchmark space
+
+--------------------------------------------------
+-- Objects (« .so », « .dylib », « .dl; ») -------
+--------------------------------------------------
+
+--
+-- foreign-library __PACKAGE__
+--   ------------------------------
+--   type:                native-shared
+--   lib-version-info:    0:0:0
+--   if os(Windows)
+--     options: standalone
+--     -- mod-def-file: __PACKAGE__.def
+--   ------------------------------
+--   hs-source-dirs:
+--     lib
+--   other-modules:
+--   ------------------------------  
+--   include-dirs:
+--     cbits
+--   includes:
+--     emacs-module.h
+--   install-includes:
+--     emacs-module.h
+--   c-sources:
+--     cbits/emacs_wrapper.c
+--   ------------------------------
+--   ghc-prof-options:
+--     -fprof-auto
+--   ------------------------------
+--   build-tools:
+--     hsc2hs
+--   build-depends:
+--                 __PACKAGE__
+--               , bytestring
+--               , safe-exceptions-checked
+--   ------------------------------
+--------------------------------------------------

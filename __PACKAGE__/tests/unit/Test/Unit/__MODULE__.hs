@@ -8,7 +8,7 @@
 
 -}
 
-module Test.__MODULE__ where
+module Test.Unit.__MODULE__ where
 
 --------------------------------------------------
 
