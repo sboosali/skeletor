@@ -6,7 +6,7 @@ build-type:          Simple
 
 --------------------------------------------------
 
-name:                __PACKAGE__
+name:                haskell-project
 version:             0.0.0
                      -- ^ ❲ A.B.C.D ❳:
                      --
@@ -53,10 +53,6 @@ tested-with:
 extra-source-files:
                    README.md
                    LICENSE.txt
-                   .gitignore
-                   Makefile
-                   scripts/**/*.sh
-                   nix/**/*.sh
 
 --------------------------------------------------
                    
@@ -67,18 +63,18 @@ extra-source-files:
 -- REPOSITORY
 --------------------------------------------------
 
-homepage:            http://github.com/sboosali/__REPOSITORY__#readme
-bug-reports:         http://github.com/sboosali/__REPOSITORY__/issues
+homepage:            http://github.com/sboosali/haskell-project-skeleton#readme
+bug-reports:         http://github.com/sboosali/haskell-project-skeleton/issues
 
 source-repository head
   type:     git
-  location: git://github.com/sboosali/__REPOSITORY__.git
-  subdir:   __PACKAGE__
+  location: git://github.com/sboosali/haskell-project-skeleton.git
+  subdir:   haskell-project
 
 -- source-repository this
 --   type:     git
---   location: https://github.com/sboosali/__REPOSITORY__/tree/v0.1.0
---   subdir:   __PACKAGE__
+--   location: https://github.com/sboosali/haskell-project-skeleton/tree/v0.1.0
+--   subdir:   haskell-project
 
 --------------------------------------------------
 -- Flags -----------------------------------------
@@ -323,16 +319,16 @@ library
  ------------------------------
  ------------------------------
  exposed-modules:
-                 __MODULE__
+                 HaskellProject
                  
-                 __MODULE__.Types
-                 __MODULE__.Core
-                 __MODULE__.Derived
+                 HaskellProject.Types
+                 HaskellProject.Core
+                 HaskellProject.Derived
 
  other-modules:
                Prelude___PACKAGE_UNDERSCORES__
             -- Paths___PACKAGE_UNDERSCORES__
-               Internal.__MODULE__
+               Internal.HaskellProject
 
  ------------------------------
  ------------------------------
@@ -406,13 +402,13 @@ test-suite unit
 
   hs-source-dirs:      tests/unit
   other-modules:
-                Test.Unit.__MODULE__
+                Test.Unit.HaskellProject
 
   -- build-tool-depends:
   --                    hspec-discover:hspec-discover
 
   build-depends:
-                __PACKAGE__
+                haskell-project
               , tasty
               , tasty-hunit
               , HUnit
@@ -428,10 +424,10 @@ test-suite property
 
   hs-source-dirs:      tests/property
   other-modules:
-                Test.Property.__MODULE__
+                Test.Property.HaskellProject
 
   build-depends:
-                __PACKAGE__
+                haskell-project
               , tasty
               , tasty-hedgehog
               , hedgehog
@@ -447,10 +443,10 @@ test-suite golden
 
   hs-source-dirs:      tests/golden
   other-modules:
-                Test.Golden.__MODULE__
+                Test.Golden.HaskellProject
 
   build-depends:
-                __PACKAGE__
+                haskell-project
               , tasty
               , tasty-golden
               , golden
@@ -459,64 +455,21 @@ test-suite golden
 -- Executables -----------------------------------
 --------------------------------------------------
 
-executable example-__PACKAGE_
+executable haskell-project
   import: sboo-haskell
   import: sboo-main
 
-  main-is:             Example.hs
+  --- HaskellProject/Main.hs
+  main-is:             Main.hs
 
-  hs-source-dirs:      executables/example
+  hs-source-dirs:      executables/haskell-project
   other-modules:
-                Example.__MODULE__
+                HaskellProject.Main
+                HaskellProject.Options
 
   build-depends:
-                __PACKAGE__
+                haskell-project
               , optparse-applicative
 
 --------------------------------------------------
--- Benchmarks ------------------------------------
---------------------------------------------------
-
--- benchmark time
-
---------------------------------------------------
-
--- benchmark space
-
---------------------------------------------------
--- Objects (« .so », « .dylib », « .dl; ») -------
---------------------------------------------------
-
---
--- foreign-library __PACKAGE__
---   ------------------------------
---   type:                native-shared
---   lib-version-info:    0:0:0
---   if os(Windows)
---     options: standalone
---     -- mod-def-file: __PACKAGE__.def
---   ------------------------------
---   hs-source-dirs:
---     lib
---   other-modules:
---   ------------------------------  
---   include-dirs:
---     cbits
---   includes:
---     emacs-module.h
---   install-includes:
---     emacs-module.h
---   c-sources:
---     cbits/emacs_wrapper.c
---   ------------------------------
---   ghc-prof-options:
---     -fprof-auto
---   ------------------------------
---   build-tools:
---     hsc2hs
---   build-depends:
---                 __PACKAGE__
---               , bytestring
---               , safe-exceptions-checked
---   ------------------------------
 --------------------------------------------------

@@ -19,6 +19,7 @@ report.html
 cabal.sandbox.config
 cabal.config
 dist-newstyle/
+dist-*/
 dist/
 .stack-work/
 .styx/

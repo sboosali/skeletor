@@ -459,7 +459,7 @@ test-suite golden
 -- Executables -----------------------------------
 --------------------------------------------------
 
-executable example-__PACKAGE_
+executable example-__PACKAGE__
   import: sboo-haskell
   import: sboo-main
 

@@ -1,4 +1,3 @@
-
 --------------------------------------------------
 --------------------------------------------------
 
@@ -8,16 +7,11 @@
 
 -}
 
-module Bench.__MODULE__ where
+module HaskellProject.Options where
 
 --------------------------------------------------
 
-import __MODULE__
---import Internal.__MODULE__
-
---------------------------------------------------
-
--- import qualified "" _ as _
+import qualified "optparse-applicative" Options.Applicative as O
 
 --------------------------------------------------
 
@@ -25,9 +19,36 @@ import __MODULE__
 
 --------------------------------------------------
 
-import Prelude___PACKAGE_UNDERSCORES__
+import Prelude_haskell_project
 
 --------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+options = _
+  <*> P.auto
+        ( P.long    "--subdir"
+       --- <> P.short   'd'
+       <> P.metavar "SUBDIR"
+       <> P.help    "Whether the (singleton-package) project has a separate subdirectory for its package."
+       <> P.value   def
+        )
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
 --------------------------------------------------
 
 {-| 
