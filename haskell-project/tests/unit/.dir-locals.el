@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ((haskell-mode
-  . ((dante-target       . "test:__PACKAGE__:unit")
-     (dante-project-root . "~/haskell/__PROJECT__/"))))
+  . ((dante-target       . "test:haskell-project:unit")
+     (dante-project-root . "~/haskell/haskell-project-skeleton/"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -11,6 +11,8 @@ Example Usage:
 import qualified "__PACKAGE__" __MODULE__ as __MODULE_ABBREVIATION__
 @
 
+See the @example-__PACKAGE__@ executable component ( under @<./executables\/example\/Example\/__MODULE__.hs>@ ).
+
 -}
 
 module __MODULE__
@@ -19,10 +21,10 @@ module __MODULE__
     module __MODULE__.Types
 
     -- * Core functions and values.
-    module __MODULE__.Core
+  , module __MODULE__.Core
 
     -- * More functions and values.
-    module __MODULE__.Derived
+  ,  module __MODULE__.Derived
 
 --, module  __MODULE__
   ) where

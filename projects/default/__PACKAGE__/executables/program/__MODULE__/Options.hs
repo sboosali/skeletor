@@ -1,4 +1,3 @@
-
 --------------------------------------------------
 --------------------------------------------------
 
@@ -8,11 +7,11 @@
 
 -}
 
-module __MODULE__.Core where
+module __MODULE__.Options where
 
 --------------------------------------------------
 
-import __MODULE__.Types
+import qualified "optparse-applicative" Options.Applicative as P
 
 --------------------------------------------------
 
@@ -24,9 +23,36 @@ import __MODULE__.Types
 
 --------------------------------------------------
 
-import Prelude___PACKAGE_UNDERSCORES__
+import Prelude_exe
 
 --------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+options = _
+  <*> P.auto
+        ( P.long    "--subdir"
+       --- <> P.short   'd'
+       <> P.metavar "SUBDIR"
+       <> P.help    "Whether the (singleton-package) project has a separate subdirectory for its package."
+       <> P.value   def
+        )
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
 --------------------------------------------------
 
 {-| 

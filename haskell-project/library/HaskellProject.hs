@@ -8,30 +8,29 @@ Re-export all (public) types and functions in this package.
 Example Usage:
 
 @
-import qualified "__PACKAGE__" __MODULE__ as __MODULE_ABBREVIATION__
+import qualified "haskell-project" HaskellProject
 @
 
 -}
 
-module __MODULE__
+module HaskellProject
   (
     -- * Core types and instances.
-    module __MODULE__.Types
+    module HaskellProject.Types
 
     -- * Core functions and values.
-    module __MODULE__.Core
+  , module HaskellProject.Core
 
     -- * More functions and values.
-    module __MODULE__.Derived
-
---, module  __MODULE__
+  , module HaskellProject.Derived
+  
   ) where
 
 --------------------------------------------------
 
-import __MODULE__.Types
-import __MODULE__.Core
-import __MODULE__.Derived
+import HaskellProject.Types
+import HaskellProject.Core
+import HaskellProject.Derived
 
 --------------------------------------------------
 --------------------------------------------------

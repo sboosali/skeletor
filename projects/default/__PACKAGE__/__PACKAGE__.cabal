@@ -24,6 +24,8 @@ synopsis:
  __SYNOPSIS__
 
 description:
+ __SYNOPSIS__
+ .
  __DESCRIPTION__
 
 category:            Data
@@ -55,8 +57,6 @@ extra-source-files:
                    LICENSE.txt
                    .gitignore
                    Makefile
-                   scripts/**/*.sh
-                   nix/**/*.sh
 
 --------------------------------------------------
                    
@@ -329,10 +329,11 @@ library
                  __MODULE__.Core
                  __MODULE__.Derived
 
+                 Internal.__MODULE__
+
  other-modules:
                Prelude___PACKAGE_UNDERSCORES__
             -- Paths___PACKAGE_UNDERSCORES__
-               Internal.__MODULE__
 
  ------------------------------
  ------------------------------
@@ -459,11 +460,31 @@ test-suite golden
 -- Executables -----------------------------------
 --------------------------------------------------
 
+--TODO __EXECUTABLE_NAME__ == example-__PACKAGE__
+
+executable __EXECUTABLE_NAME__
+  import: sboo-haskell
+  import: sboo-main
+
+  main-is:             Main.hs
+
+  hs-source-dirs:      executables/program
+  other-modules:
+                __MODULE__.Main
+                __MODULE__.Options
+                Prelude_exe
+
+  build-depends:
+                __PACKAGE__
+              , optparse-applicative
+
+--------------------------------------------------
+
 executable example-__PACKAGE__
   import: sboo-haskell
   import: sboo-main
 
-  main-is:             Example.hs
+  main-is:             Main.hs
 
   hs-source-dirs:      executables/example
   other-modules:
@@ -471,7 +492,6 @@ executable example-__PACKAGE__
 
   build-depends:
                 __PACKAGE__
-              , optparse-applicative
 
 --------------------------------------------------
 -- Benchmarks ------------------------------------

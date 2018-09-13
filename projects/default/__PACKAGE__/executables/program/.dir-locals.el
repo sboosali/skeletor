@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ((haskell-mode
-  . ((dante-target       . "test:__PACKAGE__:golden")
+  . ((dante-target       . "exe:__EXECUTABLE_NAME__")
      (dante-project-root . "~/haskell/__PROJECT__/"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -8,12 +8,12 @@
 
 -}
 
-module __MODULE__.Derived where
+module Test.Unit.HaskellProject where
 
 --------------------------------------------------
 
-import __MODULE__.Types
-import __MODULE__.Core
+import HaskellProject
+--import Internal.HaskellProject
 
 --------------------------------------------------
 
@@ -25,7 +25,7 @@ import __MODULE__.Core
 
 --------------------------------------------------
 
-import Prelude___PACKAGE_UNDERSCORES__
+import Prelude_haskell_project
 
 --------------------------------------------------
 --------------------------------------------------

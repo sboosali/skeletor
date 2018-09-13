@@ -21,10 +21,10 @@ version:             0.0.0
 --------------------------------------------------
 
 synopsis:
- __SYNOPSIS__
+ Haskell project scaffolding
 
 description:
- __DESCRIPTION__
+ Create a haskell project from a template.
 
 category:            Data
 
@@ -326,8 +326,8 @@ library
                  HaskellProject.Derived
 
  other-modules:
-               Prelude___PACKAGE_UNDERSCORES__
-            -- Paths___PACKAGE_UNDERSCORES__
+               Prelude_haskell_project
+            -- Paths_haskell_project
                Internal.HaskellProject
 
  ------------------------------
@@ -431,25 +431,6 @@ test-suite property
               , tasty
               , tasty-hedgehog
               , hedgehog
-
---------------------------------------------------
-
-test-suite golden
-  import: sboo-haskell
-  import: sboo-main
-
-  type:                exitcode-stdio-1.0
-  main-is:             GoldenTests.hs
-
-  hs-source-dirs:      tests/golden
-  other-modules:
-                Test.Golden.HaskellProject
-
-  build-depends:
-                haskell-project
-              , tasty
-              , tasty-golden
-              , golden
 
 --------------------------------------------------
 -- Executables -----------------------------------

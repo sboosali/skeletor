@@ -8,7 +8,11 @@
 
 -}
 
-module __MODULE__.Types where
+module HaskellProject.Core where
+
+--------------------------------------------------
+
+import HaskellProject.Types
 
 --------------------------------------------------
 
@@ -20,7 +24,7 @@ module __MODULE__.Types where
 
 --------------------------------------------------
 
-import Prelude___PACKAGE_UNDERSCORES__
+import Prelude_haskell_project
 
 --------------------------------------------------
 --------------------------------------------------

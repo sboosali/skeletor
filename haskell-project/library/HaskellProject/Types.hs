@@ -1,47 +1,28 @@
+
 --------------------------------------------------
 --------------------------------------------------
 
-{-| ("Internal modules" are prefixed with @Internal.@)
+{-|
 
-(Don't import them, they are invisible to the @PVP@ (Package Versioning Policy))
 
-(They are exposed for testing and documentation.)
 
 -}
 
-module Internal.__MODULE__ where
+module HaskellProject.Types where
 
 --------------------------------------------------
 
--- import qualified ""
+-- import qualified "" _ as _
 
 --------------------------------------------------
 
--- import qualified ""
+-- import           "base" _
 
 --------------------------------------------------
 
-import Prelude___PACKAGE_UNDERSCORES__
+import Prelude_haskell_project
 
 --------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
---------------------------------------------------
-
-{-| 
-
--}
-
---------------------------------------------------
-
-{-| 
-
--}
-
 --------------------------------------------------
 
 {-| 
