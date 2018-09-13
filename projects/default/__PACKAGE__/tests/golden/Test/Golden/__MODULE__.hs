@@ -8,7 +8,7 @@
 
 -}
 
-module Test.Property.__MODULE__ where
+module Test.Golden.__MODULE__ where
 
 --------------------------------------------------
 
