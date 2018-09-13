@@ -325,10 +325,11 @@ library
                  HaskellProject.Core
                  HaskellProject.Derived
 
+                 Internal.HaskellProject
+                 Prelude_haskell_project
+
  other-modules:
-               Prelude_haskell_project
             -- Paths_haskell_project
-               Internal.HaskellProject
 
  ------------------------------
  ------------------------------
@@ -447,9 +448,11 @@ executable haskell-project
   other-modules:
                 HaskellProject.Main
                 HaskellProject.Options
+                Prelude_exe
 
   build-depends:
                 haskell-project
+              , spiros
               , optparse-applicative
 
 --------------------------------------------------

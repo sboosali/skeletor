@@ -11,7 +11,7 @@ module HaskellProject.Options where
 
 --------------------------------------------------
 
-import qualified "optparse-applicative" Options.Applicative as O
+import qualified "optparse-applicative" Options.Applicative as P
 
 --------------------------------------------------
 
@@ -19,7 +19,7 @@ import qualified "optparse-applicative" Options.Applicative as O
 
 --------------------------------------------------
 
-import Prelude_haskell_project
+import Prelude_exe
 
 --------------------------------------------------
 --------------------------------------------------
