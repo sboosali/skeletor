@@ -1,26 +1,42 @@
-----------------------------------------
+--------------------------------------------------
+--------------------------------------------------
 packages:
+         ./__PACKAGE__
 
- ./__PACKAGE__
-
-----------------------------------------
+--------------------------------------------------
 optional-packages:
+                  ../spiros/
 
- --------------------
- -- my packages:
- 
- ../spiros/
- ../enumerate/enumerate
- ../enumerate/enumerate-function
+--------------------------------------------------
+-- LocalFlags (i.e. only for project/vendored packages)
+--------------------------------------------------
 
- --------------------
- -- my (frequent) forks:
- 
- ../Vinyl
+documentation:            True
+haddock-hyperlink-source: True
 
-----------------------------------------
+--------------------------------------------------
+-- (for `nix-env -i`)
 
-optimization: 0
- --TODO: only for development
+extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+extra-include-dirs: /home/sboo/.nix-profile/include/
+extra-prog-path:    /home/sboo/.nix-profile/bin/
+extra-prog-path:    /home/sboo/.nix-profile/libexec/
 
-----------------------------------------
+--------------------------------------------------
+-- GlobalFlags (i.e. only for installed/dependency packages)
+--------------------------------------------------
+
+profiling:    True
+---optimization: 2
+
+--------------------------------------------------
+-- (for `nix-env -i`)
+
+package *
+  extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+  extra-include-dirs: /home/sboo/.nix-profile/include/
+  extra-prog-path:    /home/sboo/.nix-profile/bin/
+  extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------
+--------------------------------------------------

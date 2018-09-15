@@ -1,3 +1,41 @@
+----------------------------------------
 packages:
          ./haskell-project/
-         
+
+----------------------------------------
+optional-packages:
+
+ ../spiros/
+
+--------------------------------------------------
+-- LocalFlags (i.e. only for project/vendored packages)
+--------------------------------------------------
+
+documentation:            True
+haddock-hyperlink-source: True
+
+----------------------------------------
+-- (for `nix-env -i`)
+
+extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+extra-include-dirs: /home/sboo/.nix-profile/include/
+extra-prog-path:    /home/sboo/.nix-profile/bin/
+extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------
+-- GlobalFlags (i.e. only for installed/dependency packages)
+--------------------------------------------------
+
+profiling:    True
+---optimization: 2
+
+--------------------------------------------------
+-- (for `nix-env -i`)
+
+package *
+  extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+  extra-include-dirs: /home/sboo/.nix-profile/include/
+  extra-prog-path:    /home/sboo/.nix-profile/bin/
+  extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------

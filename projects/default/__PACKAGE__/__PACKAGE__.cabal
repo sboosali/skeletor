@@ -330,9 +330,9 @@ library
                  __MODULE__.Derived
 
                  Internal.__MODULE__
+                 Prelude___PACKAGE_UNDERSCORES__
 
  other-modules:
-               Prelude___PACKAGE_UNDERSCORES__
             -- Paths___PACKAGE_UNDERSCORES__
 
  ------------------------------
