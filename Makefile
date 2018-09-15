@@ -177,6 +177,14 @@ bench-default:
 repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
 
+.PHONY: repl-default
+
+##################################################
+# Interpreter.
+##################################################
+
+repl: repl-default
+
 .PHONY: repl
 
 ##################################################

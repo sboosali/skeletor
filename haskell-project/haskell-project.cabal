@@ -347,7 +347,8 @@ library
    --------------------
 
                spiros
-             , enumerate
+               --TODO , spiros-base
+   --          , enumerate
 
   --------------------
   -- boot-libraries & standard-library packages,
@@ -355,34 +356,31 @@ library
 
              , text
              , bytestring
+             , containers
              , transformers
              , mtl
-             , containers
 
   --------------------
   -- extended(/unofficial) "standard-library" packages.
   --------------------
 
              , deepseq
-             , hashable
-             , unordered-containers
+   --          , hashable
+   --          , unordered-containers
 
    --------------------
-   -- parsing libraries.
+   -- filesystem libraries.
    --------------------
 
-             , parsers
-             , trifecta
-             , charset
+             , directory
+             , filemanip
 
    --------------------
    -- records libraries.
    --------------------
 
-             , lens
-             , generic-lens
-             , vinyl
-
+   --          , lens
+   --          , generic-lens
               
    --------------------
    -- (miscellaneous libraries).

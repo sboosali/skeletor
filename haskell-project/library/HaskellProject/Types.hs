@@ -25,9 +25,30 @@ import Prelude_haskell_project
 --------------------------------------------------
 --------------------------------------------------
 
+type UnknownOr = Either String    -- TODO
+
+--------------------------------------------------
+
 {-| 
 
 -}
+
+type ProjectIdentifier = UnknownOr KnownProject
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+data KnownProject
+
+  = DefaultProject
+  
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
 
 --------------------------------------------------
 
