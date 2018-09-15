@@ -325,6 +325,10 @@ library
                  HaskellProject.Core
                  HaskellProject.Derived
 
+                 HaskellProject.Variable
+                 HaskellProject.Variable.Types
+                 HaskellProject.Variable.Values
+
                  Internal.HaskellProject
                  Prelude_haskell_project
 

@@ -13,7 +13,6 @@ import qualified "haskell-project" HaskellProject
 
 -}
 
-
 module HaskellProject
   (
     -- * Core types and instances.
@@ -21,6 +20,9 @@ module HaskellProject
 
     -- * Core functions and values.
   , module HaskellProject.Core
+
+    -- * Configuration variables, Template variables, and their mappings.
+  , module HaskellProject.Variable
 
     -- * More functions and values.
   , module HaskellProject.Derived
@@ -33,15 +35,7 @@ import HaskellProject.Types
 import HaskellProject.Core
 import HaskellProject.Derived
 
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
-
--}
-
-
+import HaskellProject.Variable
 
 --------------------------------------------------
 --------------------------------------------------
