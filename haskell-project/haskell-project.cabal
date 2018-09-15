@@ -329,7 +329,10 @@ library
                  Prelude_haskell_project
 
  other-modules:
-            -- Paths_haskell_project
+               Paths_haskell_project
+
+ autogen-modules:
+                 Paths_haskell_project
 
  ------------------------------
  ------------------------------

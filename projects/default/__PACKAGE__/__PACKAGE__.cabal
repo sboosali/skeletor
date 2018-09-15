@@ -332,8 +332,11 @@ library
                  Internal.__MODULE__
                  Prelude___PACKAGE_UNDERSCORES__
 
- other-modules:
-            -- Paths___PACKAGE_UNDERSCORES__
+ -- other-modules:
+ --               Paths___PACKAGE_UNDERSCORES__
+ -- 
+ -- autogen-modules:
+ --               Paths___PACKAGE_UNDERSCORES__
 
  ------------------------------
  ------------------------------
