@@ -6,6 +6,13 @@
 e.g.
 
 @
+>>> projectTree <- readProject (Right DefaultProject)
+>>> :i projectTree
+@
+
+e.g.
+
+@
 >>> findProjectFiles (Right DefaultProject) >>= traverse_ putStrLn
 
 .\/default
@@ -121,9 +128,27 @@ import           "filemanip" System.FilePath.GlobPattern ((~~))
 
 --------------------------------------------------
 
+import qualified "containers" Data.Map as Map
+import           "containers" Data.Map (Map)
+
+--------------------------------------------------
+
 import Prelude_haskell_project
 
 --------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+≡ 'readProjectByIdentifier'
+@
+
+-}
+
+readProject :: ProjectIdentifier -> IO FileTree
+readProject = readProjectByIdentifier
+
 --------------------------------------------------
 
 {-|
@@ -174,8 +199,9 @@ findProjectFilesByIdentifier = projectPath > findProjectFilesByPath
 
 {-|
 
-Skips 'ignoredDirectories' when descending,
-and skips 'ignoredFiles' when collecting.
+Skips 'ignoredDirectories', when descending.
+
+Skips 'ignoredFiles' and non-files, when collecting.
 
 -}
 
@@ -188,7 +214,11 @@ findProjectFilesByPath = Find.find recursionPredicate filterPredicate
   recursionPredicate = shouldRecurIntoSubdirectory <$> Find.directory
 
   filterPredicate :: FindClause Bool
-  filterPredicate = shouldKeepFilename <$> Find.fileName
+  filterPredicate = isRegularFileM Find.&&? isGoodFilenameM
+  
+    where
+    isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
+    isGoodFilenameM = (shouldKeepFilename <$> Find.fileName)
 
   shouldRecurIntoSubdirectory :: FilePath -> Bool
   shouldRecurIntoSubdirectory = shouldIgnoreDirectory > not
@@ -250,6 +280,55 @@ ignoredFiles = concat
   nixFiles =
     [ "result"
     ]
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+≡ 'projectPath' '>>>' 'readProjectByPath'
+@
+
+-}
+
+readProjectByIdentifier :: ProjectIdentifier -> IO FileTree
+readProjectByIdentifier = projectPath > readProjectByPath
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+readProjectByPath :: FilePath -> IO FileTree
+readProjectByPath project = do
+   files <- findProjectFilesByPath project
+   readFileTree files
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+readFileTree :: [FilePath] -> IO FileTree
+readFileTree paths = do
+
+  filePathsAndContents <- go `traverse` paths
+
+  forced <- forceIO filePathsAndContents
+
+  let wrapped = fromList forced
+
+  pure wrapped
+
+  where
+
+  go path = do
+    body <- readFile path
+    pure (path, body)
 
 --------------------------------------------------
 --------------------------------------------------
