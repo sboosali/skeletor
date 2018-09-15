@@ -94,3 +94,189 @@ emptyFileTree = FileTree Map.empty
 
 --------------------------------------------------
 --------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data KnownVariable
+
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data Variable
+
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data VariableStyle
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data ConfigurationVariable
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data MetaConfigurationVariableType
+
+  = WhichLicense
+  | WhichVersionControlSystem
+ 
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+newtype ConfigurationVariableName = ConfigurationVariableName
+
+  String
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+-- | @= 'coerce'@
+
+instance IsString ConfigurationVariableName where
+  fromString = coerce
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data ConfigurationVariableType
+
+  = StringConfigurationVariable
+  | PathConfigurationVariable
+  | BooleanConfigurationVariable
+  | NumberConfigurationVariable  
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data TemplateVariable
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+newtype TemplateVariableName = TemplateVariableName
+
+  String
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+-- | @= 'coerce'@
+
+instance IsString TemplateVariableName where
+  fromString = coerce
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data TemplateVariableType
+
+  = HaskellModuleVariable        -- Module, ModuleAbbreviation
+  | HaskellPackageVariable       -- Package
+  | HaskellModuleAutogenVariable -- PackageUnderscores
+
+  | CabalComponentVariable      -- DefaultTarget
+  | CabalExecutableVariable     -- ExecutableName, Program
+  | CabalTextVariable           -- Synopsis, Description
+  
+  | PathVariable                -- ModulePath
+
+  | RawTextVariable             -- 
+  | CopyrightVariable           -- Copyright
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+--------------------------------------------------
+{- Notes / Old Code
+
+
+  
+  | FileVariable                -- Mod
+  | DirectoryVariable           -- 
+
+
+
+-}
+--------------------------------------------------
