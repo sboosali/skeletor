@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 --------------------------------------------------
 --------------------------------------------------
 
@@ -37,8 +38,76 @@ known mappings between:
 
 -}
 
-defaultTemplateEnvironment :: [Variable]
-defaultTemplateEnvironment = []
+defaultTemplateEnvironment :: [TemplateVariable]
+defaultTemplateEnvironment =
+
+  [ TemplateVariable { name = "package"
+                     , kind = HaskellPackageVariable
+                     }
+  , TemplateVariable { name = "module"
+                     , kind = HaskellModuleVariable
+                     }
+  , TemplateVariable { name = "package-snake-case"         -- "package-as-module"
+                     , kind = HaskellModuleAutogenVariable
+                     }
+  , TemplateVariable { name = "module-abbreviation"
+                     , kind = HaskellModuleVariable
+                     }
+  , TemplateVariable { name = "module-path"
+                     , kind = PathVariable
+                     }
+  , TemplateVariable { name = "target"
+                     , kind = CabalComponentVariable
+                     }
+  , TemplateVariable { name = "program"
+                     , kind = CabalExecutableVariable
+                     }
+  , TemplateVariable { name = "synopsis"
+                     , kind = CabalTextVariable
+                     }
+  , TemplateVariable { name = "description"
+                     , kind = CabalMultilineTextVariable
+                     }
+  , TemplateVariable { name = "categories"
+                     , kind = CabalTextVariable
+                     }
+  , TemplateVariable { name = "copyright"
+                     , kind = CopyrightVariable
+                     }
+  , TemplateVariable { name = "author-name"
+                     , kind = TextVariable
+                     }
+  , TemplateVariable { name = "author-email"
+                     , kind = EmailVariable
+                     }
+  , TemplateVariable { name = "github-user-name"
+                     , kind = URLSegmentVariable
+                     }
+  , TemplateVariable { name = "github-repository-name"
+                     , kind = URLSegmentVariable
+                     }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  -- , TemplateVariable { name = ""
+  --                    , kind = _
+  --                    }
+  ]
 
 --------------------------------------------------
 
@@ -75,4 +144,55 @@ defaultVariableStyles :: [Variable]
 defaultVariableStyles = []
 
 --------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+
+@
+
+-}
+
+typeOfTemplateVariable :: TemplateVariableKind -> ConfigurationVariableType
+typeOfTemplateVariable = \case
+  
+   HaskellModuleVariable         -> StringConfigurationVariable
+   HaskellPackageVariable        -> StringConfigurationVariable
+   HaskellModuleAutogenVariable  -> StringConfigurationVariable
+
+   CabalComponentVariable       -> StringConfigurationVariable
+   CabalExecutableVariable      -> StringConfigurationVariable
+   CabalTextVariable            -> StringConfigurationVariable
+   CabalMultilineTextVariable   -> StringConfigurationVariable
+
+   URIVariable                  -> StringConfigurationVariable
+   URLSegmentVariable           -> StringConfigurationVariable
+   EmailVariable                -> StringConfigurationVariable
+   CopyrightVariable            -> StringConfigurationVariable
+
+   PathVariable                 -> StringConfigurationVariable
+
+   TextVariable                 -> StringConfigurationVariable
+   RawTextVariable              -> StringConfigurationVariable
+
+--------------------------------------------------
+--------------------------------------------------
+{- Code Templates
+
+
+--------------------------------------------------
+
+  , TemplateVariable { name = ""
+                     , kind = _
+                     }
+
+--------------------------------------------------
+
+-}
+--------------------------------------------------
+{- Notes / Old Code
+
+
+-}
 --------------------------------------------------
