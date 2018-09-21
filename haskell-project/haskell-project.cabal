@@ -434,15 +434,20 @@ test-suite property
 
   build-depends:
                 haskell-project
+
+              , hedgehog
+
               , tasty
               , tasty-hedgehog
-              , hedgehog
 
 --------------------------------------------------
 -- Executables -----------------------------------
 --------------------------------------------------
 
+-- see « HaskellProject.Program ».
+
 executable haskell-project
+
   import: sboo-haskell
   import: sboo-main
 
@@ -451,8 +456,10 @@ executable haskell-project
 
   hs-source-dirs:      executables/haskell-project
   other-modules:
-                HaskellProject.Main
+                HaskellProject.Main                
                 HaskellProject.Options
+                HaskellProject.Program
+                
                 Prelude_exe
 
   build-depends:

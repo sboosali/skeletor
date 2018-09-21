@@ -110,7 +110,7 @@ default: build
 
 .PHONY: default
 
-##################################################
+#------------------------------------------------#
 
 all: build-all test-all docs-all check-all tarball-all 
 	@echo '=================================================='
@@ -128,21 +128,21 @@ check-haskell:
 
 .PHONY: check-haskell
 
-##################################################
+#------------------------------------------------#
 
 build-all:
 	$(Cabal) new-build all
 
 .PHONY: build-all
 
-##################################################
+#------------------------------------------------#
 
 test-all:
 	$(Cabal) new-test all
 
 .PHONY: test-all
 
-##################################################
+#------------------------------------------------#
 
 bench-all:
 	$(Cabal) new-bench all
@@ -158,26 +158,58 @@ build-default:
 
 .PHONY: build-default
 
-##################################################
+#------------------------------------------------#
 
 test-default:
 	$(Cabal) new-test $(DefaultLibraryTarget)
 
 .PHONY: test-default
 
-##################################################
+#------------------------------------------------#
 
 bench-default:
 	$(Cabal) new-bench $(DefaultLibraryTarget)
 
 .PHONY: bench-default
 
-##################################################
+#------------------------------------------------#
 
 repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
 
 .PHONY: repl
+
+##################################################
+# Configuring: install non-Haskell dependencies.
+##################################################
+
+configure: install-dependencies cabal-configure
+
+.PHONY: configure
+
+#------------------------------------------------#
+
+install: install-dependencies #TODO is "install" the right name.
+
+.PHONY: install
+
+#------------------------------------------------#
+
+install-dependencies:
+	nix-env -f ./nix/shell.nix -i
+
+#TODO? ./nix/environment/shell.nix
+
+.PHONY: install-dependencies
+
+#------------------------------------------------#
+
+cabal-configure:
+	cabal --enable-nix new-configure --project-file ./cabal.project
+
+.PHONY: cabal-configure
+
+#------------------------------------------------#
 
 ##################################################
 # Building: different targets, compilers, build-tools.
@@ -190,13 +222,13 @@ build: build-default
 
 .PHONY: build
 
-##################################################
+#------------------------------------------------#
 
 cabal-compile: build-all
 
 .PHONY: cabal-compile
 
-##################################################
+#------------------------------------------------#
 
 stack-compile:
 	stack --nix build
@@ -231,13 +263,13 @@ docs: docs-all
 
 .PHONY: docs
 
-##################################################
+#------------------------------------------------#
 
 docs-all: docs-markdown docs-haskell
 
 .PHONY: docs-all
 
-##################################################
+#------------------------------------------------#
 
 docs-markdown: 
 	find . -name '*.md'   -print0 | xargs -n 1 -0 $(Markdown)
@@ -256,7 +288,7 @@ docs-markdown:
 # ^ NOTE:
 # https://stackoverflow.com/questions/15030563/redirecting-stdout-with-find-exec-and-without-creating-new-shell
 
-##################################################
+#------------------------------------------------#
 
 docs-haskell: build-docs-haskell copy-docs-haskell
 #TODO docs-haskell: build-docs-haskell copy-docs-haskell open-docs-haskell
@@ -266,7 +298,7 @@ docs-haskell: build-docs-haskell copy-docs-haskell
 
 .PHONY: docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 build-docs-haskell: build-default
 	@echo '=================================================='
@@ -276,7 +308,7 @@ build-docs-haskell: build-default
 
 .PHONY: build-docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 copy-docs-haskell: build-docs-haskell
 	rm    -fr $(HaddockDirectory)
@@ -286,7 +318,7 @@ copy-docs-haskell: build-docs-haskell
 
 .PHONY: copy-docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 open-docs-haskell: 
 	@echo '=================================================='
@@ -304,7 +336,7 @@ check: check-all
 
 .PHONY: check
 
-##################################################
+#------------------------------------------------#
 
 check-all: check-files   # check-haskell
 	@echo '=================================================='
@@ -314,7 +346,7 @@ check-all: check-files   # check-haskell
 
 .PHONY: check-all
 
-##################################################
+#------------------------------------------------#
 
 check-files: check-markdown check-json check-cabal check-bash check-nix
 	@echo '=================================================='
@@ -325,7 +357,7 @@ check-files: check-markdown check-json check-cabal check-bash check-nix
 
 .PHONY: check-files
 
-##################################################
+#------------------------------------------------#
 
 check-markdown:
 	@echo '=================================================='
@@ -334,7 +366,7 @@ check-markdown:
 
 .PHONY: check-markdown
 
-##################################################
+#------------------------------------------------#
 
 check-json:
 	@echo '=================================================='
@@ -342,7 +374,7 @@ check-json:
 
 .PHONY: check-json
 
-##################################################
+#------------------------------------------------#
 
 check-cabal:
 	@echo '=================================================='
@@ -350,7 +382,7 @@ check-cabal:
 
 .PHONY: check-cabal
 
-##################################################
+#------------------------------------------------#
 
 check-bash:
 	@echo '=================================================='
@@ -358,7 +390,7 @@ check-bash:
 
 .PHONY: check-bash
 
-##################################################
+#------------------------------------------------#
 
 check-nix:
 	@echo '=================================================='
@@ -366,7 +398,7 @@ check-nix:
 
 .PHONY: check-nix
 
-##################################################
+#------------------------------------------------#
 
 # check-text:
 # 	@echo '=================================================='
@@ -377,7 +409,7 @@ check-nix:
 #	find */$(DocumentDirectory)/ -name "*" -type f -print0 -exec $(CheckText) \{\} \;
         # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' ) 
 
-##################################################
+#------------------------------------------------#
 
 # check-cabal:
 # 	find $(Directory) -name "*.cabal" -print0 -exec $(CheckCabal) \{\} \;
@@ -391,7 +423,7 @@ tarball-all: tarball 		# TODO
 
 .PHONY: tarball-all
 
-##################################################
+#------------------------------------------------#
 
 tarball: build-tarball check-tarball
 	@echo '=================================================='
@@ -400,7 +432,7 @@ tarball: build-tarball check-tarball
 
 .PHONY: tarball
 
-##################################################
+#------------------------------------------------#
 
 check-tarball: copy-tarball
 	@echo '=================================================='
@@ -410,7 +442,7 @@ check-tarball: copy-tarball
 
 .PHONY: check-tarball
 
-##################################################
+#------------------------------------------------#
 
 copy-tarball: build-tarball
 	@echo '=================================================='
@@ -420,7 +452,7 @@ copy-tarball: build-tarball
 
 .PHONY: copy-tarball
 
-##################################################
+#------------------------------------------------#
 
 build-tarball: build-default
 	@echo '=================================================='
@@ -447,7 +479,7 @@ release: release-all
 
 .PHONY: release
 
-##################################################
+#------------------------------------------------#
 
 release-all: docs-haskell tarball
 	find $(ReleaseDirectory) -type f
@@ -457,14 +489,14 @@ release-all: docs-haskell tarball
 
 .PHONY: release-all
 
-##################################################
+#------------------------------------------------#
 
 install:
 	$(Cabal) new-build all --prefix=$(InstallDirectory)
 
 .PHONY: install
 
-##################################################
+#------------------------------------------------#
 
 upload: tarball
 	$(Cabal) upload
@@ -474,4 +506,8 @@ upload: tarball
 
 .PHONY: upload
 
+#------------------------------------------------#
+
+##################################################
+# (EOF)
 ##################################################

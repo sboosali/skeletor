@@ -349,12 +349,12 @@ library
  ------------------------------
  build-depends:
 
-   --------------------
-   -- my libraries.
-   --------------------
+  --------------------
+  -- my libraries.
+  --------------------
 
                spiros
-             , enumerate
+   ---          , enumerate
 
   --------------------
   -- boot-libraries & standard-library packages,
@@ -374,28 +374,27 @@ library
              , hashable
              , unordered-containers
 
-   --------------------
-   -- parsing libraries.
-   --------------------
+  --------------------
+  -- parsing libraries.
+  --------------------
 
              , parsers
              , trifecta
              , charset
 
-   --------------------
-   -- records libraries.
-   --------------------
+  --------------------
+  -- records libraries.
+  --------------------
 
              , lens
              , generic-lens
              , vinyl
-
               
-   --------------------
-   -- (miscellaneous libraries).
-   --------------------
---  , 
+  --------------------
+  -- (miscellaneous libraries).
+  --------------------
 
+             -- , pkg
 
 --------------------------------------------------
 -- Tests -----------------------------------------
@@ -417,9 +416,11 @@ test-suite unit
 
   build-depends:
                 __PACKAGE__
+
+              , HUnit
+
               , tasty
               , tasty-hunit
-              , HUnit
 
 --------------------------------------------------
 
@@ -436,9 +437,11 @@ test-suite property
 
   build-depends:
                 __PACKAGE__
+
+              , hedgehog
+
               , tasty
               , tasty-hedgehog
-              , hedgehog
 
 --------------------------------------------------
 
@@ -455,17 +458,20 @@ test-suite golden
 
   build-depends:
                 __PACKAGE__
+
+              , golden
+
               , tasty
               , tasty-golden
-              , golden
 
 --------------------------------------------------
 -- Executables -----------------------------------
 --------------------------------------------------
 
---TODO __EXECUTABLE_NAME__ == example-__PACKAGE__
+-- see « __MODULE__.Program ».
 
 executable __EXECUTABLE_NAME__
+
   import: sboo-haskell
   import: sboo-main
 
@@ -475,10 +481,13 @@ executable __EXECUTABLE_NAME__
   other-modules:
                 __MODULE__.Main
                 __MODULE__.Options
+                __MODULE__.Program
+                
                 Prelude_exe
 
   build-depends:
                 __PACKAGE__
+
               , optparse-applicative
 
 --------------------------------------------------

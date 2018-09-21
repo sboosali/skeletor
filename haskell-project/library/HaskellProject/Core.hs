@@ -6,14 +6,14 @@
 e.g.
 
 @
->>> projectTree <- readProject (Right DefaultProject)
+>>> projectTree <- readProject (Right DefaultHaskellProject)
 >>> :i projectTree
 @
 
 e.g.
 
 @
->>> findProjectFiles (Right DefaultProject) >>= traverse_ putStrLn
+>>> findProjectFiles (Right DefaultHaskellProject) >>= traverse_ putStrLn
 
 .\/default
 .\/default\/.gitignore
@@ -139,6 +139,17 @@ import Prelude_haskell_project
 --------------------------------------------------
 --------------------------------------------------
 
+allKnownProjects :: [KnownProject]
+allKnownProjects = genum
+
+--------------------------------------------------
+
+knownProjectNames :: [String]
+knownProjectNames = printKnownProject <$> allKnownProjects
+
+--------------------------------------------------
+--------------------------------------------------
+
 {-|
 
 @
@@ -170,8 +181,8 @@ findProjectFiles = findProjectFilesByIdentifier
 
 -}
 
-projectPath :: ProjectIdentifier -> FilePath
-projectPath = either id knownProjectPath
+locateProject :: ProjectIdentifier -> FilePath
+locateProject = either id locateKnownProject
 
 --------------------------------------------------
 
@@ -179,22 +190,45 @@ projectPath = either id knownProjectPath
 
 -}
 
-knownProjectPath :: KnownProject -> FilePath
-knownProjectPath = \case
-  DefaultProject -> "/home/sboo/haskell/haskell-project-skeleton/projects/default"     -- TODO data-files
+locateKnownProject :: KnownProject -> FilePath
+locateKnownProject = \case
+
+  DefaultHaskellProject -> "/home/sboo/haskell/haskell-project-skeleton/projects/default"     -- TODO data-files
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+printKnownProject :: KnownProject -> String
+printKnownProject = \case
+
+  DefaultHaskellProject -> "default"
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+parseKnownProject :: String -> Maybe KnownProject
+parseKnownProject = \case
+
+  "default" -> return DefaultHaskellProject
 
 --------------------------------------------------
 
 {-|
 
 @
-≡ 'projectPath' '>>>' 'findProjectFilesByPath'
+≡ 'locateProject' '>>>' 'findProjectFilesByPath'
 @
 
 -}
 
 findProjectFilesByIdentifier :: ProjectIdentifier -> IO [FilePath]
-findProjectFilesByIdentifier = projectPath > findProjectFilesByPath
+findProjectFilesByIdentifier = locateProject > findProjectFilesByPath
 
 --------------------------------------------------
 
@@ -288,13 +322,13 @@ ignoredFiles = concat
 {-|
 
 @
-≡ 'projectPath' '>>>' 'readProjectByPath'
+≡ 'locateProject' '>>>' 'readProjectByPath'
 @
 
 -}
 
 readProjectByIdentifier :: ProjectIdentifier -> IO FileTree
-readProjectByIdentifier = projectPath > readProjectByPath
+readProjectByIdentifier = locateProject > readProjectByPath
 
 --------------------------------------------------
 

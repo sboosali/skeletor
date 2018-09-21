@@ -7,7 +7,7 @@
 
 -}
 
-module HaskellProject.Main where
+module HaskellProject.Program where
 
 --------------------------------------------------
 
@@ -16,7 +16,6 @@ import HaskellProject
 --------------------------------------------------
 
 import HaskellProject.Options
-import HaskellProject.Program
 
 --------------------------------------------------
 
@@ -37,9 +36,10 @@ import Prelude_exe
 
 -}
 
-main :: IO ()
-main = do
-  print "TODO"
+program :: Options -> IO ()
+program options@Options{..} = do
+
+  print options
 
 --------------------------------------------------
 

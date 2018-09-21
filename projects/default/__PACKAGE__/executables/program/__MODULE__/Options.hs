@@ -67,3 +67,9 @@ options = _
 
 --------------------------------------------------
 --------------------------------------------------
+{- Notes
+
+http://hackage.haskell.org/package/optparse-applicative-0.14.2.0/docs/Options-Applicative.html 
+
+-}
+--------------------------------------------------

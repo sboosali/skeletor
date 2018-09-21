@@ -41,23 +41,24 @@ type ProjectIdentifier = UnknownOr KnownProject
 
 data KnownProject
 
-  = DefaultProject
+  = DefaultHaskellProject
   
   deriving stock    (Enum,Bounded,Ix)
+  deriving anyclass (GEnum)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
 
-
---------------------------------------------------
 --------------------------------------------------
 
-{-| 
+-- | @= 'defaultKnownProject'@
 
--}
+instance Default KnownProject where
+  def = defaultKnownProject
 
---------------------------------------------------
+-- | @= 'DefaultHaskellProject'@
 
-
+defaultKnownProject :: KnownProject
+defaultKnownProject = DefaultHaskellProject
 
 --------------------------------------------------
 --------------------------------------------------
@@ -96,10 +97,12 @@ emptyFileTree = FileTree Map.empty
 --------------------------------------------------
 {- Notes / Old Code
 
+--------------------------------------------------
 
-  
   | FileVariable                -- Mod
   | DirectoryVariable           -- 
+
+--------------------------------------------------
 
 
 
