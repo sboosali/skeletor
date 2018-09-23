@@ -35,6 +35,17 @@ DefaultLibraryTarget="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
 #                          ^  e.g. "lib:haskell-project"
 
+DefaultExecutableTarget="haskell-project:exe:haskell-project"
+#                          ^ [Customize]
+
+DefaultTarget="all"
+#                          ^ [Customize]
+#        e.g.
+#             "all"
+#             $(DefaultTarget)
+#             $(DefaultLibraryTarget)
+#
+
 DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
 
@@ -154,21 +165,21 @@ bench-all:
 ##################################################
 
 build-default:
-	$(Cabal) new-build $(DefaultLibraryTarget)
+	$(Cabal) new-build $(DefaultTarget)
 
 .PHONY: build-default
 
 ##################################################
 
 test-default:
-	$(Cabal) new-test $(DefaultLibraryTarget)
+	$(Cabal) new-test $(DefaultTarget)
 
 .PHONY: test-default
 
 ##################################################
 
 bench-default:
-	$(Cabal) new-bench $(DefaultLibraryTarget)
+	$(Cabal) new-bench $(DefaultTarget)
 
 .PHONY: bench-default
 
@@ -178,6 +189,22 @@ repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
 
 .PHONY: repl-default
+
+##################################################
+# Executables.
+##################################################
+
+build-exe:
+	$(Cabal) new-build $(DefaultExecutableTarget)
+
+.PHONY: build-exe
+
+##################################################
+
+repl-exe:
+	$(Cabal) new-repl $(DefaultExecutableTarget)
+
+.PHONY: repl-exe
 
 ##################################################
 # Interpreter.

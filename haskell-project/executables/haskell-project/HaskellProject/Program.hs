@@ -36,10 +36,10 @@ import Prelude_exe
 
 -}
 
-program :: Options -> IO ()
-program options@Options{..} = do
+program :: Config -> IO ()
+program config@Config{..} = do
 
-  print options
+  print config
 
 --------------------------------------------------
 

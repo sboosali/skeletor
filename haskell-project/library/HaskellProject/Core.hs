@@ -148,6 +148,14 @@ knownProjectNames :: [String]
 knownProjectNames = printKnownProject <$> allKnownProjects
 
 --------------------------------------------------
+
+-- |
+-- >>> defaultProjectName
+-- "default"
+defaultProjectName :: String
+defaultProjectName = printKnownProject defaultKnownProject
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-|

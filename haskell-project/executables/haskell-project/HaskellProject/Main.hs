@@ -3,16 +3,16 @@
 
 {-|
 
-
-
 -}
 
-module HaskellProject.Main where
+module HaskellProject.Main
+
+  ( main
+  , module HaskellProject.Options
+  , module HaskellProject.Program
+  ) where
 
 --------------------------------------------------
-
-import HaskellProject
-
 --------------------------------------------------
 
 import HaskellProject.Options
@@ -39,7 +39,8 @@ import Prelude_exe
 
 main :: IO ()
 main = do
-  print "TODO"
+  config <- getConfig
+  program config
 
 --------------------------------------------------
 

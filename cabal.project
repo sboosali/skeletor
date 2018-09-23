@@ -1,6 +1,10 @@
 ----------------------------------------
 packages:
          ./haskell-project/
+--         ./skeletor-haskell/
+--         ./skeletor-emacs/
+
+--         ./projects/default/xxx-package-xxx/
 
 ----------------------------------------
 optional-packages:
