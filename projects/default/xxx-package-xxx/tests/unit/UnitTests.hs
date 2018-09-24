@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-import Test.Unit.__MODULE__
+import Test.Unit.Xxx_Module_xxX
 
 --------------------------------------------------
 
@@ -19,7 +19,7 @@ import "base" Prelude
 --------------------------------------------------
 
 main = do
-  putStrLn "[TODO] test:__PACKAGE__:unit"
+  putStrLn "[TODO] test:xxx-package-xxx:unit"
 
   Tasty.defaultMain tests
 

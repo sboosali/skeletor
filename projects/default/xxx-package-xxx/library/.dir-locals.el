@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ((haskell-mode
-  . ((dante-target       . "lib:__PACKAGE__")
-     (dante-project-root . "~/haskell/__PROJECT__/"))))
+  . ((dante-target       . "lib:xxx-package-xxx")
+     (dante-project-root . "__ProjectDirectory__/"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

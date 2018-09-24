@@ -7,15 +7,15 @@
 
 -}
 
-module __MODULE__.Main where
+module Xxx_Module_xxX.Main where
 
 --------------------------------------------------
 
-import __MODULE__.Options
+import Xxx_Module_xxX.Options
 
 --------------------------------------------------
 
-import qualified "__PACKAGE__" __MODULE__ as __MODULE_ABBREVIATION__
+import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 
@@ -40,7 +40,7 @@ import Prelude_exe
 
 main :: IO ()
 main = do
-  print "[TODO] __EXECUTABLE_NAME__"
+  print "[TODO] xxx-executable-xxx"
 
 --------------------------------------------------
 

@@ -8,32 +8,32 @@ Re-export all (public) types and functions in this package.
 Example Usage:
 
 @
-import qualified "__PACKAGE__" __MODULE__ as __MODULE_ABBREVIATION__
+import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 @
 
-See the @example-__PACKAGE__@ executable component ( under @<./executables\/example\/Example\/__MODULE__.hs>@ ).
+See the @example-xxx-package-xxx@ executable component ( under @<./executables\/example\/Example\/Xxx_Module_xxX.hs>@ ).
 
 -}
 
-module __MODULE__
+module Xxx_Module_xxX
   (
     -- * Core types and instances.
-    module __MODULE__.Types
+    module Xxx_Module_xxX.Types
 
     -- * Core functions and values.
-  , module __MODULE__.Core
+  , module Xxx_Module_xxX.Core
 
     -- * More functions and values.
-  ,  module __MODULE__.Derived
+  ,  module Xxx_Module_xxX.Derived
 
---, module  __MODULE__
+--, module  Xxx_Module_xxX
   ) where
 
 --------------------------------------------------
 
-import __MODULE__.Types
-import __MODULE__.Core
-import __MODULE__.Derived
+import Xxx_Module_xxX.Types
+import Xxx_Module_xxX.Core
+import Xxx_Module_xxX.Derived
 
 --------------------------------------------------
 --------------------------------------------------

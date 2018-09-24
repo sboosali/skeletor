@@ -9,13 +9,13 @@
 
 -}
 
-module Test.Property.__MODULE__ where
+module Test.Property.Xxx_Module_xxX where
 
 --------------------------------------------------
 --------------------------------------------------
 
-import __MODULE__
---import Internal.__MODULE__
+import Xxx_Module_xxX
+--import Internal.Xxx_Module_xxX
 
 --------------------------------------------------
 

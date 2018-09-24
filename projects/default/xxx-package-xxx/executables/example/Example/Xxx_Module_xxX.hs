@@ -7,11 +7,11 @@
 
 -}
 
-module Example.__MODULE__ where
+module Example.Xxx_Module_xxX where
 
 --------------------------------------------------
 
-import qualified "__PACKAGE__" __MODULE__ as __MODULE_ABBREVIATION__
+import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

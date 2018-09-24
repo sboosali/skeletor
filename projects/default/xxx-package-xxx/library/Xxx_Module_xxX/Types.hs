@@ -8,7 +8,7 @@
 
 -}
 
-module __MODULE__.Types where
+module Xxx_Module_xxX.Types where
 
 --------------------------------------------------
 

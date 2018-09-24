@@ -3,7 +3,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-import Test.Property.__MODULE__
+import Test.Property.Xxx_Module_xxX
 
 --------------------------------------------------
 
@@ -22,7 +22,7 @@ import "base" Prelude
 --------------------------------------------------
 
 main = do
-  putStrLn "[TODO] test:__PACKAGE__:property"
+  putStrLn "[TODO] test:xxx-package-xxx:property"
 
   Tasty.defaultMain tests
 

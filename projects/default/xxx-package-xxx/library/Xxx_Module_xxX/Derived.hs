@@ -8,12 +8,12 @@
 
 -}
 
-module __MODULE__.Derived where
+module Xxx_Module_xxX.Derived where
 
 --------------------------------------------------
 
-import __MODULE__.Types
-import __MODULE__.Core
+import Xxx_Module_xxX.Types
+import Xxx_Module_xxX.Core
 
 --------------------------------------------------
 

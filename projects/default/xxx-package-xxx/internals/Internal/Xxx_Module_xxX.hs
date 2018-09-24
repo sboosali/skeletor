@@ -9,7 +9,7 @@
 
 -}
 
-module Internal.__MODULE__ where
+module Internal.Xxx_Module_xxX where
 
 --------------------------------------------------
 

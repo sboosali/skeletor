@@ -8,12 +8,12 @@
 
 -}
 
-module Test.Golden.__MODULE__ where
+module Test.Golden.Xxx_Module_xxX where
 
 --------------------------------------------------
 
-import __MODULE__
---import Internal.__MODULE__
+import Xxx_Module_xxX
+--import Internal.Xxx_Module_xxX
 
 --------------------------------------------------
 

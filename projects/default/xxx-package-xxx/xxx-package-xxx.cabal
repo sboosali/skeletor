@@ -21,14 +21,14 @@ version:             0.0.0
 --------------------------------------------------
 
 synopsis:
- __SYNOPSIS__
+ __Synopsis__
 
 description:
- __SYNOPSIS__
+ __Synopsis__
  .
- __DESCRIPTION__
+ __Description__
 
-category:            Data
+category: __Categories__
 
 --------------------------------------------------
 
@@ -67,18 +67,18 @@ extra-source-files:
 -- REPOSITORY
 --------------------------------------------------
 
-homepage:            http://github.com/sboosali/__REPOSITORY__#readme
-bug-reports:         http://github.com/sboosali/__REPOSITORY__/issues
+homepage:            http://github.com/__GithubUser__/__Repository__#readme
+bug-reports:         http://github.com/__GithubUser__/__Repository__/issues
 
 source-repository head
   type:     git
-  location: git://github.com/sboosali/__REPOSITORY__.git
-  subdir:   xxx-package-xxx
+  location: git://github.com/__GithubUser__/__Repository__.git
+  subdir:   xxx-package-directory-xxx
 
 -- source-repository this
 --   type:     git
---   location: https://github.com/sboosali/__REPOSITORY__/tree/v0.1.0
---   subdir:   xxx-package-xxx
+--   location: https://github.com/__GithubUser__/__Repository__/tree/v0.1.0
+--   subdir:   xxx-package-directory-xxx
 
 --------------------------------------------------
 -- Flags -----------------------------------------
@@ -470,7 +470,7 @@ test-suite golden
 
 -- see « Xxx_Module_xxX.Program ».
 
-executable __EXECUTABLE_NAME__
+executable xxx-executable-xxx
 
   import: sboo-haskell
   import: sboo-main

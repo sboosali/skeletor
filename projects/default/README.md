@@ -1,9 +1,9 @@
-# `__PACKAGE__`
+# `xxx-package-xxx`
 
-__SYNOPSIS__
+__Synopsis__
 
 ## Description
 
-__DESCRIPTION__
+__Description__
 
 ## 

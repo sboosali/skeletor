@@ -7,7 +7,7 @@
 
 -}
 
-module __MODULE__.Options where
+module Xxx_Module_xxX.Options where
 
 --------------------------------------------------
 

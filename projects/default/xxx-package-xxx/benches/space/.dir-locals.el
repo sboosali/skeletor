@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ((haskell-mode
-  . ((dante-target       . "bench:__PACKAGE__:space")
-     (dante-project-root . "~/haskell/__PROJECT__/"))))
+  . ((dante-target       . "bench:xxx-package-xxx:space")
+     (dante-project-root . "__ProjectDirectory__/"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
