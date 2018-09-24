@@ -8,10 +8,10 @@
 # Makefile Customizeables:Customize 
 ##################################################
 
-DefaultPackageName=__PACKAGE__
+DefaultPackageName=xxx-package-xxx
 #                          ^ [Customize]
 
-DefaultModule=__MODULE__
+DefaultModule=Xxx_Module_xxX
 #                          ^ [Customize]
 
 DefaultProjectFile=./cabal.project
@@ -33,7 +33,7 @@ DefaultPackageVersion=0.0.0
 
 DefaultLibraryTarget="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
-#                          ^  e.g. "lib:__PACKAGE__"
+#                          ^  e.g. "lib:xxx-package-xxx"
 
 DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
@@ -251,7 +251,7 @@ test: test-default
 ##################################################
 
 build-example:
-	$(Cabal) new-build __PACKAGE__-example
+	$(Cabal) new-build xxx-package-xxx-example
 
 .PHONY: build-example
 
