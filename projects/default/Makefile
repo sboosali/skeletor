@@ -35,6 +35,14 @@ DefaultLibraryTarget="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
 #                          ^  e.g. "lib:xxx-package-xxx"
 
+DefaultTarget="all"
+#                          ^ [Customize]
+#        e.g.
+#             "all"
+#             $(DefaultTarget)
+#             $(DefaultLibraryTarget)
+#
+
 DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
 
@@ -106,7 +114,7 @@ InstallDirectory=$(ReleaseDirectory)/dist-newstyle/ #TODO
 # the `default` and `all` targets
 ##################################################
 
-default: build
+default: build-all
 
 .PHONY: default
 
@@ -154,30 +162,30 @@ bench-all:
 ##################################################
 
 build-default:
-	$(Cabal) new-build $(DefaultLibraryTarget)
+	$(Cabal) new-build $(DefaultTarget)
 
 .PHONY: build-default
 
-#------------------------------------------------#
+##################################################
 
 test-default:
-	$(Cabal) new-test $(DefaultLibraryTarget)
+	$(Cabal) new-test $(DefaultTarget)
 
 .PHONY: test-default
 
-#------------------------------------------------#
+##################################################
 
 bench-default:
-	$(Cabal) new-bench $(DefaultLibraryTarget)
+	$(Cabal) new-bench $(DefaultTarget)
 
 .PHONY: bench-default
 
-#------------------------------------------------#
+##################################################
 
 repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
 
-.PHONY: repl
+.PHONY: repl-default
 
 ##################################################
 # Configuring: install non-Haskell dependencies.
@@ -456,7 +464,7 @@ copy-tarball: build-tarball
 
 build-tarball: build-default
 	@echo '=================================================='
-	(cd  $(DefaultPackageDirectory) && $(Cabal) sdist)
+	cabal new-sdist $(DefaultTarget)
 
 .PHONY: build-tarball
 

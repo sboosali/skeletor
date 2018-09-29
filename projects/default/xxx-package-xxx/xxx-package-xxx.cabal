@@ -34,19 +34,20 @@ category: __Categories__
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
-copyright:           2018 Spiros Boosalis
+copyright:           2018 __Name__
 
-author:              Spiros Boosalis
-maintainer:          samboosalis@gmail.com
+author:              __Name__
+maintainer:          __Name__ <__Email__>
 
 --------------------------------------------------
 
 stability:           provisional
 tested-with:
             GHC == 8.2.2
-            -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
-            GHC == 8.4.3
---          , GHC == 8.6.1
+          , GHC == 8.4.3
+          , GHC == 8.6.1
+
+          -- NOTE ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------
@@ -57,6 +58,9 @@ extra-source-files:
                    LICENSE.txt
                    .gitignore
                    Makefile
+                   shell.nix
+                   nix/**/*.nix
+                   nix/**/*.json
 
 --------------------------------------------------
                    
@@ -93,7 +97,7 @@ source-repository head
 -- Common Stanzas --------------------------------
 --------------------------------------------------
 
-common sboo-haskell
+common Haskell2020Library
 
  ------------------------------
 
@@ -102,7 +106,7 @@ common sboo-haskell
  ------------------------------
  
  build-depends:
-               base >=4.10 && <5
+               base-noprelude >=4.10 && <5
 
  ------------------------------
 
@@ -279,7 +283,9 @@ common sboo-haskell
 
 --------------------------------------------------
 
-common sboo-main
+common Haskell2020Program
+
+ import: Haskell2020Library
 
  ------------------------------
 
@@ -312,7 +318,7 @@ common sboo-main
 --------------------------------------------------
 library
 
- import: sboo-haskell
+ import: Haskell2020Library
 
  hs-source-dirs:
                 library
@@ -401,8 +407,8 @@ library
 --------------------------------------------------
 
 test-suite unit
-  import: sboo-haskell
-  import: sboo-main
+  import: Haskell2020Library
+  import: Haskell2020Program
 
   type:                exitcode-stdio-1.0
   main-is:             UnitTests.hs
@@ -425,8 +431,8 @@ test-suite unit
 --------------------------------------------------
 
 test-suite property
-  import: sboo-haskell
-  import: sboo-main
+  import: Haskell2020Library
+  import: Haskell2020Program
 
   type:                exitcode-stdio-1.0
   main-is:             PropertyTests.hs
@@ -446,8 +452,8 @@ test-suite property
 --------------------------------------------------
 
 test-suite golden
-  import: sboo-haskell
-  import: sboo-main
+  import: Haskell2020Library
+  import: Haskell2020Program
 
   type:                exitcode-stdio-1.0
   main-is:             GoldenTests.hs
@@ -472,8 +478,8 @@ test-suite golden
 
 executable xxx-executable-xxx
 
-  import: sboo-haskell
-  import: sboo-main
+  import: Haskell2020Library
+  import: Haskell2020Program
 
   main-is:             Main.hs
 
@@ -493,8 +499,8 @@ executable xxx-executable-xxx
 --------------------------------------------------
 
 executable example-xxx-package-xxx
-  import: sboo-haskell
-  import: sboo-main
+  import: Haskell2020Library
+  import: Haskell2020Program
 
   main-is:             Main.hs
 

@@ -3,7 +3,10 @@
 
 {-|
 
+See the source at
 
+* Hackage: <>
+* GitHub: <>
 
 -}
 
@@ -28,7 +31,7 @@ import "base" Prelude
 
 -}
 
-
+main 
 
 --------------------------------------------------
 
