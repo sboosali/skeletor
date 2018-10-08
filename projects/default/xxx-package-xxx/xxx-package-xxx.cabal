@@ -1,4 +1,4 @@
-cabal-version:       2.2
+cabal-version:       2.4
                      -- ^
                      -- for CommonStanzas, i.e. ❲ common _ ❳.
 
@@ -43,9 +43,9 @@ maintainer:          __Name__ <__Email__>
 
 stability:           provisional
 tested-with:
-            GHC == 8.2.2
+            GHC == 8.6.1
           , GHC == 8.4.3
-          , GHC == 8.6.1
+          , GHC == 8.2.2
 
           -- NOTE ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
 
@@ -56,11 +56,13 @@ tested-with:
 extra-source-files:
                    README.md
                    LICENSE.txt
-                   .gitignore
-                   Makefile
-                   shell.nix
-                   nix/**/*.nix
-                   nix/**/*.json
+
+                   ../Makefile
+                   ../shell.nix
+                   ../nix/**/*.nix
+                   ../nix/**/*.json
+                   ../.gitignore
+  --TODO: include project files in package?
 
 --------------------------------------------------
                    
