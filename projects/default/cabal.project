@@ -39,7 +39,11 @@ package *
   extra-prog-path:    /home/sboo/.nix-profile/libexec/
 
 --------------------------------------------------
--- Repositories
+-- Meta
+--------------------------------------------------
+
+jobs: 6
+
 --------------------------------------------------
 
 repository stackage-lts-12.12
@@ -49,4 +53,21 @@ repository stackage-lts-12.12
   -- https://www.stackage.org/lts-12.12/cabal.config?global=true
 
 --------------------------------------------------
+-- Notes -----------------------------------------
+--------------------------------------------------
+
+-- by omitting a `compiler:` field in `cabal.project`,
+-- we can easily test multiple compiler versions by specifying that same field
+-- via the `-w` command line option
+-- (also see the `Makefile`'s `configure-8-2` target).
+--
+-- e.g. verify by seeing the `Build profile: ...` message that `cabal` prints:
+-- 
+--     $ cabal new-configure -w ghc-8.4.3
+--     $ cabal new-build all
+--     Build profile: -w ghc-8.4.3 -O1
+--     ...
+--
+-- 
+
 --------------------------------------------------

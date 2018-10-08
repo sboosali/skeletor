@@ -213,17 +213,31 @@ configure: configure-8-6
 
 #------------------------------------------------#
 
+configure-8-6:
+	cabal $(EnableNix) new-configure -w ghc-8.6.1
+
+.PHONY: configure-8-6
+
+#------------------------------------------------#
+
 configure-8-4:
-	cabal new-configure --enable-nix -w ghc-8.4.3
+	cabal $(EnableNix) new-configure -w ghc-8.4.3
 
 .PHONY: configure-8-4
 
 #------------------------------------------------#
 
-configure-8-6:
-	cabal $(EnableNix) new-configure -w ghc-8.6.1
+configure-8-2:
+	cabal $(EnableNix) new-configure -w ghc-8.2.2
 
-.PHONY: configure-8-6
+.PHONY: configure-8-2
+
+#------------------------------------------------#
+
+configure-7-10:
+	cabal $(EnableNix) new-configure -w ghc-7.10.3
+
+.PHONY: configure-7-10
 
 ##################################################
 # Configuring: install non-Haskell dependencies.
