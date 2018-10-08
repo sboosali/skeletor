@@ -9,7 +9,7 @@ packages:
 ----------------------------------------
 optional-packages:
 
- ../spiros/
+ ../spiros/spiros/
 
 --------------------------------------------------
 -- LocalFlags (i.e. only for project/vendored packages)
