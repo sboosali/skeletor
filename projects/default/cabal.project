@@ -39,4 +39,14 @@ package *
   extra-prog-path:    /home/sboo/.nix-profile/libexec/
 
 --------------------------------------------------
+-- Repositories
+--------------------------------------------------
+
+repository stackage-lts-12.12
+  url: stackage-lts-12.12:http://www.stackage.org/lts-12.12
+
+  -- From:
+  -- https://www.stackage.org/lts-12.12/cabal.config?global=true
+
+--------------------------------------------------
 --------------------------------------------------

@@ -57,12 +57,13 @@ extra-source-files:
                    README.md
                    LICENSE.txt
 
-                   ../Makefile
-                   ../shell.nix
-                   ../nix/**/*.nix
-                   ../nix/**/*.json
-                   ../.gitignore
-  --TODO: include project files in package?
+  --TODO: how to include project files (parent directory) in package?
+  --
+  --                 ../Makefile
+  --                 ../shell.nix
+  --                 ../nix/**/*.nix
+  --                 ../nix/**/*.json
+  --                 ../.gitignore
 
 --------------------------------------------------
                    
@@ -512,6 +513,7 @@ executable example-xxx-package-xxx
 
   build-depends:
                 xxx-package-xxx
+              , base
 
 --------------------------------------------------
 -- Benchmarks ------------------------------------

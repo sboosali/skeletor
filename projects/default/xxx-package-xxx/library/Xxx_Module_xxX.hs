@@ -9,6 +9,10 @@ Example Usage:
 
 @
 import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+
+main :: IO ()
+main = do
+  ...
 @
 
 See the @example-xxx-package-xxx@ executable component ( under @<./executables\/example\/Example\/Xxx_Module_xxX.hs>@ ).

@@ -69,6 +69,8 @@ CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
 
 ProjectFile=$(DefaultProjectFile)
 
+EnableNix?= # "--enable-nix"
+
 CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 #                          ^ [Derived]
 
@@ -205,9 +207,7 @@ repl-default:
 # Configuring: `cabal configure`
 ##################################################
 
-#------------------------------------------------#
-
-configure: configure-8-4
+configure: configure-8-6
 
 .PHONY: configure
 
@@ -221,34 +221,13 @@ configure-8-4:
 #------------------------------------------------#
 
 configure-8-6:
-	cabal new-configure --enable-nix -w ghc-8.6.1
+	cabal $(EnableNix) new-configure -w ghc-8.6.1
 
 .PHONY: configure-8-6
-
-#------------------------------------------------#
-
-
-tags:
-	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
-
-        # ^ NOTE:
-        # * the « <(...) » is a Process Substitution, while
-        # * the « ... < ... » is a Redirection.
-
-.PHONY: tags
-
-##################################################
-
 
 ##################################################
 # Configuring: install non-Haskell dependencies.
 ##################################################
-
-configure: install-dependencies cabal-configure
-
-.PHONY: configure
-
-#------------------------------------------------#
 
 install: install-dependencies #TODO is "install" the right name.
 
@@ -262,15 +241,6 @@ install-dependencies:
 #TODO? ./nix/environment/shell.nix
 
 .PHONY: install-dependencies
-
-#------------------------------------------------#
-
-cabal-configure:
-	cabal --enable-nix new-configure --project-file ./cabal.project
-
-.PHONY: cabal-configure
-
-#------------------------------------------------#
 
 ##################################################
 # Building: different targets, compilers, build-tools.
@@ -319,6 +289,17 @@ build-example:
 ##################################################
 # Development: developing this package
 ##################################################
+
+#------------------------------------------------#
+
+tags:
+	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
+
+        # ^ NOTE:
+        # * the « <(...) » is a Process Substitution, while
+        # * the « ... < ... » is a Redirection.
+
+.PHONY: tags
 
 #------------------------------------------------#
 

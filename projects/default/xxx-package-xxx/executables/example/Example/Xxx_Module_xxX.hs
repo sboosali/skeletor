@@ -31,7 +31,10 @@ import "base" Prelude
 
 -}
 
-main 
+main :: IO ()
+main = do
+
+  putStrLn "TODO: example-xxx-package-xxx"
 
 --------------------------------------------------
 
