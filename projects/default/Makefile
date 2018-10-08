@@ -5,6 +5,12 @@
 .EXPORT_ALL_VARIABLES:
 
 ##################################################
+# Makefile Settings
+##################################################
+
+SHELL=bash
+
+##################################################
 # Makefile Customizeables:Customize 
 ##################################################
 
@@ -101,6 +107,8 @@ ReleaseDirectory=./ignore/release
 # to actually commit it.
 
 BuildDirectory=./dist-newstyle
+BuildTarballDirectory=$(BuildDirectory)/sdist/
+
 NixDirectory=./nix
 ScriptDirectory=./scripts
 DocumentDirectory=./docs
@@ -109,6 +117,12 @@ HaddockDirectory=$(ReleaseDirectory)/documentation
 TarballDirectory=$(ReleaseDirectory)/tarballs
 BinaryDirectory=$(ReleaseDirectory)/bin
 InstallDirectory=$(ReleaseDirectory)/dist-newstyle/ #TODO
+
+##################################################
+# Makefile Variables: (Miscellaneous) Strings
+##################################################
+
+TagsScript?=":etags\n:quit\n"
 
 ##################################################
 # the `default` and `all` targets
@@ -128,7 +142,7 @@ all: build-all test-all docs-all check-all tarball-all
 .PHONY: all
 
 ##################################################
-# `cabal` wrapper targets
+# `cabal`-wrapper for target `all`
 ##################################################
 
 check-haskell:
@@ -186,6 +200,45 @@ repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
 
 .PHONY: repl-default
+
+##################################################
+# Configuring: `cabal configure`
+##################################################
+
+#------------------------------------------------#
+
+configure: configure-8-4
+
+.PHONY: configure
+
+#------------------------------------------------#
+
+configure-8-4:
+	cabal new-configure --enable-nix -w ghc-8.4.3
+
+.PHONY: configure-8-4
+
+#------------------------------------------------#
+
+configure-8-6:
+	cabal new-configure --enable-nix -w ghc-8.6.1
+
+.PHONY: configure-8-6
+
+#------------------------------------------------#
+
+
+tags:
+	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
+
+        # ^ NOTE:
+        # * the « <(...) » is a Process Substitution, while
+        # * the « ... < ... » is a Redirection.
+
+.PHONY: tags
+
+##################################################
+
 
 ##################################################
 # Configuring: install non-Haskell dependencies.
@@ -262,6 +315,12 @@ build-example:
 	$(Cabal) new-build xxx-package-xxx-example
 
 .PHONY: build-example
+
+##################################################
+# Development: developing this package
+##################################################
+
+#------------------------------------------------#
 
 ##################################################
 # Documentation: building/copying/opening
@@ -427,61 +486,91 @@ check-nix:
 # Tarballs: zip them and unzip them.
 ##################################################
 
-tarball-all: tarball 		# TODO
-
-.PHONY: tarball-all
-
-#------------------------------------------------#
-
-tarball: build-tarball check-tarball
-	@echo '=================================================='
-	@echo '[Tarballs (.tar.gz)] SUCCESS ====================='
-	@echo '=================================================='
+tarball: tarball-all
 
 .PHONY: tarball
 
 #------------------------------------------------#
 
-check-tarball: copy-tarball
+tarball-all: copy-tarball
 	@echo '=================================================='
-	find $(TarballDirectory) -name "*.tar.gz" -print0 -exec $(CheckTarball) \{\} \;
-        # ^ verifies tarball, by unpacking it.
-	find /tmp/$(DefaultPackage) -name "*.tar.gz"
+	@echo '[Tarballs (.tar.gz)] SUCCESS ====================='
+	@echo '=================================================='
+	@echo 
+	@find $(TarballDirectory) -name "*.tar.gz"
+	@echo 
+	@echo '=================================================='
 
-.PHONY: check-tarball
+.PHONY: tarball-all
 
 #------------------------------------------------#
 
-copy-tarball: build-tarball
+cabal-sdist:
+	cabal new-sdist all
+
+.PHONY: cabal-sdist
+
+#------------------------------------------------#
+
+copy-tarball: cabal-sdist
 	@echo '=================================================='
 	rm    -fr $(TarballDirectory)
 	mkdir -p  $(TarballDirectory)
-	find $(DefaultPackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;
+	find $(BuildTarballDirectory) -name "*.tar.gz" -exec mv \{\} $(TarballDirectory) \;
 
 .PHONY: copy-tarball
 
-#------------------------------------------------#
+# #------------------------------------------------#
 
-build-tarball: build-default
-	@echo '=================================================='
-	cabal new-sdist $(DefaultTarget)
+# check-tarball: copy-tarball
+# 	@echo '=================================================='
+# 	find $(TarballDirectory) -name "*.tar.gz" -print0 -exec $(CheckTarball) \{\} \;
+#         # ^ verifies tarball, by unpacking it.
+# 	find /tmp/$(DefaultPackage) -name "*.tar.gz"    		# TODO
 
-.PHONY: build-tarball
+# .PHONY: check-tarball
+
+# #------------------------------------------------#
+
+# copy-tarball: build-tarball
+# 	@echo '=================================================='
+# 	rm    -fr $(TarballDirectory)
+# 	mkdir -p  $(TarballDirectory)
+# 	find $(DefaultPackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;      		# TODO
+
+# .PHONY: copy-tarball
+
+# #------------------------------------------------#
+
+# build-tarball: build-default cabal-sdist
+# 	@echo '=================================================='
+
+# .PHONY: build-tarball
 
 ##################################################
-# (Miscellaneous)
+# Cleaning
 ##################################################
 
-clean:
-	rm -rf "./dist/" "./dist-newstyle/" "./dist-newdante/" "./dist-ghcjs/"
+clean: cabal-clean
+	rm -rf "./dist/" "./dist-newstyle/" ./dist-* ".stack-work"
+	rm -rf ./*/dist/ ./*/dist-*/
 	rm -f *.project.local .ghc*.environment.*
-	rm -rf ./*/dist/ ./*/dist-newstyle/
+	rm -rf TAGS ./*/TAGS
 
 .PHONY: clean
 
+#------------------------------------------------#
+
+cabal-clean:
+	cabal new-clean
+
+.PHONY: cabal-clean
+
 ##################################################
-# Release: 
+# Release: tarball and documentation into `./realease/`
 ##################################################
+
+#------------------------------------------------#
 
 release: release-all
 
@@ -517,5 +606,5 @@ upload: tarball
 #------------------------------------------------#
 
 ##################################################
-# (EOF)
+# (Miscellaneous)
 ##################################################
