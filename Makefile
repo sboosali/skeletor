@@ -75,6 +75,8 @@ CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 
 Cabal=cabal
 
+Pandoc?=pandoc
+
 Markdown=multimarkdown
  #TODO pandoc
 
@@ -273,6 +275,14 @@ docs-all: docs-markdown docs-haskell
 .PHONY: docs-all
 
 ##################################################
+
+markdown:
+	$(Pandoc) README.md -o README.html
+
+.PHONY: markdown
+
+##################################################
+
 
 docs-markdown: 
 	find . -name '*.md'   -print0 | xargs -n 1 -0 $(Markdown)
