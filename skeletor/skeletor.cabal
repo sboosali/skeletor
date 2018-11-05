@@ -1,10 +1,12 @@
-cabal-version:       2.4
-                     -- ^ for « common » stanzas,
+cabal-version:       2.2
+                     -- ^
+                     -- for CommonStanzas, i.e. ❲ common _ ❳.
+
 build-type:          Simple
 
 --------------------------------------------------
 
-name:                xxx-package-xxx
+name:                skeletor
 version:             0.0.0
                      -- ^ ❲ A.B.C.D ❳:
                      --
@@ -19,35 +21,30 @@ version:             0.0.0
 --------------------------------------------------
 
 synopsis:
- __Synopsis__
+ Haskell project scaffolding
 
 description:
- __Synopsis__
- .
- __Description__
+ Create a haskell project from a template.
 
-category: __Categories__
+category:            Data
 
 --------------------------------------------------
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
-copyright:           2018 __Name__
+copyright:           2018 Spiros Boosalis
 
-author:              __Name__
-maintainer:          __Name__ <__Email__>
+author:              Spiros Boosalis
+maintainer:          samboosalis@gmail.com
 
 --------------------------------------------------
 
 stability:           provisional
 tested-with:
-            GHC == 8.6.1
-          , GHC == 8.4.3
-          , GHC == 8.2.2
-          --- , GHC == 8.0.2
-          --- , GHC == 7.10.3
-
-          -- NOTE ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
+            GHC == 8.2.2
+            -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
+            GHC == 8.4.3
+--          , GHC == 8.6.1
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------
@@ -56,14 +53,6 @@ tested-with:
 extra-source-files:
                    README.md
                    LICENSE.txt
-
-  --TODO: how to include project files (parent directory) in package?
-  --
-  --                 ../Makefile
-  --                 ../shell.nix
-  --                 ../nix/**/*.nix
-  --                 ../nix/**/*.json
-  --                 ../.gitignore
 
 --------------------------------------------------
                    
@@ -74,18 +63,18 @@ extra-source-files:
 -- REPOSITORY
 --------------------------------------------------
 
-homepage:            http://github.com/__GithubUser__/__Repository__#readme
-bug-reports:         http://github.com/__GithubUser__/__Repository__/issues
+homepage:            http://github.com/sboosali/skeletor#readme
+bug-reports:         http://github.com/sboosali/skeletor/issues
 
 source-repository head
   type:     git
-  location: git://github.com/__GithubUser__/__Repository__.git
-  subdir:   xxx-package-directory-xxx
+  location: git://github.com/sboosali/skeletor.git
+  subdir:   skeletor
 
 -- source-repository this
 --   type:     git
---   location: https://github.com/__GithubUser__/__Repository__/tree/v0.1.0
---   subdir:   xxx-package-directory-xxx
+--   location: https://github.com/sboosali/skeletor/tree/v0.1.0
+--   subdir:   skeletor
 
 --------------------------------------------------
 -- Flags -----------------------------------------
@@ -100,7 +89,7 @@ source-repository head
 -- Common Stanzas --------------------------------
 --------------------------------------------------
 
-common Haskell2020Library
+common sboo-haskell
 
  ------------------------------
 
@@ -109,7 +98,7 @@ common Haskell2020Library
  ------------------------------
  
  build-depends:
-               base-noprelude >=4.10 && <5
+               base >=4.10 && <5
 
  ------------------------------
 
@@ -286,9 +275,7 @@ common Haskell2020Library
 
 --------------------------------------------------
 
-common Haskell2020Program
-
- import: Haskell2020Library
+common sboo-main
 
  ------------------------------
 
@@ -321,7 +308,7 @@ common Haskell2020Program
 --------------------------------------------------
 library
 
- import: Haskell2020Library
+ import: sboo-haskell
 
  hs-source-dirs:
                 library
@@ -332,20 +319,24 @@ library
  ------------------------------
  ------------------------------
  exposed-modules:
-                 Xxx_Module_xxX
+                 Skeletor.Haskell
                  
-                 Xxx_Module_xxX.Types
-                 Xxx_Module_xxX.Core
-                 Xxx_Module_xxX.Derived
+                 Skeletor.Haskell.Types
+                 Skeletor.Haskell.Core
+                 Skeletor.Haskell.Derived
 
-                 Internal.Xxx_Module_xxX
-                 Prelude_Xxx_PackageUnderscores_xxX
+                 Skeletor.Haskell.Variable
+                 Skeletor.Haskell.Variable.Types
+                 Skeletor.Haskell.Variable.Values
 
- -- other-modules:
- --               Paths_Xxx_PackageUnderscores_xxX
- -- 
- -- autogen-modules:
- --               Paths_Xxx_PackageUnderscores_xxX
+                 Internal.Skeletor.Haskell
+                 Prelude_skeletor
+
+ other-modules:
+               Paths_skeletor
+
+ autogen-modules:
+                 Paths_skeletor
 
  ------------------------------
  ------------------------------
@@ -358,12 +349,13 @@ library
  ------------------------------
  build-depends:
 
-  --------------------
-  -- my libraries.
-  --------------------
+   --------------------
+   -- my libraries.
+   --------------------
 
                spiros
-   ---          , enumerate
+               --TODO , spiros-base
+   --          , enumerate
 
   --------------------
   -- boot-libraries & standard-library packages,
@@ -371,81 +363,77 @@ library
 
              , text
              , bytestring
+             , containers
              , transformers
              , mtl
-             , containers
 
   --------------------
   -- extended(/unofficial) "standard-library" packages.
   --------------------
 
              , deepseq
-             , hashable
-             , unordered-containers
+   --          , hashable
+   --          , unordered-containers
 
-  --------------------
-  -- parsing libraries.
-  --------------------
+   --------------------
+   -- filesystem libraries.
+   --------------------
 
-             , parsers
-             , trifecta
-             , charset
+             , directory
+             , filemanip
 
-  --------------------
-  -- records libraries.
-  --------------------
+   --------------------
+   -- records libraries.
+   --------------------
 
-             , lens
-             , generic-lens
-             , vinyl
+   --          , lens
+   --          , generic-lens
               
-  --------------------
-  -- (miscellaneous libraries).
-  --------------------
+   --------------------
+   -- (miscellaneous libraries).
+   --------------------
+--  , 
 
-             -- , pkg
 
 --------------------------------------------------
 -- Tests -----------------------------------------
 --------------------------------------------------
 
 test-suite unit
-  import: Haskell2020Library
-  import: Haskell2020Program
+  import: sboo-haskell
+  import: sboo-main
 
   type:                exitcode-stdio-1.0
   main-is:             UnitTests.hs
 
   hs-source-dirs:      tests/unit
   other-modules:
-                Test.Unit.Xxx_Module_xxX
+                Test.Unit.Skeletor.Haskell
 
   -- build-tool-depends:
   --                    hspec-discover:hspec-discover
 
   build-depends:
-                xxx-package-xxx
-
-              , HUnit
-
+                skeletor
               , tasty
               , tasty-hunit
+              , HUnit
 
 --------------------------------------------------
 
 test-suite property
-  import: Haskell2020Library
-  import: Haskell2020Program
+  import: sboo-haskell
+  import: sboo-main
 
   type:                exitcode-stdio-1.0
   main-is:             PropertyTests.hs
 
   hs-source-dirs:      tests/property
   other-modules:
-                Test.Property.Xxx_Module_xxX
+                Test.Property.Skeletor.Haskell
 
   build-depends:
-                xxx-package-xxx
+                skeletor
 
               , hedgehog
 
@@ -453,112 +441,31 @@ test-suite property
               , tasty-hedgehog
 
 --------------------------------------------------
-
-test-suite golden
-  import: Haskell2020Library
-  import: Haskell2020Program
-
-  type:                exitcode-stdio-1.0
-  main-is:             GoldenTests.hs
-
-  hs-source-dirs:      tests/golden
-  other-modules:
-                Test.Golden.Xxx_Module_xxX
-
-  build-depends:
-                xxx-package-xxx
-
-              , golden
-
-              , tasty
-              , tasty-golden
-
---------------------------------------------------
 -- Executables -----------------------------------
 --------------------------------------------------
 
--- see « Xxx_Module_xxX.Program ».
+-- see « Skeletor.Haskell.Program ».
 
-executable xxx-executable-xxx
+executable skeletor
 
-  import: Haskell2020Library
-  import: Haskell2020Program
+  import: sboo-haskell
+  import: sboo-main
 
+  --- Skeletor.Haskell/Main.hs
   main-is:             Main.hs
 
-  hs-source-dirs:      executables/program
+  hs-source-dirs:      executables/skeletor
   other-modules:
-                Xxx_Module_xxX.Main
-                Xxx_Module_xxX.Options
-                Xxx_Module_xxX.Program
+                Skeletor.Haskell.Main                
+                Skeletor.Haskell.Options
+                Skeletor.Haskell.Program
                 
                 Prelude_exe
 
   build-depends:
-                xxx-package-xxx
-
+                skeletor
+              , spiros
               , optparse-applicative
 
 --------------------------------------------------
-
-executable example-xxx-package-xxx
-  import: Haskell2020Library
-  import: Haskell2020Program
-
-  main-is:             Main.hs
-
-  hs-source-dirs:      executables/example
-  other-modules:
-                Example.Xxx_Module_xxX
-
-  build-depends:
-                xxx-package-xxx
-              , base
-
---------------------------------------------------
--- Benchmarks ------------------------------------
---------------------------------------------------
-
--- benchmark time
-
---------------------------------------------------
-
--- benchmark space
-
---------------------------------------------------
--- Objects (« .so », « .dylib », « .dl; ») -------
---------------------------------------------------
-
---
--- foreign-library xxx-package-xxx
---   ------------------------------
---   type:                native-shared
---   lib-version-info:    0:0:0
---   if os(Windows)
---     options: standalone
---     -- mod-def-file: xxx-package-xxx.def
---   ------------------------------
---   hs-source-dirs:
---     lib
---   other-modules:
---   ------------------------------  
---   include-dirs:
---     cbits
---   includes:
---     emacs-module.h
---   install-includes:
---     emacs-module.h
---   c-sources:
---     cbits/emacs_wrapper.c
---   ------------------------------
---   ghc-prof-options:
---     -fprof-auto
---   ------------------------------
---   build-tools:
---     hsc2hs
---   build-depends:
---                 xxx-package-xxx
---               , bytestring
---               , safe-exceptions-checked
---   ------------------------------
 --------------------------------------------------

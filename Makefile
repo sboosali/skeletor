@@ -8,10 +8,10 @@
 # Makefile Customizeables:Customize 
 ##################################################
 
-DefaultPackageName=haskell-project
+DefaultPackageName=skeletor
 #                          ^ [Customize]
 
-DefaultModule=HaskellProject
+DefaultModule=Skeletor.Haskell
 #                          ^ [Customize]
 
 DefaultProjectFile=./cabal.project
@@ -33,9 +33,9 @@ DefaultPackageVersion=0.0.0
 
 DefaultLibraryTarget="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
-#                          ^  e.g. "lib:haskell-project"
+#                          ^  e.g. "lib:skeletor"
 
-DefaultExecutableTarget="haskell-project:exe:haskell-project"
+DefaultExecutableTarget="skeletor:exe:skeletor"
 #                          ^ [Customize]
 
 DefaultTarget="all"
@@ -256,7 +256,7 @@ test: test-default
 ##################################################
 
 build-example:
-	$(Cabal) new-build haskell-project
+	$(Cabal) new-build skeletor
 
 .PHONY: build-example
 
