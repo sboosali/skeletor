@@ -325,6 +325,8 @@ library
                  Skeletor.Haskell.Core
                  Skeletor.Haskell.Derived
 
+                 Skeletor.Haskell.IO
+
                  Skeletor.Haskell.Variable
                  Skeletor.Haskell.Variable.Types
                  Skeletor.Haskell.Variable.Values
