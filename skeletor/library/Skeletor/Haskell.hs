@@ -1,31 +1,31 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
+{-| Module that re-exports the package API.
 
-Re-export all (public) types and functions in this package.
+= Usage
 
-Example Usage:
-
-@
-import qualified "skeletor" Skeletor.Haskell
+@import qualified "skeletor" Skeletor.Haskell as Skeletor
 @
 
 -}
 
 module Skeletor.Haskell
   (
-    -- * Core types and instances.
+    -- * Core types (datatypes, typeclasses, and instances).
     module Skeletor.Haskell.Types
 
-    -- * Core functions and values.
+    -- * Core definitions.
   , module Skeletor.Haskell.Core
 
     -- * Configuration variables, Template variables, and their mappings.
   , module Skeletor.Haskell.Variable
 
-    -- * More functions and values.
+    -- * Derived defined.
   , module Skeletor.Haskell.Derived
+  
+    -- * Read, and Copy, Files and Directories.
+  , module Skeletor.Haskell.IO
   
   ) where
 
@@ -36,6 +36,7 @@ import Skeletor.Haskell.Core
 import Skeletor.Haskell.Derived
 
 import Skeletor.Haskell.Variable
+import Skeletor.Haskell.IO
 
 --------------------------------------------------
 --------------------------------------------------
