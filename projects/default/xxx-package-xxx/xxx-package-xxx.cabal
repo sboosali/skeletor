@@ -533,7 +533,7 @@ test-suite doc
 
  -----------------------------
 
- hs-source-dirs: tests/doc/DocTests.hs
+ hs-source-dirs: tests/doc
 
  main-is:        DocTests.hs
 

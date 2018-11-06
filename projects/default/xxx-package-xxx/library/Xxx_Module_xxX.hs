@@ -3,9 +3,10 @@
 
 {-|
 
-Re-export all (public) types and functions in this package.
+Re-Exports all (public) types and functions in this package.
 
-Example Usage:
+
+= Usage
 
 @
 import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
@@ -16,6 +17,13 @@ main = do
 @
 
 See the @example-xxx-package-xxx@ executable component ( under @<./executables\/example\/Example\/Xxx_Module_xxX.hs>@ ).
+
+
+= Examples
+
+>>> import Prelude
+>>> "xxx-package-xxx" == "xxx-package-xxx"
+True
 
 -}
 
