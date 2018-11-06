@@ -1,3 +1,3 @@
-xxx-executable-xxx Copyright (C) 2018 Spiros Boosalis
+xxx-program-xxx Copyright (C) 2018 Spiros Boosalis
 This program comes with ABSOLUTELY NO WARRANTY; for details type `:license-warranty'.
 This is free software, and you are welcome to redistribute it under certain conditions; type `show :license-conditions' for details.
