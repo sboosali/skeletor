@@ -8,54 +8,64 @@ name:                xxx-package-xxx
 version:             0.0.0
                      -- ^ ❲ A.B.C.D ❳:
                      --
-                     -- • ❲ A.B ❳ is the MajorVersion,
-                     -- • ❲ C ❳ is the MinorVersion,
-                     -- • ❲ D ❳ is a PatchVersion.
+                     -- • ❲ A.B ❳ — the MajorVersion
+                     -- • ❲ C ❳   — the MinorVersion
+                     -- • ❲ D ❳   — a PatchVersion
 
 -- x-revision:          1
 
 --------------------------------------------------
--- Metadata --------------------------------------
+-- Description -----------------------------------
 --------------------------------------------------
 
-synopsis:
- __Synopsis__
-
-description:
- __Synopsis__
- .
- __Description__
+synopsis: __Synopsis__
 
 category: __Categories__
 
+--------------------------------------------------
+
+description: __Synopsis__
+             .
+             __Description__
+             .
+
+--------------------------------------------------
+
+author:              __Name__
+maintainer:          __Name__ <__Email__>
+
+--------------------------------------------------
+-- Portability -----------------------------------
+--------------------------------------------------
+
+stability: provisional
+
+--------------------------------------------------
+
+tested-with: GHC   == 8.6.1
+           , GHC   == 8.4.3
+           , GHC   == 8.2.2
+           , GHC   == 8.0.2
+--         , GHC   == 7.10.3
+--         , GHCJS == 8.4.0.1
+
+--------------------------------------------------
+-- Licensing -------------------------------------
 --------------------------------------------------
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
 copyright:           2018 __Name__
 
-author:              __Name__
-maintainer:          __Name__ <__Email__>
-
---------------------------------------------------
-
-stability:           provisional
-tested-with:
-            GHC == 8.6.1
-          , GHC == 8.4.3
-          , GHC == 8.2.2
-          --- , GHC == 8.0.2
-          --- , GHC == 7.10.3
-
-          -- NOTE ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
+-- license:             GPL-3.0-or-later
+-- license:             BSD-4-Clause
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------
 --------------------------------------------------
 
-extra-source-files:
-                   README.md
-                   LICENSE.txt
+extra-source-files: README.md
+                    LICENSE.txt
 
   --TODO: how to include project files (parent directory) in package?
   --
@@ -71,16 +81,20 @@ extra-source-files:
 --            data/*.txt
 
 --------------------------------------------------
--- REPOSITORY
+-- Repository ------------------------------------
 --------------------------------------------------
 
 homepage:            http://github.com/__GithubUser__/__Repository__#readme
 bug-reports:         http://github.com/__GithubUser__/__Repository__/issues
 
+--------------------------------------------------
+
 source-repository head
   type:     git
   location: git://github.com/__GithubUser__/__Repository__.git
   subdir:   xxx-package-directory-xxx
+
+--------------------------------------------------
 
 -- source-repository this
 --   type:     git
@@ -89,6 +103,16 @@ source-repository head
 
 --------------------------------------------------
 -- Flags -----------------------------------------
+--------------------------------------------------
+
+flag development
+
+  default:     False
+
+  description: Dynamic checking and exposed internals (for development).
+
+  manual:      True
+
 --------------------------------------------------
 
 -- flag ...
@@ -102,16 +126,21 @@ source-repository head
 
 common Haskell2020Library
 
- ------------------------------
+ -----------------------------
 
  default-language: Haskell2010
  
- ------------------------------
+ -----------------------------
  
- build-depends:
-               base-noprelude >=4.10 && <5
+--build-depends: base-noprelude >=4.10 && <5
 
- ------------------------------
+ -----------------------------
+
+ include-dirs:     include
+ includes:         sboo-base-feature-macros.h
+ install-includes: sboo-base-feature-macros.h
+
+ -----------------------------
 
  ghc-options:
 
@@ -125,27 +154,13 @@ common Haskell2020Library
   -- disabled warnings
   --------------------
 
-             -Wno-unticked-promoted-constructors
-
   --------------------
   -- enabled warnings
   --------------------
 
-  -- enable:
-
-             -Wmissing-methods
              -fwarn-name-shadowing
              -fwarn-tabs
               
-  --------------------
-  -- typed-holes
-  --------------------
-
-  -- use `typed-holes`, not `undefined`, during development
-
-             -fdefer-typed-holes
-             -Wtyped-holes
-
   --------------------
   -- (miscellaneous warnings)
   --------------------
@@ -153,7 +168,20 @@ common Haskell2020Library
   -- raise a warning into an error
   -- -Werror=missing-fields
 
- ------------------------------
+ -----------------------------
+ 
+ if impl(ghc >= 7.10)
+    ghc-options:
+
+        --------------------
+        -- disabled warnings
+        --------------------
+
+                -fno-warn-unticked-promoted-constructors
+                -- ^ NOTE « -fno-warn-... » is the old style,
+                --        « -Wno-... » is the new style.
+
+ -----------------------------
  
  if impl(ghc >= 8.0)
     ghc-options:
@@ -165,6 +193,13 @@ common Haskell2020Library
                 -Wcompat
       
         --------------------
+        -- disabled warnings
+        --------------------
+
+                -Wno-unticked-promoted-constructors
+         --TODO -fno-warn-redundant-constraints
+
+        --------------------
         -- enabled warnings
         --------------------
 
@@ -174,12 +209,24 @@ common Haskell2020Library
                 -Wincomplete-record-updates
                 -Wincomplete-uni-patterns
 
+                -Wmissing-methods
                 -Widentities
 
                 -- -Wmissing-exported-signatures
                 -- -Whi-shadowing
 
- ------------------------------
+        --------------------
+
+                -Wtyped-holes
+
+ -----------------------------
+  
+ if flag(development) && impl(ghc >= 8.0)
+ 
+    ghc-options: -fdefer-typed-holes
+                 -- ^ Use `typed-holes`, not `undefined`, during development.
+
+ -----------------------------
   
  if impl(ghc >= 8.2)
     ghc-options:
@@ -194,7 +241,7 @@ common Haskell2020Library
 
                 -Wunbanged-strict-patterns
 
- ------------------------------
+ -----------------------------
 
  default-extensions:
 
@@ -212,12 +259,8 @@ common Haskell2020Library
                     DeriveFunctor
                     DeriveFoldable
                     DeriveTraversable
-                    DeriveLift
                     StandaloneDeriving
-
-                    DerivingStrategies
-                    DeriveAnyClass
-                    GeneralizedNewtypeDeriving
+--TODO                    
 
    --------------------
    -- syntax
@@ -257,7 +300,77 @@ common Haskell2020Library
    --------------------
                     ScopedTypeVariables
 
- ------------------------------
+ -----------------------------
+
+ other-extensions:
+
+   --------------------
+   -- macros
+   --------------------
+                  CPP
+   --               TemplateHaskell
+   --               QuasiQuotes
+
+   --------------------
+   -- syntax (of literals)
+   --------------------
+                  OverloadedStrings
+                  OverloadedLists
+
+   --------------------
+   -- (miscellaneous)
+   --------------------
+
+   -- RebindableSyntax
+   -- kinds:
+   -- DataKinds ConstraintKinds
+   -- harmful to inference:
+   -- GADTs RankNTypes
+   -- (miscellaneous)
+
+ -----------------------------
+
+ if impl(ghc >= 7.2)
+
+    default-extensions: DeriveLift
+   
+ -----------------------------
+
+ if impl(ghc >= 7.10)
+
+    other-extensions: DeriveAnyClass
+
+ -----------------------------
+
+ if impl(ghc >= 8.0)
+
+    default-extensions: DuplicateRecordFields
+
+    other-extensions:   TemplateHaskellQuotes
+
+ -----------------------------
+
+ if impl(ghc >= 8.4)
+
+    default-extensions: DerivingStrategies
+                      , DeriveAnyClass
+                      , GeneralizedNewtypeDeriving
+
+ -----------------------------
+
+ if impl(ghc >= 8.6)
+    default-extensions: StarIsType
+
+    -- ^ Enabling « StarIsType » is necessary for forwards-compatibility.
+    --
+    --   Using « :: * -> * » versus « :: Type -> Type » is necessary
+    --   for backwards-compatibility.
+    --
+    --   "Before GHC 8.0: the only way to refer to the kind of lifted types was the * syntax."
+    --
+    --   See « https://github.com/ghc-proposals/ghc-proposals/blob/master/proposals/0030-remove-star-kind.rst ».
+
+ -----------------------------
 
  other-extensions:
 
@@ -290,7 +403,7 @@ common Haskell2020Program
 
  import: Haskell2020Library
 
- ------------------------------
+ -----------------------------
 
  ghc-options:
  
@@ -314,32 +427,34 @@ common Haskell2020Program
              -Wno-missing-signatures
              -fno-warn-type-defaults
              
- ------------------------------
-
 --------------------------------------------------
 -- Library ---------------------------------------
 --------------------------------------------------
+
 library
+
+------------------------------
 
  import: Haskell2020Library
 
- hs-source-dirs:
-                library
-                internals
-              --signatures
- --(TODO: signatures break repl.)
+------------------------------
 
- ------------------------------
- ------------------------------
- exposed-modules:
-                 Xxx_Module_xxX
-                 
-                 Xxx_Module_xxX.Types
-                 Xxx_Module_xxX.Core
-                 Xxx_Module_xxX.Derived
+ hs-source-dirs: library
+               , internals
+ --            , signatures
 
-                 Internal.Xxx_Module_xxX
-                 Prelude_Xxx_PackageUnderscores_xxX
+ --(TODO: signatures break repl?)
+
+ -----------------------------
+
+ exposed-modules: Xxx_Module_xxX
+
+                  Xxx_Module_xxX.Types
+                  Xxx_Module_xxX.Core
+                  Xxx_Module_xxX.Derived
+
+                  Internal.Xxx_Module_xxX
+                  Prelude_Xxx_PackageUnderscores_xxX
 
  -- other-modules:
  --               Paths_Xxx_PackageUnderscores_xxX
@@ -347,36 +462,33 @@ library
  -- autogen-modules:
  --               Paths_Xxx_PackageUnderscores_xxX
 
- ------------------------------
- ------------------------------
+ -----------------------------
 
  -- signatures:
 
- --(TODO: signatures break repl.)
+ -----------------------------
 
- ------------------------------
- ------------------------------
  build-depends:
 
   --------------------
-  -- my libraries.
+  -- My Libraries ----
   --------------------
 
                spiros
    ---          , enumerate
 
   --------------------
-  -- boot-libraries & standard-library packages,
+  -- Standard-Library
   --------------------
 
-             , text
+             , text             
              , bytestring
              , transformers
              , mtl
              , containers
 
   --------------------
-  -- extended(/unofficial) "standard-library" packages.
+  -- "Extended" StdLib
   --------------------
 
              , deepseq
@@ -384,7 +496,7 @@ library
              , unordered-containers
 
   --------------------
-  -- parsing libraries.
+  -- Parsing ---------
   --------------------
 
              , parsers
@@ -392,15 +504,15 @@ library
              , charset
 
   --------------------
-  -- records libraries.
+  -- Records ---------
   --------------------
 
              , lens
              , generic-lens
              , vinyl
-              
+                                        
   --------------------
-  -- (miscellaneous libraries).
+  -- (etc) -----------
   --------------------
 
              -- , pkg
@@ -409,69 +521,119 @@ library
 -- Tests -----------------------------------------
 --------------------------------------------------
 
+test-suite doc
+
+ import: Haskell2020Program
+
+ -----------------------------
+
+ if impl(ghcjs)
+    buildable: False
+    -- ^ Because « GHCJSi » doesn't work.
+
+ -----------------------------
+
+ main-is:             DocTests.hs
+ hs-source-dirs:      tests
+
+--other-modules:       
+
+ -----------------------------
+
+ build-depends: base
+              , xxx-package-xxx
+
+              ----------------
+
+              , doctest
+
+ -----------------------------
+
+ type: exitcode-stdio-1.0
+
+--------------------------------------------------
+
 test-suite unit
+
   import: Haskell2020Library
   import: Haskell2020Program
 
-  type:                exitcode-stdio-1.0
-  main-is:             UnitTests.hs
+  ----------------------------
 
-  hs-source-dirs:      tests/unit
-  other-modules:
-                Test.Unit.Xxx_Module_xxX
+  main-is:        UnitTests.hs
+
+  hs-source-dirs: tests/unit
+
+  other-modules:  Test.Unit.Xxx_Module_xxX
 
   -- build-tool-depends:
   --                    hspec-discover:hspec-discover
 
-  build-depends:
-                xxx-package-xxx
+  ----------------------------
 
-              , HUnit
+  build-depends: xxx-package-xxx
+               , HUnit
 
-              , tasty
-              , tasty-hunit
+               , tasty
+               , tasty-hunit
+
+  ----------------------------
+
+  type: exitcode-stdio-1.0
 
 --------------------------------------------------
 
 test-suite property
+
   import: Haskell2020Library
   import: Haskell2020Program
 
-  type:                exitcode-stdio-1.0
-  main-is:             PropertyTests.hs
+  ----------------------------
 
-  hs-source-dirs:      tests/property
-  other-modules:
-                Test.Property.Xxx_Module_xxX
+  hs-source-dirs: tests/property
 
-  build-depends:
-                xxx-package-xxx
+  main-is:        PropertyTests.hs
 
-              , hedgehog
+  other-modules:  Test.Property.Xxx_Module_xxX
 
-              , tasty
-              , tasty-hedgehog
+  ----------------------------
+
+  build-depends: xxx-package-xxx
+               , hedgehog
+
+               , tasty
+               , tasty-hedgehog
+
+  ----------------------------
+
+  type: exitcode-stdio-1.0
 
 --------------------------------------------------
 
 test-suite golden
+
   import: Haskell2020Library
   import: Haskell2020Program
 
-  type:                exitcode-stdio-1.0
-  main-is:             GoldenTests.hs
+  ----------------------------
 
-  hs-source-dirs:      tests/golden
-  other-modules:
-                Test.Golden.Xxx_Module_xxX
+  hs-source-dirs: tests/golden
 
-  build-depends:
-                xxx-package-xxx
+  main-is:        GoldenTests.hs
 
-              , golden
+  other-modules:  Test.Golden.Xxx_Module_xxX
 
-              , tasty
-              , tasty-golden
+  ----------------------------
+
+  build-depends: xxx-package-xxx
+               , golden
+
+               , tasty
+               , tasty-golden
+
+  ----------------------------
+
+  type: exitcode-stdio-1.0
 
 --------------------------------------------------
 -- Executables -----------------------------------
@@ -484,20 +646,23 @@ executable xxx-executable-xxx
   import: Haskell2020Library
   import: Haskell2020Program
 
-  main-is:             Main.hs
+  ----------------------------
 
-  hs-source-dirs:      executables/program
-  other-modules:
-                Xxx_Module_xxX.Main
-                Xxx_Module_xxX.Options
-                Xxx_Module_xxX.Program
-                
-                Prelude_exe
+  hs-source-dirs: executables/program
 
-  build-depends:
-                xxx-package-xxx
+  main-is:        Main.hs
 
-              , optparse-applicative
+  other-modules: Xxx_Module_xxX.Main
+                 Xxx_Module_xxX.Options
+                 Xxx_Module_xxX.Program
+                 Xxx_Module_xxX.Types
+
+                 Prelude_exe
+
+  ----------------------------
+
+  build-depends: xxx-package-xxx
+               , optparse-applicative
 
 --------------------------------------------------
 
@@ -531,13 +696,13 @@ executable example-xxx-package-xxx
 
 --
 -- foreign-library xxx-package-xxx
---   ------------------------------
+--   -----------------------------
 --   type:                native-shared
 --   lib-version-info:    0:0:0
 --   if os(Windows)
 --     options: standalone
 --     -- mod-def-file: xxx-package-xxx.def
---   ------------------------------
+--   -----------------------------
 --   hs-source-dirs:
 --     lib
 --   other-modules:
@@ -550,15 +715,15 @@ executable example-xxx-package-xxx
 --     emacs-module.h
 --   c-sources:
 --     cbits/emacs_wrapper.c
---   ------------------------------
+--   -----------------------------
 --   ghc-prof-options:
 --     -fprof-auto
---   ------------------------------
+--   -----------------------------
 --   build-tools:
 --     hsc2hs
 --   build-depends:
 --                 xxx-package-xxx
 --               , bytestring
 --               , safe-exceptions-checked
---   ------------------------------
+--   -----------------------------
 --------------------------------------------------

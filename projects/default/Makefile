@@ -124,7 +124,7 @@ InstallDirectory=$(ReleaseDirectory)/dist-newstyle/ #TODO
 # Makefile Variables: (Miscellaneous) Strings
 ##################################################
 
-TagsScript?=":etags\n:quit\n"
+TagsCommand?=":etags"
 
 ##################################################
 # the `default` and `all` targets
@@ -307,11 +307,15 @@ build-example:
 #------------------------------------------------#
 
 tags:
-	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
+#	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
+	ghci -e $(TagsCommand)
 
         # ^ NOTE:
         # * the « <(...) » is a Process Substitution, while
         # * the « ... < ... » is a Redirection.
+
+        # ^ NOTE:
+        # « ghci -e » (« -e » means "evaluate") is for non-interactive usage.
 
 .PHONY: tags
 

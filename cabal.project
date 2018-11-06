@@ -5,7 +5,7 @@ packages: ./skeletor
 --         ./skeletor-haskell/
 --         ./skeletor-emacs/
 
---         ./projects/default/xxx-package-xxx/
+         ./projects/default/xxx-package-xxx/
 
 ----------------------------------------
 
