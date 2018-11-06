@@ -533,8 +533,9 @@ test-suite doc
 
  -----------------------------
 
- main-is:             DocTests.hs
- hs-source-dirs:      tests
+ hs-source-dirs: tests/doc/DocTests.hs
+
+ main-is:        DocTests.hs
 
 --other-modules:       
 
@@ -626,7 +627,6 @@ test-suite golden
   ----------------------------
 
   build-depends: xxx-package-xxx
-               , golden
 
                , tasty
                , tasty-golden

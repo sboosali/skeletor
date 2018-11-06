@@ -1,6 +1,8 @@
-cabal-version:       2.2
+cabal-version:       2.4
                      -- ^
-                     -- for CommonStanzas, i.e. ❲ common _ ❳.
+                     -- Cabal-2.4 introduces File Globs,
+                     -- e.g. « **/*.txt' ».
+                     -- Cabal-2.2 introduced Common Stanzas.
 
 build-type:          Simple
 
@@ -38,8 +40,13 @@ author:              Spiros Boosalis
 maintainer:          samboosalis@gmail.com
 
 --------------------------------------------------
+-- Portability -----------------------------------
+--------------------------------------------------
 
-stability:           provisional
+stability: provisional
+
+--------------------------------------------------
+
 tested-with:
             GHC == 8.2.2
             -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
@@ -50,14 +57,20 @@ tested-with:
 -- (Non-Code) Files ------------------------------
 --------------------------------------------------
 
-extra-source-files:
-                   README.md
-                   LICENSE.txt
+extra-source-files: README.md
+                    LICENSE.txt
 
 --------------------------------------------------
-                   
--- data-files:
---            data/*.txt
+
+data-dir: data
+
+data-files: licenses/**/*.txt
+            .gitignore
+
+--------------------------------------------------
+
+--TODO add images
+-- extra-doc-files: docs/
 
 --------------------------------------------------
 -- REPOSITORY
