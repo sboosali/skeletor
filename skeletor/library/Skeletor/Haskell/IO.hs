@@ -224,8 +224,9 @@ readProjectByIdentifier = locateProject > readProjectByPath
 
 readProjectByPath :: FilePath -> IO FileTree
 readProjectByPath project = do
-   files <- findProjectFilesByPath project
-   readFileTree files
+
+  files <- findProjectFilesByPath project
+  readFileTree files
 
 --------------------------------------------------
 

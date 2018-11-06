@@ -29,12 +29,12 @@ import Prelude_skeletor
 --------------------------------------------------
 --------------------------------------------------
 
-{-| the default variable-environment of this templating engine.
+{-| The default variable-environment of this templating engine.
 
-known mappings between:
+Has known mappings:
 
-* configuration variables (e.g. @"module"@, as in @"--module=..."@); and
-* template variables (e.g. @"XxxModulexxX"@).
+* from configuration variables (e.g. @"module"@, as in @"--module=..."@),
+* to template variables (e.g. @"XxxModulexxX"@).
 
 -}
 
@@ -111,9 +111,7 @@ defaultTemplateEnvironment =
 
 --------------------------------------------------
 
-{-|
-
-the builtin mapping-styles between configuration variables and template variables.
+{-| The "builtin" mapping-styles between configuration variables and template variables.
 
 these mapping-styles include:
 
@@ -147,6 +145,9 @@ defaultVariableStyles = []
 --------------------------------------------------
 
 {-|
+
+
+"Type" means: a "DSL-level" type (not a Haskell type).
 
 @
 

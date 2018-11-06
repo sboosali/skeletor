@@ -3,6 +3,11 @@
 
 {-|
 
+'Skeletor.Haskell.Main' glues the other modules together:
+
+* 'Skeletor.Haskell.Options': the command-line options (parsing, defaulting, etc).
+* 'Skeletor.Haskell.Program': the @main@ program (the logic, filesystem interaction, etc).
+
 -}
 
 module Skeletor.Haskell.Main
@@ -20,14 +25,6 @@ import Skeletor.Haskell.Program
 
 --------------------------------------------------
 
--- import qualified "" _ as _
-
---------------------------------------------------
-
--- import           "base" _
-
---------------------------------------------------
-
 import Prelude_exe
 
 --------------------------------------------------
@@ -41,30 +38,6 @@ main :: IO ()
 main = do
   config <- getConfig
   program config
-
---------------------------------------------------
-
-{-| 
-
--}
-
---------------------------------------------------
-
-{-| 
-
--}
-
---------------------------------------------------
-
-{-| 
-
--}
-
---------------------------------------------------
-
-{-| 
-
--}
 
 --------------------------------------------------
 --------------------------------------------------

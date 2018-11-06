@@ -231,7 +231,7 @@ options = Config
 
         [ P.long    "verbose"
         , P.short   'v'
-        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this commandL [1] parsing these command-line options; and [2] defaulting the values of any optional options)."
+        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: [1] parsing these command-line options; and [2] defaulting the values of any optional options)."
         ])
 
   <*> optional (P.strOption (mconcat

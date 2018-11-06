@@ -61,39 +61,40 @@ data DelimiterBrackets = DelimiterBrackets
 
 -- | @= 'wrapDelimiterBrackets'@ 
 
-instance Semigroup DelimiterBrackets where
-  (<>) = wrapDelimiterBrackets
+instance Semigroup DelimiterBrackets where (<>) = wrapDelimiterBrackets
 
-{-|
+--------------------------------------------------
 
-Associative (the @Semigroup@ instance is valid).
+{-| 
 
-**Not** Commutative (being "wrapping" or "nesting", and not appending).
+Is Associative (the @Semigroup@ instance being valid).
 
-i.e.
+Is **Not** Commutative (the actioin being "wrapping" or "nesting", and not appending).
 
+i.e.:
+
+@outermost `wrapDelimiterBrackets` inner `wrapDelimiterBrackets` innermost
 @
-outermost `wrapDelimiterBrackets` inner `wrapDelimiterBrackets` innermost
-@
 
-e.g. @doctest@:
+e.g. (@doctest@):
 
-@
 >>> :set -XRecordWildCards
->>> let DelimiterBrackets{..} = DelimiterBrackets{ open= "{", close= "}" } <> DelimiterBrackets{ open= "-", close= "-" } <> DelimiterBrackets{ open= "#", close= "#" }
+>>> DelimiterBrackets{..} = DelimiterBrackets{ open= "{", close= "}" } <> DelimiterBrackets{ open= "-", close= "-" } <> DelimiterBrackets{ open= "#", close= "#" }
 >>> open == ['{', '-', '#' ]
 True
 >>> close == ['#', '-', '}' ]
 True
-@
 
 -}
 
 wrapDelimiterBrackets :: DelimiterBrackets -> DelimiterBrackets -> DelimiterBrackets
-wrapDelimiterBrackets DelimiterBrackets{open=outerOpen, close=outerClose} DelimiterBrackets{open=innerOpen, close=innerClose} = DelimiterBrackets
-  { open  = outerOpen  <> innerOpen
-  , close = innerClose <> outerClose
-  }
+wrapDelimiterBrackets DelimiterBrackets{open=outerOpen, close=outerClose}
+                      DelimiterBrackets{open=innerOpen, close=innerClose} =
+
+  DelimiterBrackets
+    { open  = outerOpen  <> innerOpen
+    , close = innerClose <> outerClose
+    }
 
 -- {-|
 -- -}
@@ -107,10 +108,18 @@ wrapDelimiterBrackets DelimiterBrackets{open=outerOpen, close=outerClose} Delimi
 
 {-|
 
+e.g. (@doctest@):
+
+>>> :set -XRecordWildCards
+>>> DelimiterBrackets{..} = dittoDelimiterBrackets "=="
+>>> open == close
+True
+
 -}
 
 dittoDelimiterBrackets :: String -> DelimiterBrackets
 dittoDelimiterBrackets s = DelimiterBrackets
+
   { open  = s
   , close = s
   }
@@ -118,10 +127,15 @@ dittoDelimiterBrackets s = DelimiterBrackets
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
+{-| These variables aren't /interpolated/, they represent arbitrary template fragments
+(or choose between templates in separate files).
 
-@
-@
+In particular:
+
+* 'WhichLicenese': 
+* 'WhichVersionControlSystem': 
+* 'WhetherPackageInSubdirectory': 
+* 'WhichPrelude': 
 
 -}
 
@@ -145,7 +159,10 @@ data MetaConfigurationVariableType
 data WhichLicense
 
   = GPL3License
+  | BSD4License
   | BSD3License
+  | BSD2License
+  | MITLicense
 
   deriving stock    (Enum,Bounded,Ix)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
@@ -155,8 +172,9 @@ data WhichLicense
 --------------------------------------------------
 
 -- | @= 'defaultWhichLicense'@
-instance Default WhichLicense where
-  def = defaultWhichLicense
+instance Default WhichLicense where def = defaultWhichLicense
+
+--------------------------------------------------
 
 -- | @= 'GPL3License'@
 defaultWhichLicense :: WhichLicense
@@ -180,8 +198,9 @@ data WhichVersionControlSystem
 --------------------------------------------------
 
 -- | @= 'defaultWhichVersionControlSystem'@
-instance Default WhichVersionControlSystem where
-  def = defaultWhichVersionControlSystem
+instance Default WhichVersionControlSystem where def = defaultWhichVersionControlSystem
+
+--------------------------------------------------
 
 -- | @= 'GitVCS'@
 defaultWhichVersionControlSystem :: WhichVersionControlSystem
@@ -206,8 +225,9 @@ data WhichPackageDirectory
 --------------------------------------------------
 
 -- | @= 'defaultWhichPackageDirectory'@
-instance Default WhichPackageDirectory where
-  def = defaultWhichPackageDirectory
+instance Default WhichPackageDirectory where def = defaultWhichPackageDirectory
+
+--------------------------------------------------
 
 -- | @= 'PackageInNamesakeSubdirectory'@
 defaultWhichPackageDirectory :: WhichPackageDirectory
@@ -221,8 +241,9 @@ defaultWhichPackageDirectory = PackageInNamesakeSubdirectory
 
 data WhichPrelude
 
-  = BasePrelude
-  | SpirosPrelude
+  = ImplicitPrelude             -- ^ @Prelude@ (the official one).
+  | BasePrelude                 -- ^ Re-Export as much of @base@ as possible.
+  | SpirosPrelude               -- ^ The library author's custom prelude (from the @spiros@ package).
 
   deriving stock    (Enum,Bounded,Ix)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
@@ -232,12 +253,13 @@ data WhichPrelude
 --------------------------------------------------
 
 -- | @= 'defaultWhichPrelude'@
-instance Default WhichPrelude where
-  def = defaultWhichPrelude
+instance Default WhichPrelude where def = defaultWhichPrelude
 
--- | @= 'BasePrelude'@
+--------------------------------------------------
+
+-- | @= 'ImplicitPrelude'@
 defaultWhichPrelude :: WhichPrelude
-defaultWhichPrelude = BasePrelude
+defaultWhichPrelude = ImplicitPrelude
 
 --------------------------------------------------
 --------------------------------------------------
@@ -280,10 +302,10 @@ newtype ConfigurationVariableName = ConfigurationVariableName
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
--- | @= 'coerce'@
+--------------------------------------------------
 
-instance IsString ConfigurationVariableName where
-  fromString = coerce
+-- | @= 'coerce'@
+instance IsString ConfigurationVariableName where fromString = coerce
 
 --------------------------------------------------
 
@@ -341,10 +363,10 @@ newtype TemplateVariableName = TemplateVariableName
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
--- | @= 'coerce'@
+--------------------------------------------------
 
-instance IsString TemplateVariableName where
-  fromString = coerce
+-- | @= 'coerce'@
+instance IsString TemplateVariableName where fromString = coerce
 
 --------------------------------------------------
 
@@ -382,7 +404,7 @@ data TemplateVariableKind
 
 --------------------------------------------------
 
-{-| the lexical style of a variable.
+{-| The lexical style of a variable.
 
 @
 @
@@ -404,8 +426,9 @@ data TemplateVariableStyle
 --------------------------------------------------
 
 -- | @= 'defaultTemplateVariableStyle'@
-instance Default TemplateVariableStyle where
-  def = defaultTemplateVariableStyle
+instance Default TemplateVariableStyle where def = defaultTemplateVariableStyle
+
+--------------------------------------------------
 
 -- | @= 'AnyStyle'@
 defaultTemplateVariableStyle :: TemplateVariableStyle

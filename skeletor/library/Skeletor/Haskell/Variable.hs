@@ -1,9 +1,9 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
+{-| Variables within templates.
 
-Re-export all types and functions of this module's submodules.
+(Re-export all types and functions of this module's submodules.)
 
 -}
 
