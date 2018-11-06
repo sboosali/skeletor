@@ -12,10 +12,6 @@ module Prelude_exe
 
 --------------------------------------------------
 
-import "spiros" Prelude.Spiros as X
-
---------------------------------------------------
-
-
+import "xxx-package-xxx" Prelude_Xxx_PackageUnderscores_xxX as X
 
 --------------------------------------------------

@@ -1,4 +1,4 @@
-import qualified Xxx_Module_xxX.Main as Executable
-import Prelude
+import qualified Xxx_Module_xxX.Main as Program
+import Prelude_exe
 main :: IO ()
-main = Executable.main
+main = Program.main
