@@ -30,7 +30,7 @@ import qualified "hedgehog" Hedgehog.Range as Range
 
 --------------------------------------------------
 
-import Prelude_Xxx_PackageUnderscores_xxX
+import Prelude_xxx_package_xxx
 
 --------------------------------------------------
 --------------------------------------------------

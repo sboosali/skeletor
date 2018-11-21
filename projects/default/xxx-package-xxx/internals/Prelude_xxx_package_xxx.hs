@@ -6,7 +6,7 @@ a project-specific custom prelude.
 
 -}
 
-module Prelude_Xxx_PackageUnderscores_xxX
+module Prelude_xxx_package_xxx
     ( module X
     ) where
 

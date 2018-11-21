@@ -76,9 +76,16 @@ extra-source-files: README.md
   --                 ../.gitignore
 
 --------------------------------------------------
-                   
--- data-files:
---            data/*.txt
+
+data-dir: data
+
+data-files: golden/*.txt
+          , golden/*.example
+
+--------------------------------------------------
+
+--TODO add images
+-- extra-doc-files: docs/
 
 --------------------------------------------------
 -- Repository ------------------------------------
@@ -105,7 +112,7 @@ source-repository head
 -- Flags -----------------------------------------
 --------------------------------------------------
 
-flag development
+flag develop
 
   default:     False
 
@@ -221,7 +228,7 @@ common Haskell2020Library
 
  -----------------------------
   
- if flag(development) && impl(ghc >= 8.0)
+ if flag(develop) && impl(ghc >= 8.0)
  
     ghc-options: -fdefer-typed-holes
                  -- ^ Use `typed-holes`, not `undefined`, during development.
@@ -453,14 +460,19 @@ library
                   Xxx_Module_xxX.Core
                   Xxx_Module_xxX.Derived
 
-                  Internal.Xxx_Module_xxX
-                  Prelude_Xxx_PackageUnderscores_xxX
+--other-modules: -- NOTE these intenal modules are exposed for the test-components.
 
- -- other-modules:
- --               Paths_Xxx_PackageUnderscores_xxX
- -- 
- -- autogen-modules:
- --               Paths_Xxx_PackageUnderscores_xxX
+                  Internal.Xxx_Module_xxX
+                  Prelude_xxx_package_xxx
+
+ -----------------------------
+
+ if flag(develop)
+    exposed-modules: Paths_xxx_package_xxx
+ else
+  --other-modules: Paths_xxx_package_xxx
+    exposed-modules: Paths_xxx_package_xxx
+    autogen-modules: Paths_xxx_package_xxx
 
  -----------------------------
 

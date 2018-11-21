@@ -18,7 +18,7 @@ GithubUser=sboosali
 
 ## core template-variables
 
-- `xxx-package-xxx`: the package name.
+- `xxx-package-xxx`: the package name. NOTE this template-variable has a **rigid** name (why? to support `xxx_package_xxx`), unlike other template-variables whose name can have aliases.
 - `Xxx_Module_xxX`: the primary module (i.e. all other `exposed-modules` are its submodules).
 - `__Project__`: the project name (a project has one-or-more packages).
 
@@ -33,11 +33,11 @@ GithubUser=sboosali
 `__Description__`: the `.cabal` `description` field.
 `__Categories__`: the `.cabal` `category` field.
 
-
 ## derived template-variables
 
 - `xxx-package-directory-xxx`: defaults to `xxx-package-xxx`.
 - `xxx-program-xxx`: defaults to `xxx-package-xxx`.
+- `xxx_package_xxx`: the package name as a valid module name.
 - `Xxx_ModuleAbbreviation_xxX`: defaults to (the constant) `"Z"`.
 - `__Project__`: defaults to `xxx-package-directory-xxx`.
 - `__GithubUser__`: defaults to `__User__`.

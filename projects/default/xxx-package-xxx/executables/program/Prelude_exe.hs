@@ -12,6 +12,6 @@ module Prelude_exe
 
 --------------------------------------------------
 
-import "xxx-package-xxx" Prelude_Xxx_PackageUnderscores_xxX as X
+import "xxx-package-xxx" Prelude_xxx_package_xxx as X
 
 --------------------------------------------------

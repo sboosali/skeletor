@@ -69,7 +69,7 @@ instance Semigroup DelimiterBrackets where (<>) = wrapDelimiterBrackets
 
 Is Associative (the @Semigroup@ instance being valid).
 
-Is **Not** Commutative (the actioin being "wrapping" or "nesting", and not appending).
+Is **Not** Commutative (the action being "wrapping" or "nesting", and not appending).
 
 i.e.:
 

@@ -11,22 +11,22 @@
 SHELL=bash
 
 ##################################################
-# Makefile Customizeables:Customize 
+# Makefile Customizeables:Customize
 ##################################################
 
-DefaultPackageName=xxx-package-xxx
+DefaultPackageName?=xxx-package-xxx
 #                          ^ [Customize]
 
-DefaultModule=Xxx_Module_xxX
+DefaultModule?=Xxx_Module_xxX
 #                          ^ [Customize]
 
-DefaultProjectFile=./cabal.project
+DefaultProjectFile?=./cabal.project
 #                          ^ [Customize]
 
-DefaultCompilerFlavor=ghc
+DefaultCompilerFlavor?=ghc
 #                          ^ [Customize]
 
-DefaultCompilerVersion=8.4.3
+DefaultCompilerVersion?=8.4.3
 #                          ^ [Customize]
 
 ##################################################
@@ -34,14 +34,14 @@ DefaultCompilerVersion=8.4.3
 ################################################## Customize:
 # (i.e. Package-Specific / Component-Specific)
 
-DefaultPackageVersion=0.0.0
+DefaultPackageVersion?=0.0.0
 #                          ^ [Customize]
 
-DefaultLibraryTarget="lib:$(DefaultPackageName)"
+DefaultLibraryTarget?="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
 #                          ^  e.g. "lib:xxx-package-xxx"
 
-DefaultTarget="all"
+DefaultTarget?="all"
 #                          ^ [Customize]
 #        e.g.
 #             "all"
@@ -49,48 +49,50 @@ DefaultTarget="all"
 #             $(DefaultLibraryTarget)
 #
 
-DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
+DefaultPackage?=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
 
 ##################################################
 # Makefile Variables: Haskell Compiler.
 ################################################## Customize:
 
-CompilerFlavor=$(DefaultCompilerFlavor)
+CompilerFlavor?=$(DefaultCompilerFlavor)
 
-CompilerVersion=$(DefaultCompilerVersion)
+CompilerVersion?=$(DefaultCompilerVersion)
 
-CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
+CompilerProgram?=$(CompilerFlavor)-$(CompilerVersion)
 #                          ^ [Derived]
 
 ##################################################
 # Makefile Variables: Project / `cabal-new`
 ##################################################
 
-ProjectFile=$(DefaultProjectFile)
+Target?=$(DefaultTarget)
+
+ProjectFile?=$(DefaultProjectFile)
 
 EnableNix?= # "--enable-nix"
 
-CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
+CabalOptions?=--project-file $(ProjectFile) -w $(CompilerProgram)
 #                          ^ [Derived]
 
 ##################################################
 # Makefile Variables: Programs.
 ##################################################
 
-Cabal=cabal
+Cabal?=cabal
 
-Markdown=multimarkdown
+Markdown?=multimarkdown
  #TODO pandoc
 
-Open=xdg-open
+Open?=xdg-open
 
-CheckCabal=$(Cabal) check
-CheckTarball=tar -C /tmp -zxvf
-CheckMarkdown=$(Markdown)
-CheckJson=jsonlint
-CheckBash=shellcheck
-CheckNix=nix-instantiate
+CheckCabal?=$(Cabal) check
+CheckTarball?=tar -C /tmp -zxvf
+CheckMarkdown?=$(Markdown)
+CheckJson?=jsonlint
+CheckBash?=shellcheck
+CheckNix?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
@@ -98,27 +100,27 @@ CheckNix=nix-instantiate
 # Makefile Variables: File/Directory Paths
 ##################################################
 
-RootDirectory=$(CURDIR)
-DefaultPackageDirectory=$(DefaultPackageName)
+RootDirectory?=$(CURDIR)
+DefaultPackageDirectory?=$(DefaultPackageName)
 
-ReleaseDirectory=./ignore/release
+ReleaseDirectory?=./ignore/release
 #                          ^ [Customize]
 
-# ReleaseDirectory=./release
+# ReleaseDirectory?=./release
 # ^ change `ReleaseDirectory` to `./release` during a release
 # to actually commit it.
 
-BuildDirectory=./dist-newstyle
-BuildTarballDirectory=$(BuildDirectory)/sdist/
+BuildDirectory?=./dist-newstyle
+BuildTarballDirectory?=$(BuildDirectory)/sdist/
 
-NixDirectory=./nix
-ScriptDirectory=./scripts
-DocumentDirectory=./docs
+NixDirectory?=./nix
+ScriptDirectory?=./scripts
+DocumentDirectory?=./docs
 
-HaddockDirectory=$(ReleaseDirectory)/documentation
-TarballDirectory=$(ReleaseDirectory)/tarballs
-BinaryDirectory=$(ReleaseDirectory)/bin
-InstallDirectory=$(ReleaseDirectory)/dist-newstyle/ #TODO
+HaddockDirectory?=$(ReleaseDirectory)/documentation
+TarballDirectory?=$(ReleaseDirectory)/tarballs
+BinaryDirectory?=$(ReleaseDirectory)/bin
+InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
 ##################################################
 # Makefile Variables: (Miscellaneous) Strings
@@ -136,12 +138,29 @@ default: build-all
 
 #------------------------------------------------#
 
-all: build-all test-all docs-all check-all tarball-all 
+all: info build-all test-all docs-all check-all tarball-all
 	@echo '=================================================='
 	@echo '[All (build/test/docs)] SUCCESS =================='
 	@echo '=================================================='
 
 .PHONY: all
+
+#------------------------------------------------#
+
+info:
+	@echo '=================================================='
+	@echo 'target'
+	@echo $(Target)
+
+	@echo '=================================================='
+	$(Cabal) --version
+
+	@echo '=================================================='
+	ghc --version
+
+	@echo '=================================================='
+
+.PHONY: info
 
 ##################################################
 # `cabal`-wrapper for target `all`
@@ -214,28 +233,28 @@ configure: configure-8-6
 #------------------------------------------------#
 
 configure-8-6:
-	cabal $(EnableNix) new-configure -w ghc-8.6.1
+	$(Cabal) $(EnableNix) new-configure -w ghc-8.6.1
 
 .PHONY: configure-8-6
 
 #------------------------------------------------#
 
 configure-8-4:
-	cabal $(EnableNix) new-configure -w ghc-8.4.3
+	$(Cabal) $(EnableNix) new-configure -w ghc-8.4.3
 
 .PHONY: configure-8-4
 
 #------------------------------------------------#
 
 configure-8-2:
-	cabal $(EnableNix) new-configure -w ghc-8.2.2
+	$(Cabal) $(EnableNix) new-configure -w ghc-8.2.2
 
 .PHONY: configure-8-2
 
 #------------------------------------------------#
 
 configure-7-10:
-	cabal $(EnableNix) new-configure -w ghc-7.10.3
+	$(Cabal) $(EnableNix) new-configure -w ghc-7.10.3
 
 .PHONY: configure-7-10
 
@@ -307,7 +326,7 @@ build-example:
 #------------------------------------------------#
 
 tags:
-#	cabal new-repl $(DefaultTarget) < <(echo -e $(TagsScript))
+#	$(Cabal) new-repl $(Target) < <(echo -e $(TagsScript))
 	ghci -e $(TagsCommand)
 
         # ^ NOTE:
@@ -368,7 +387,7 @@ docs-haskell: build-docs-haskell copy-docs-haskell
 
 build-docs-haskell: build-default
 	@echo '=================================================='
-	$(Cabal) new-haddock $(DefaultLibraryTarget) --enable-documentation
+	$(Cabal) new-haddock $(LibraryTarget) --enable-documentation
 	@echo '=================================================='
 	find $(BuildDirectory) -name "index.html" -print
 
@@ -380,7 +399,7 @@ copy-docs-haskell: build-docs-haskell
 	rm    -fr $(HaddockDirectory)
 	mkdir -p  $(HaddockDirectory)
 	@echo '=================================================='
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/$(DefaultPackage)/doc/html/$(DefaultPackageName)/src/* $(HaddockDirectory)
+	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/$(Package)/doc/html/$(PackageName)/src/* $(HaddockDirectory)
 
 .PHONY: copy-docs-haskell
 
@@ -388,9 +407,9 @@ copy-docs-haskell: build-docs-haskell
 
 open-docs-haskell: 
 	@echo '=================================================='
-	find $(HaddockDirectory) -name "$(DefaultModule).html" -print
+	find $(HaddockDirectory) -name "$(Module).html" -print
 	@echo '=================================================='
-	find $(HaddockDirectory) -name "$(DefaultModule).html" -exec $(Open) \{\} \; #TODO open with `&`
+	find $(HaddockDirectory) -name "$(Module).html" -exec $(Open) \{\} \; #TODO open with `&`
 
 .PHONY: open-docs-haskell
 
@@ -428,7 +447,7 @@ check-files: check-markdown check-json check-cabal check-bash check-nix
 check-markdown:
 	@echo '=================================================='
 	find $(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
-	find $(DefaultPackageDirectory)/$(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
+	find $(PackageDirectory)/$(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
 
 .PHONY: check-markdown
 
@@ -444,7 +463,7 @@ check-json:
 
 check-cabal:
 	@echo '=================================================='
-	(cd $(DefaultPackageDirectory) && $(CheckCabal))
+	(cd $(PackageDirectory) && $(CheckCabal))
 
 .PHONY: check-cabal
 
@@ -505,7 +524,7 @@ tarball-all: copy-tarball
 #------------------------------------------------#
 
 cabal-sdist:
-	cabal new-sdist all
+	$(Cabal) new-sdist all
 
 .PHONY: cabal-sdist
 
@@ -525,7 +544,7 @@ copy-tarball: cabal-sdist
 # 	@echo '=================================================='
 # 	find $(TarballDirectory) -name "*.tar.gz" -print0 -exec $(CheckTarball) \{\} \;
 #         # ^ verifies tarball, by unpacking it.
-# 	find /tmp/$(DefaultPackage) -name "*.tar.gz"    		# TODO
+# 	find /tmp/$(Package) -name "*.tar.gz"    		# TODO
 
 # .PHONY: check-tarball
 
@@ -535,7 +554,7 @@ copy-tarball: cabal-sdist
 # 	@echo '=================================================='
 # 	rm    -fr $(TarballDirectory)
 # 	mkdir -p  $(TarballDirectory)
-# 	find $(DefaultPackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;      		# TODO
+# 	find $(PackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;      		# TODO
 
 # .PHONY: copy-tarball
 
@@ -561,7 +580,7 @@ clean: cabal-clean
 #------------------------------------------------#
 
 cabal-clean:
-	cabal new-clean
+	$(Cabal) new-clean
 
 .PHONY: cabal-clean
 
