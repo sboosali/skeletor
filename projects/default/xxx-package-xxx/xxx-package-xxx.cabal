@@ -694,15 +694,39 @@ executable example-xxx-package-xxx
   other-modules:
                 Example.Xxx_Module_xxX
 
-  build-depends:
-                xxx-package-xxx
-              , base
+  build-depends: xxx-package-xxx
+               , base
 
 --------------------------------------------------
 -- Benchmarks ------------------------------------
 --------------------------------------------------
 
--- benchmark time
+benchmark time
+
+  ----------------------------
+
+  import: Haskell2020Library
+  import: Haskell2020Program
+
+  ----------------------------
+
+  hs-source-dirs: benchmarks/time
+
+  main-is:        Main.hs
+  other-modules:  Bench.Xxx_Module_xxX
+
+  ----------------------------
+
+  build-depends: xxx-package-xxx
+
+               , base
+               , deepseq
+
+               , criterion
+
+  ----------------------------
+
+  type: exitcode-stdio-1.0
 
 --------------------------------------------------
 
