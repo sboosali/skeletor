@@ -3,21 +3,32 @@
 
 {-|
 
-
-
 -}
 
-module Test.Unit.Xxx_Module_xxX where
+module Test.Unit.Xxx_Module_xxX
+
+  ( tests
+  ) where
 
 --------------------------------------------------
+--------------------------------------------------
 
-import Xxx_Module_xxX
+--import Xxx_Module_xxX
 --import Internal.Xxx_Module_xxX
 
 --------------------------------------------------
 
-import qualified "HUnit" Test.HUnit as Test
-import           "HUnit" Test.HUnit         ((~:), (~=?), (@?))
+import Prelude_xxx_package_xxx
+
+--------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
+
+import qualified "tasty"       Test.Tasty       as Tasty
+import qualified "tasty-hunit" Test.Tasty.HUnit as Tasty
+import           "tasty-hunit" Test.Tasty.HUnit ((@=?), (@?))
+
+--import           "HUnit" Test.HUnit ((~:), (~=?), (@?))
 
 --------------------------------------------------
 
@@ -25,34 +36,65 @@ import           "HUnit" Test.HUnit         ((~:), (~=?), (@?))
 
 --------------------------------------------------
 
-import Prelude_Xxx_PackageUnderscores_xxX
+import Prelude
 
 --------------------------------------------------
+-- Exports ---------------------------------------
 --------------------------------------------------
 
 {-| 
 
 -}
 
-tests = test
-  [ "test1" ~: test1
-  , "test2" ~: test2
+tests :: Tasty.TestTree
+tests = Tasty.testGroup "Unit Tests"
+
+  [ Tasty.testCase "foo (symbolic)" $
+  
+      test1_symbolic
+      
+  , Tasty.testCase "foo (alphanumeric)" $
+  
+      test1_alphanumeric
+
+  , Tasty.testCase "bar" $
+  
+      bar (bar True)  @?  "bar ∘ bar ≡ id"
+
   ]
+
+  where
+  bar = Prelude.not
+
+--------------------------------------------------
+-- Tests -----------------------------------------
+--------------------------------------------------
+
+test1_symbolic :: Tasty.Assertion
+test1_symbolic =
+
+  (1,2) @=? (foo 3)
+
+  where
+  foo x = (x - 2, x - 1)
 
 --------------------------------------------------
 
-test1 = "(foo 3)" ~: (1,2) ~=? (foo 3)
+test1_alphanumeric :: Tasty.Assertion
+test1_alphanumeric = do
 
-test2 = do
-  (x, y) <- partA 3
-  assertEqual "for the first result of partA," 5 x
-  partB y @? "(partB " ++ show y ++ ") failed"
+  Tasty.assertEqual "(foo 3)" (1,2) (foo 3)
+
+  where
+  foo x = (x - 2, x - 1)
 
 --------------------------------------------------
 --------------------------------------------------
 {- NOTES
 
+(@=?) ≡ assertEqual ""
 
+(@?) ≡ flip assertBool
 
 -}
 --------------------------------------------------

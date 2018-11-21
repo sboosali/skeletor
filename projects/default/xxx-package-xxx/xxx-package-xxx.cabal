@@ -138,7 +138,8 @@ common Haskell2020Library
  default-language: Haskell2010
  
  -----------------------------
- 
+
+ build-depends: base >=4.10 && <5
 --build-depends: base-noprelude >=4.10 && <5
 
  -----------------------------
@@ -366,6 +367,7 @@ common Haskell2020Library
  -----------------------------
 
  if impl(ghc >= 8.6)
+
     default-extensions: StarIsType
 
     -- ^ Enabling « StarIsType » is necessary for forwards-compatibility.
@@ -585,10 +587,12 @@ test-suite unit
   ----------------------------
 
   build-depends: xxx-package-xxx
-               , HUnit
 
                , tasty
                , tasty-hunit
+
+            -- , HUnit
+            -- NOTE « tasty-hunit » re-implements a minimal interface of HUnit.
 
   ----------------------------
 
