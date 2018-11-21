@@ -19,7 +19,7 @@ main :: IO ()
 main = do
 
   putStrLn "----------------------------------------"
-  putStrLn "[TODO] bench:xxx-package-xxx:time"
+  putStrLn "[bench:xxx-package-xxx:time] TODO"
   putStrLn "----------------------------------------"
 
   Criterion.defaultMainWith config benchmarks

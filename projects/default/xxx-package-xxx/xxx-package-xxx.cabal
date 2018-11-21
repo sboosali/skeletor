@@ -136,7 +136,7 @@ common Haskell2020Library
  -----------------------------
 
  default-language: Haskell2010
- 
+
  -----------------------------
 
  build-depends: base >=4.10 && <5
@@ -168,7 +168,7 @@ common Haskell2020Library
 
              -fwarn-name-shadowing
              -fwarn-tabs
-              
+
   --------------------
   -- (miscellaneous warnings)
   --------------------
@@ -177,7 +177,7 @@ common Haskell2020Library
   -- -Werror=missing-fields
 
  -----------------------------
- 
+
  if impl(ghc >= 7.10)
     ghc-options:
 
@@ -190,7 +190,7 @@ common Haskell2020Library
                 --        « -Wno-... » is the new style.
 
  -----------------------------
- 
+
  if impl(ghc >= 8.0)
     ghc-options:
 
@@ -199,7 +199,7 @@ common Haskell2020Library
         --------------------
 
                 -Wcompat
-      
+
         --------------------
         -- disabled warnings
         --------------------
@@ -228,14 +228,14 @@ common Haskell2020Library
                 -Wtyped-holes
 
  -----------------------------
-  
+
  if flag(develop) && impl(ghc >= 8.0)
- 
+
     ghc-options: -fdefer-typed-holes
                  -- ^ Use `typed-holes`, not `undefined`, during development.
 
  -----------------------------
-  
+
  if impl(ghc >= 8.2)
     ghc-options:
 
@@ -268,7 +268,7 @@ common Haskell2020Library
                     DeriveFoldable
                     DeriveTraversable
                     StandaloneDeriving
---TODO                    
+--TODO
 
    --------------------
    -- syntax
@@ -287,7 +287,7 @@ common Haskell2020Library
                     DoAndIfThenElse
                     EmptyDataDecls
                     InstanceSigs
-                       
+
    --------------------
    -- typeclasses
    --------------------
@@ -341,7 +341,7 @@ common Haskell2020Library
  if impl(ghc >= 7.2)
 
     default-extensions: DeriveLift
-   
+
  -----------------------------
 
  if impl(ghc >= 7.10)
@@ -415,27 +415,53 @@ common Haskell2020Program
  -----------------------------
 
  ghc-options:
- 
+
    --------------------
    -- Compilation -----
    --------------------
- 
+
              -O2
 
    --------------------
    -- Runtime ---------
    --------------------
- 
+
              -threaded
              -rtsopts -with-rtsopts=-N             
- 
+
    --------------------
    -- Warnings --------
    --------------------
- 
+
              -Wno-missing-signatures
              -fno-warn-type-defaults
-             
+
+
+--------------------------------------------------
+
+common Haskell2020Benchmark
+
+ import: Haskell2020Program
+
+ -----------------------------
+
+ ghc-options:
+
+   --------------------
+   -- Compilation -----
+   --------------------
+
+             -O2
+
+   --------------------
+   -- Runtime ---------
+   --------------------
+
+             -fdicts-cheap
+             -funbox-strict-fields
+
+   --------------------
+
 --------------------------------------------------
 -- Library ---------------------------------------
 --------------------------------------------------
@@ -570,7 +596,6 @@ test-suite doc
 
 test-suite unit
 
-  import: Haskell2020Library
   import: Haskell2020Program
 
   ----------------------------
@@ -602,7 +627,6 @@ test-suite unit
 
 test-suite property
 
-  import: Haskell2020Library
   import: Haskell2020Program
 
   ----------------------------
@@ -629,7 +653,6 @@ test-suite property
 
 test-suite golden
 
-  import: Haskell2020Library
   import: Haskell2020Program
 
   ----------------------------
@@ -661,7 +684,6 @@ test-suite golden
 
 executable xxx-program-xxx
 
-  import: Haskell2020Library
   import: Haskell2020Program
 
   ----------------------------
@@ -685,14 +707,16 @@ executable xxx-program-xxx
 --------------------------------------------------
 
 executable example-xxx-package-xxx
-  import: Haskell2020Library
+
   import: Haskell2020Program
 
-  main-is:             Main.hs
+  ----------------------------
 
-  hs-source-dirs:      executables/example
-  other-modules:
-                Example.Xxx_Module_xxX
+  main-is:        Main.hs
+  hs-source-dirs: executables/example
+  other-modules:  Example.Xxx_Module_xxX
+
+  ----------------------------
 
   build-depends: xxx-package-xxx
                , base
@@ -705,8 +729,7 @@ benchmark time
 
   ----------------------------
 
-  import: Haskell2020Library
-  import: Haskell2020Program
+  import: Haskell2020Benchmark
 
   ----------------------------
 
@@ -718,9 +741,8 @@ benchmark time
   ----------------------------
 
   build-depends: xxx-package-xxx
-
                , base
-               , deepseq
+            -- , deepseq
 
                , criterion
 
@@ -730,7 +752,29 @@ benchmark time
 
 --------------------------------------------------
 
--- benchmark space
+benchmark space
+
+  ----------------------------
+
+  import: Haskell2020Benchmark
+
+  ----------------------------
+
+  hs-source-dirs: benchmarks/space
+
+  main-is:        Main.hs
+  other-modules:  Bench.Xxx_Module_xxX
+
+  ----------------------------
+
+  build-depends: xxx-package-xxx
+               , base
+
+               , weigh
+
+  ----------------------------
+
+  type: exitcode-stdio-1.0
 
 --------------------------------------------------
 -- Objects (« .so », « .dylib », « .dl; ») -------

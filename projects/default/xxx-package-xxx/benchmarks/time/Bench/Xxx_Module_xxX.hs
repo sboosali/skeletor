@@ -12,7 +12,10 @@
 
 -}
 
-module Bench.Xxx_Module_xxX where
+module Bench.Xxx_Module_xxX
+
+  ( benchmarks
+  ) where
 
 --------------------------------------------------
 --------------------------------------------------
