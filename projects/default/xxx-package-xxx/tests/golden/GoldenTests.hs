@@ -1,16 +1,14 @@
 --------------------------------------------------
---------------------------------------------------
 
-import Test.Golden.Xxx_Module_xxX
+import Test.Golden.Xxx_Module_xxX (goldenTests)
 
---------------------------------------------------
+import qualified "tasty" Test.Tasty as Tasty
 
 import Prelude
 
 --------------------------------------------------
 
-main = do
-  putStrLn "[TODO] test:xxx-package-xxx:golden"
+main :: IO ()
+main = Tasty.defaultMain =<< goldenTests
 
---------------------------------------------------
 --------------------------------------------------

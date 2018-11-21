@@ -50,7 +50,7 @@ mainWith :: Config -> IO ()
 
 mainWith config@Config{..} = do
 
-  print "[TODO] xxx-executable-xxx"
+  print "[TODO] xxx-program-xxx"
   print config
 
 --------------------------------------------------

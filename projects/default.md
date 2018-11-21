@@ -37,7 +37,7 @@ GithubUser=sboosali
 ## derived template-variables
 
 - `xxx-package-directory-xxx`: defaults to `xxx-package-xxx`.
-- `xxx-executable-xxx`: defaults to `xxx-package-xxx`.
+- `xxx-program-xxx`: defaults to `xxx-package-xxx`.
 - `Xxx_ModuleAbbreviation_xxX`: defaults to (the constant) `"Z"`.
 - `__Project__`: defaults to `xxx-package-directory-xxx`.
 - `__GithubUser__`: defaults to `__User__`.

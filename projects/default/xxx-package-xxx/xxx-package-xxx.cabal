@@ -627,9 +627,11 @@ test-suite golden
   ----------------------------
 
   build-depends: xxx-package-xxx
-
                , tasty
                , tasty-golden
+
+               , bytestring
+               , filepath
 
   ----------------------------
 
@@ -641,7 +643,7 @@ test-suite golden
 
 -- see « Xxx_Module_xxX.Program ».
 
-executable xxx-executable-xxx
+executable xxx-program-xxx
 
   import: Haskell2020Library
   import: Haskell2020Program

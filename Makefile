@@ -73,21 +73,21 @@ CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 # Makefile Variables: Programs.
 ##################################################
 
-Cabal=cabal
+Cabal?=cabal
 
 Pandoc?=pandoc
 
-Markdown=multimarkdown
+Markdown?=multimarkdown
  #TODO pandoc
 
-Open=xdg-open
+Open?=xdg-open
 
-CheckCabal=$(Cabal) check
-CheckTarball=tar -C /tmp -zxvf
-CheckMarkdown=$(Markdown)
-CheckJson=jsonlint
-CheckBash=shellcheck
-CheckNix=nix-instantiate
+CheckCabal?=$(Cabal) check
+CheckTarball?=tar -C /tmp -zxvf
+CheckMarkdown?=$(Markdown)
+CheckJson?=jsonlint
+CheckBash?=shellcheck
+CheckNix?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
@@ -95,25 +95,25 @@ CheckNix=nix-instantiate
 # Makefile Variables: File/Directory Paths
 ##################################################
 
-RootDirectory=$(CURDIR)
-DefaultPackageDirectory=$(DefaultPackageName)
+RootDirectory?=$(CURDIR)
+DefaultPackageDirectory?=$(DefaultPackageName)
 
-ReleaseDirectory=./ignore/release
+ReleaseDirectory?=./ignore/release
 #                          ^ [Customize]
 
-# ReleaseDirectory=./release
+# ReleaseDirectory?=./release
 # ^ change `ReleaseDirectory` to `./release` during a release
 # to actually commit it.
 
-BuildDirectory=./dist-newstyle
-NixDirectory=./nix
-ScriptDirectory=./scripts
-DocumentDirectory=./docs
+BuildDirectory?=./dist-newstyle
+NixDirectory?=./nix
+ScriptDirectory?=./scripts
+DocumentDirectory?=./docs
 
-HaddockDirectory=$(ReleaseDirectory)/documentation
-TarballDirectory=$(ReleaseDirectory)/tarballs
-BinaryDirectory=$(ReleaseDirectory)/bin
-InstallDirectory=$(ReleaseDirectory)/dist-newstyle/ #TODO
+HaddockDirectory?=$(ReleaseDirectory)/documentation
+TarballDirectory?=$(ReleaseDirectory)/tarballs
+BinaryDirectory?=$(ReleaseDirectory)/bin
+InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
 ##################################################
 # the `default` and `all` targets
