@@ -183,6 +183,7 @@ And here are some details that `skeletor` handles:
 
 Includes several **extensive** template-skeletons.
 
+
 ## Usage (as a library)
 
 ```haskell
@@ -192,11 +193,30 @@ import qualified "skeletor" Skeletor
 ```
 
 
-## Implementation
+## "Specification" (Work In Progress)
 
-```haskell
+a project skeleton is a FileTree. it SHOULD be a valid project.
 
-```
+e.g. for haskell projects, a "valid project" is one that `cabal` can build (modulo other dependencies, like system libraries or inaccessible downloads).
+
+a FileTree is a directory containing regular-files, directories, and (maybe?) symlinks.
+
+a project identifier is a URI (or any other short string?) that identifies and locates a project skeleton. a.k.a. the Identified "can be uniquely identified as, and/or located at," the Identifier.
+
+the supported project identifiers are:
+
+* a filepath — the root of the FileTree, a directory.
+* an archive — a `.tar`, is un-archived (into the above).
+* a tarball — a `.tar.gz` is decompressed (into the above).
+* a URI — download it, follow links (detect cycles, ditto with hardlinks of filepaths).
+* a git repo — clone it.
+* a project name — the named project must exist on a Projects Path (where "exists" is often "contains as a subdirectory", but is contextual, and includes (maybe) a git repository of a github organization).
+
+a Project Path is a location that contains multiple project skeletons. there are several Projects Paths (as constants and as variables). namely (directly or indirectly):
+
+* `$SKELETOR_PATH` — an environment variable, a colon-separated list of paths (like `$PATH`).
+* `$XDG_DATA_HOME/skeletor/projects` — the standard location of data files for a user's application.
+* <https://github.com/sboosali/skeletor/tree/master/projects> — official repository (extremely "official" lol)
 
 
 ## Roadmap

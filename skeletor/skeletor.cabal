@@ -459,7 +459,7 @@ test-suite property
 -- Executables -----------------------------------
 --------------------------------------------------
 
--- see « Skeletor.Haskell.Program ».
+-- see « Skeletor.Haskell.Core ».
 
 executable skeletor
 
@@ -470,12 +470,11 @@ executable skeletor
   main-is:             Main.hs
 
   hs-source-dirs:      executables/skeletor
-  other-modules:
-                Skeletor.Haskell.Main                
-                Skeletor.Haskell.Options
-                Skeletor.Haskell.Program
-                
-                Prelude_exe
+  other-modules: Program.Skeletor.Haskell.Main
+                 Program.Skeletor.Haskell.Options
+                 Program.Skeletor.Haskell.Core
+
+                 Prelude_exe
 
   build-depends:
                 skeletor

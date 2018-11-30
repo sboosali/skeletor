@@ -7,7 +7,7 @@
 
 -}
 
-module Skeletor.Haskell.Program where
+module Program.Skeletor.Haskell.Core where
 
 --------------------------------------------------
 
@@ -15,7 +15,7 @@ import Skeletor.Haskell
 
 --------------------------------------------------
 
-import Skeletor.Haskell.Options
+import Program.Skeletor.Haskell.Options
 
 --------------------------------------------------
 

@@ -5,23 +5,23 @@
 
 'Skeletor.Haskell.Main' glues the other modules together:
 
-* 'Skeletor.Haskell.Options': the command-line options (parsing, defaulting, etc).
-* 'Skeletor.Haskell.Program': the @main@ program (the logic, filesystem interaction, etc).
+* 'Program.Skeletor.Haskell.Options': the command-line options (parsing, defaulting, etc).
+* 'Program.Skeletor.Haskell.Core': the @main@ program (the logic, filesystem interaction, etc).
 
 -}
 
-module Skeletor.Haskell.Main
+module Program.Skeletor.Haskell.Main
 
   ( main
-  , module Skeletor.Haskell.Options
-  , module Skeletor.Haskell.Program
+  , module Program.Skeletor.Haskell.Options
+  , module Program.Skeletor.Haskell.Core
   ) where
 
 --------------------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Options
-import Skeletor.Haskell.Program
+import Program.Skeletor.Haskell.Options
+import Program.Skeletor.Haskell.Core
 
 --------------------------------------------------
 

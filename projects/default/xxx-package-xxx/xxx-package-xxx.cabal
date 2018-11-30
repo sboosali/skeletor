@@ -680,7 +680,7 @@ test-suite golden
 -- Executables -----------------------------------
 --------------------------------------------------
 
--- see « Xxx_Module_xxX.Program ».
+-- see « Xxx_Module_xxX.Core ».
 
 executable xxx-program-xxx
 
@@ -694,7 +694,7 @@ executable xxx-program-xxx
 
   other-modules: Xxx_Module_xxX.Main
                  Xxx_Module_xxX.Options
-                 Xxx_Module_xxX.Program
+                 Xxx_Module_xxX.Core
                  Xxx_Module_xxX.Types
 
                  Prelude_exe

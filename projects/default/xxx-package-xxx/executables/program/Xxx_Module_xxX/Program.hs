@@ -8,7 +8,7 @@
 
 -}
 
-module Xxx_Module_xxX.Program
+module Xxx_Module_xxX.Core
   
   ( mainWith
   ) where

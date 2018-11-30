@@ -7,12 +7,17 @@
 
 -}
 
-module Skeletor.Haskell.Options where
+module Program.Skeletor.Haskell.Options where
+
+--------------------------------------------------
+
+import Program.Skeletor.Haskell.Types
 
 --------------------------------------------------
 
 import Skeletor.Haskell
 
+--------------------------------------------------
 --------------------------------------------------
 
 import qualified "optparse-applicative" Options.Applicative as P
@@ -24,70 +29,6 @@ import qualified "optparse-applicative" Options.Applicative as P
 --------------------------------------------------
 
 import Prelude_exe
-
---------------------------------------------------
---------------------------------------------------
-
-{-|  
-
--}
-
-data Config = Config
-
-  { verbosity    :: Verbosity
-  , filepath     :: Maybe FilePath
-  , project      :: Maybe String
-  , subdirectory :: WhichPackageDirectory
-  }
-
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
-
--- | @= 'defaultConfig'@
-
-instance Default Config where
-  def = defaultConfig
-
-{-|
-
--}
-
-defaultConfig :: Config
-defaultConfig = Config{..}
-  where
-  verbosity    = def
-  filepath     = def
-  project      = Just defaultProjectName
-  subdirectory = def
-
---------------------------------------------------
-
-{-|
-
--}
-
-data Verbosity
-
-  = Concise
-  | Verbose
-
-  deriving stock    (Enum,Bounded,Ix)
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
-
--- | @= 'defaultVerbosity'@
-
-instance Default Verbosity where
-  def = defaultVerbosity
-
--- | @= 'Concise'@
-
-defaultVerbosity :: Verbosity
-defaultVerbosity = Concise
 
 --------------------------------------------------
 --------------------------------------------------

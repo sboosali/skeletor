@@ -8,7 +8,7 @@
 
 * 'Xxx_Module_xxX.Options': 
 the command-line options (parsing, defaulting, etc).
-* 'Xxx_Module_xxX.Program': 
+* 'Xxx_Module_xxX.Core': 
 the @main@ program (the logic, data loading, filesystem interaction, etc).
 
 -}
@@ -17,13 +17,13 @@ module Xxx_Module_xxX.Main
 
   ( main
   , module Xxx_Module_xxX.Options
-  , module Xxx_Module_xxX.Program
+  , module Xxx_Module_xxX.Core
   ) where
 
 --------------------------------------------------
 
 import Xxx_Module_xxX.Options
-import Xxx_Module_xxX.Program
+import Xxx_Module_xxX.Core
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
