@@ -1,5 +1,15 @@
 cabal-version:       2.4
-                     -- ^ for « common » stanzas,
+
+                     -- ^ « v2.2 » introduced:
+                     --
+                     --   * « common » stanzas;
+                     --   * the « elif » keyword;
+                     --
+                     -- ^ « v2.4 » introduced:
+                     --
+                     --   * double-star wildcards (e.g. « data/**/*.txt »);
+                     --
+
 build-type:          Simple
 
 --------------------------------------------------
@@ -80,6 +90,7 @@ extra-source-files: README.md
 data-dir: data
 
 data-files: golden/*.txt
+                -- TODO golden/**/*.txt
           , golden/*.example
 
 --------------------------------------------------
@@ -132,6 +143,34 @@ flag develop
 --------------------------------------------------
 
 common Haskell2020Library
+
+ -----------------------------
+ --TODO cross-platform template...
+
+ -- if   os(linux)
+ -- --   linux-only:
+ -- --   ...
+ -- elif os(windows)
+ -- --   windows-only:
+ -- --   ...
+ -- elif os(darwin)
+ -- --   mac-only:
+ -- --   ...
+
+ -- -- ^ See « System.Info.os ».
+ -- -- ^ NOTE « os(windows) » canonicalizes « os(mingw32) », « os(cygwin32) », etc.
+
+ -----------------------------
+ --TODO cross-platform template...
+
+ -- if   arch(x86_64)
+ -- --   64-bit-only:
+ -- --   ...
+ -- elif arch(i386)
+ -- --   32-bit-only:
+ -- --   ...
+
+ -- -- ^ See « System.Info.arch ».
 
  -----------------------------
 
@@ -229,8 +268,15 @@ common Haskell2020Library
 
  -----------------------------
 
- if flag(develop) && impl(ghc >= 8.0)
+ if flag(develop)
+ 
+    cpp-options: -DDEVELOP
+                 -- ^ Define the « DEVELOP » symbol for CPP.
 
+ -----------------------------
+
+ if flag(develop) && impl(ghc >= 8.0)
+ 
     ghc-options: -fdefer-typed-holes
                  -- ^ Use `typed-holes`, not `undefined`, during development.
 
@@ -296,6 +342,7 @@ common Haskell2020Library
                     FlexibleInstances
                     TypeFamilies
                     FunctionalDependencies
+                    ConstrainedClassMethods
 
    --------------------
    -- patterns

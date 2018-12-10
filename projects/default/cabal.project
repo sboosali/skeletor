@@ -1,10 +1,14 @@
 --------------------------------------------------
 
-packages: ./xxx-package-xxx/
+packages: ./xxx-package-xxx
 
 --------------------------------------------------
 
-optional-packages: ~/haskell/spiros/spiros/
+optional-packages: submodules/*
+                   ~/haskell/spiros/spiros
+
+-- « submodules/* » automatically detects any package
+-- cloned/unpacked within the « ./submodules » subdirectory.
 
 --------------------------------------------------
 -- LocalFlags (i.e. only for project/vendored packages)
@@ -60,7 +64,11 @@ repository hackage.mobilehaskell
 -- Notes -----------------------------------------
 --------------------------------------------------
 
--- by omitting a `compiler:` field in `cabal.project`,
+-- Schema for « cabal.project »:
+-- « https://cabal.readthedocs.io/en/latest/nix-local-build.html#configuring-builds-with-cabal-project ».
+
+--
+-- By omitting a `compiler:` field in `cabal.project`,
 -- we can easily test multiple compiler versions by specifying that same field
 -- via the `-w` command line option
 -- (also see the `Makefile`'s `configure-8-2` target).
