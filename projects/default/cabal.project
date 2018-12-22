@@ -34,8 +34,8 @@ jobs: 6
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-12.12
-  url: http://www.stackage.org/lts-12.12
+repository stackage-lts-12.20
+  url: http://www.stackage.org/lts-12.20
 
   -- From:
   -- https://www.stackage.org/lts-12.12/cabal.config?global=true

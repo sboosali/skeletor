@@ -6,4 +6,17 @@ __Synopsis__
 
 __Description__
 
+## Examples
+
+``` haskell
+
+```
+
+## Images
+
+<p align="center">
+  <img src="./images/haskell_128x128.png"/>
+</p>
+
 ## 
+

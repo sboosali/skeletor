@@ -7,7 +7,8 @@ readPrefetchGitJSON = p:
   (builtins.fetchGit
     (builtins.intersectAttrs { url = null; rev = null; }
       (builtins.fromJSON
-        (builtins.readFile p))));
+        (builtins.readFile
+          p))));
 
 in
 ##################################################
