@@ -347,6 +347,10 @@ library
                  Internal.Skeletor.Haskell
                  Prelude_skeletor
 
+                 Skeletor.Haskell.Location
+                 Skeletor.Haskell.EnvironmentVariable
+                 Prelude_location
+
  other-modules:
                Paths_skeletor
 
