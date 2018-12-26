@@ -52,8 +52,8 @@ stability: provisional
 
 --------------------------------------------------
 
-tested-with: GHC   == 8.6.1
-           , GHC   == 8.4.3
+tested-with: GHC   == 8.6.3
+           , GHC   == 8.4.4
            , GHC   == 8.2.2
            , GHC   == 8.0.2
 --         , GHC   == 7.10.3
@@ -739,10 +739,10 @@ executable xxx-program-xxx
 
   main-is:        Main.hs
 
-  other-modules: Xxx_Module_xxX.Main
-                 Xxx_Module_xxX.Options
-                 Xxx_Module_xxX.Core
-                 Xxx_Module_xxX.Types
+  other-modules: Executable.Xxx_Module_xxX.Main
+                 Executable.Xxx_Module_xxX.Types
+                 Executable.Xxx_Module_xxX.Core
+                 Executable.Xxx_Module_xxX.Options
 
                  Prelude_exe
 
@@ -759,8 +759,10 @@ executable example-xxx-package-xxx
 
   ----------------------------
 
-  main-is:        Main.hs
   hs-source-dirs: executables/example
+
+  main-is:        Main.hs
+
   other-modules:  Example.Xxx_Module_xxX
 
   ----------------------------

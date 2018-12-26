@@ -8,13 +8,13 @@
 
 -}
 
-module Xxx_Module_xxX.Types where
+module Executable.Xxx_Module_xxX.Types where
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
 --------------------------------------------------
 
----import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+---import qualified "xxx-package-xxx" Executable.Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

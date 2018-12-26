@@ -14,7 +14,7 @@ module Example.Xxx_Module_xxX where
 
 --------------------------------------------------
 
-import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+--import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

@@ -8,7 +8,7 @@
 
 -}
 
-module Xxx_Module_xxX.Core
+module Executable.Xxx_Module_xxX.Core
   
   ( mainWith
   ) where
@@ -16,14 +16,14 @@ module Xxx_Module_xxX.Core
 --------------------------------------------------
 --------------------------------------------------
 
-import Xxx_Module_xxX.Types   (Config(..))
-import Xxx_Module_xxX.Options (getConfig)
+import Executable.Xxx_Module_xxX.Types   (Config(..))
+import Executable.Xxx_Module_xxX.Options (getConfig)
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
 --------------------------------------------------
 
----import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+---import qualified "xxx-package-xxx" Executable.Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

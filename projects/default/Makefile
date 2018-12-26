@@ -26,7 +26,7 @@ DefaultProjectFile?=./cabal.project
 DefaultCompilerFlavor?=ghc
 #                          ^ [Customize]
 
-DefaultCompilerVersion?=8.4.3
+DefaultCompilerVersion?=8.6.3
 #                          ^ [Customize]
 
 ##################################################
@@ -356,7 +356,7 @@ docs-all: docs-markdown docs-haskell
 
 #------------------------------------------------#
 
-docs-markdown: 
+docs-markdown:
 	find . -name '*.md'   -print0 | xargs -n 1 -0 $(Markdown)
 	find . -name '*.html' -print0
 

@@ -175,6 +175,13 @@ options = Config
         , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: [1] parsing these command-line options; and [2] defaulting the values of any optional options)."
         ])
 
+  <*> (P.flag TrueRun DryRun) (mconcat
+
+        [ P.long    "dryrun"
+        , P.short   'i'
+        , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
+        ])
+
   <*> optional (P.strOption (mconcat
 
         [ P.long    "project-filepath"

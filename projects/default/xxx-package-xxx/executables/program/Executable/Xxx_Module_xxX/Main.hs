@@ -13,23 +13,23 @@ the @main@ program (the logic, data loading, filesystem interaction, etc).
 
 -}
 
-module Xxx_Module_xxX.Main
+module Executable.Xxx_Module_xxX.Main
 
   ( main
-  , module Xxx_Module_xxX.Options
-  , module Xxx_Module_xxX.Core
+  , module Executable.Xxx_Module_xxX.Options
+  , module Executable.Xxx_Module_xxX.Core
   ) where
 
 --------------------------------------------------
 
-import Xxx_Module_xxX.Options
-import Xxx_Module_xxX.Core
+import Executable.Xxx_Module_xxX.Options
+import Executable.Xxx_Module_xxX.Core
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
 --------------------------------------------------
 
----import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+---import qualified "xxx-package-xxx" Executable.Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

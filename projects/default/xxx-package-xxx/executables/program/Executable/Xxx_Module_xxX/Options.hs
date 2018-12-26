@@ -7,18 +7,18 @@
 
 -}
 
-module Xxx_Module_xxX.Options where
+module Executable.Xxx_Module_xxX.Options where
 
 --------------------------------------------------
 --------------------------------------------------
 
-import Xxx_Module_xxX.Types
+import Executable.Xxx_Module_xxX.Types
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
 --------------------------------------------------
 
----import qualified "xxx-package-xxx" Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
+---import qualified "xxx-package-xxx" Executable.Xxx_Module_xxX as Xxx_ModuleAbbreviation_xxX
 
 --------------------------------------------------
 

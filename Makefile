@@ -5,7 +5,7 @@
 .EXPORT_ALL_VARIABLES:
 
 ##################################################
-# Makefile Customizeables:Customize 
+# Makefile Customizeables:Customize
 ##################################################
 
 DefaultPackageName=skeletor
@@ -116,6 +116,14 @@ BinaryDirectory?=$(ReleaseDirectory)/bin
 InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
 ##################################################
+# Makefile Variables: (Miscellaneous) Strings
+##################################################
+
+TagsCommand ?=":etags"
+
+TagsScript ="$(TagsCommand)\n:q\n"
+
+##################################################
 # the `default` and `all` targets
 ##################################################
 
@@ -125,7 +133,7 @@ default: build
 
 ##################################################
 
-all: build-all test-all docs-all check-all tarball-all 
+all: build-all test-all docs-all check-all tarball-all
 	@echo '=================================================='
 	@echo '[All (build/test/docs)] SUCCESS =================='
 	@echo '=================================================='
@@ -241,7 +249,7 @@ stack-compile:
 .PHONY: stack-compile
 
 ##################################################
-# Testing: 
+# Testing:
 ##################################################
 
 test: test-default
@@ -333,7 +341,7 @@ copy-docs-haskell: build-docs-haskell
 
 ##################################################
 
-open-docs-haskell: 
+open-docs-haskell:
 	@echo '=================================================='
 	find $(HaddockDirectory) -name "$(DefaultModule).html" -print
 	@echo '=================================================='
@@ -355,7 +363,7 @@ check-all: check-files   # check-haskell
 	@echo '=================================================='
 	@echo '[Check Everything] SUCCESS ======================='
 	@echo '=================================================='
-	@echo 
+	@echo
 
 .PHONY: check-all
 
@@ -365,7 +373,7 @@ check-files: check-markdown check-json check-cabal check-bash check-nix
 	@echo '=================================================='
 	@echo '[Check Files/Tools (non-Code)] SUCCESS ==========='
 	@echo '=================================================='
-	@echo 
+	@echo
         # ^ check all (non-code) tools and files.
 
 .PHONY: check-files
@@ -420,7 +428,7 @@ check-nix:
 # .PHONY: check-text
 
 #	find */$(DocumentDirectory)/ -name "*" -type f -print0 -exec $(CheckText) \{\} \;
-        # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' ) 
+        # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' )
 
 ##################################################
 
@@ -485,7 +493,26 @@ clean:
 .PHONY: clean
 
 ##################################################
-# Release: 
+# Development: developing this package
+##################################################
+
+tags:
+	$(Cabal) new-repl $(DefaultLibraryTarget) < <(echo -e $(TagsScript))
+#TODO[tags file is empty]	ghci -e $(TagsCommand)
+
+        # ^ NOTE:
+        # * the « <(...) » is a Process Substitution, while
+        # * the « ... < ... » is a Redirection.
+
+        # ^ NOTE:
+        # « ghci -e » (« -e » means "evaluate") is for non-interactive usage.
+
+.PHONY: tags
+
+#------------------------------------------------#
+
+##################################################
+# Release:
 ##################################################
 
 release: release-all

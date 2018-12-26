@@ -1,7 +1,7 @@
 cabal-version:       2.4
                      -- ^
                      -- Cabal-2.4 introduces File Globs,
-                     -- e.g. « **/*.txt' ».
+                     -- e.g. « **/*.txt ».
                      -- Cabal-2.2 introduced Common Stanzas.
 
 build-type:          Simple

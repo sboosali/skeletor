@@ -15,6 +15,7 @@ import Skeletor.Haskell
 
 --------------------------------------------------
 
+import Program.Skeletor.Haskell.Types
 import Program.Skeletor.Haskell.Options
 
 --------------------------------------------------
