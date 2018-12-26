@@ -12,6 +12,11 @@
 module Skeletor.Haskell.Types where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
+
+import "these" Data.These (These(..))
+
 --------------------------------------------------
 
 import qualified "unordered-containers" Data.HashMap.Lazy as HashMap
@@ -25,9 +30,16 @@ import           "containers" Data.Map (Map)
 
 --------------------------------------------------
 
+import qualified "containers" Data.Set as Set
+import           "containers" Data.Set (Set)
+
+--------------------------------------------------
+--------------------------------------------------
+
 import Prelude_skeletor
 
 --------------------------------------------------
+-- Types -----------------------------------------
 --------------------------------------------------
 
 type UnknownOr = Either String    -- TODO mv to own pkg.
@@ -71,7 +83,10 @@ defaultKnownProject = DefaultHaskellProject
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
+{-| 
+
+@HashMap FilePath () ≡ HashSet FilePath
+@
 
 -}
 
@@ -227,6 +242,78 @@ instance IsList FileTree where
 
 emptyFileTree :: FileTree
 emptyFileTree = FileTree Map.empty
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+type FilePathRegex = FilePath
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+type FilePathFilters = These Blacklist Whitelist
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+newtype Whitelist = Whitelist
+
+  (Set FilePathRegex)
+
+  deriving stock    (Generic)
+  deriving stock    (Show, Read)
+  deriving newtype  (Eq, Ord)
+
+  deriving newtype  (Semigroup, Monoid)
+  deriving newtype  (NFData{-, Hashable-})
+
+--------------------------------------------------
+
+instance IsList Whitelist where
+
+  type Item (Whitelist) = FilePathRegex
+
+  fromList = Set.fromList > coerce
+  toList   = coerce > Set.toList
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+newtype Blacklist = Blacklist
+
+  (Set FilePathRegex)
+
+  deriving stock    (Generic)
+  deriving stock    (Show, Read)
+  deriving newtype  (Eq, Ord)
+
+  deriving newtype  (Semigroup, Monoid)
+  deriving newtype  (NFData{-, Hashable-})
+
+--------------------------------------------------
+
+instance IsList Blacklist where
+
+  type Item (Blacklist) = FilePathRegex
+
+  fromList = Set.fromList > coerce
+  toList   = coerce > Set.toList
 
 --------------------------------------------------
 --------------------------------------------------
