@@ -338,6 +338,7 @@ library
                  Skeletor.Haskell.Core
                  Skeletor.Haskell.Derived
 
+                 Skeletor.Haskell.Find
                  Skeletor.Haskell.IO
 
                  Skeletor.Haskell.Variable

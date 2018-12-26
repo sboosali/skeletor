@@ -19,6 +19,10 @@ import "these" Data.These (These(..))
 
 --------------------------------------------------
 
+import "filemanip" System.FilePath.GlobPattern (GlobPattern)
+
+--------------------------------------------------
+
 import qualified "unordered-containers" Data.HashMap.Lazy as HashMap
 import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
@@ -250,7 +254,7 @@ emptyFileTree = FileTree Map.empty
 
 -}
 
-type FilePathRegex = FilePath
+type FilePathRegex = GlobPattern
 
 --------------------------------------------------
 --------------------------------------------------
