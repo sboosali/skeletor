@@ -123,10 +123,10 @@ import Skeletor.Haskell.Variable
 
 --------------------------------------------------
 
-import qualified "filemanip" System.FilePath.Find as Find
-import           "filemanip" System.FilePath.Find (FindClause)
+import qualified "filemanip"  System.FilePath.Find as Find
+import           "filemanip"  System.FilePath.Find (FindClause)
 
-import           "filemanip" System.FilePath.GlobPattern ((~~))
+import           "filemanip"  System.FilePath.GlobPattern ((~~))
 
 --------------------------------------------------
 
@@ -134,6 +134,23 @@ import qualified "containers" Data.Map as Map
 import           "containers" Data.Map (Map)
 
 --------------------------------------------------
+
+import qualified "filepath"   System.FilePath as File
+
+--------------------------------------------------
+
+import qualified "text"       Data.Text    as T
+import qualified "text"       Data.Text.IO as T
+
+--------------------------------------------------
+
+import qualified "bytestring" Data.ByteString as B
+
+--import qualified "bytestring" Data.ByteString.Lazy as B
+
+--------------------------------------------------
+
+--import qualified "base" System.IO as IO
 
 import Prelude_skeletor
 

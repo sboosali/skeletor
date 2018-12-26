@@ -368,7 +368,7 @@ library
    -- my libraries.
    --------------------
 
-               spiros
+               spiros >= 0.3.1
                --TODO , spiros-base
    --          , enumerate
 
@@ -387,13 +387,14 @@ library
   --------------------
 
              , deepseq
-   --          , hashable
-   --          , unordered-containers
+             , hashable             >= 0.12.5
+             , unordered-containers >= 0.2.0
 
    --------------------
    -- filesystem libraries.
    --------------------
 
+             , filepath
              , directory
              , filemanip
 
