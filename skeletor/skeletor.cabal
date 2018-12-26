@@ -406,7 +406,7 @@ library
    -- web libraries.
    --------------------
 
---           , modern-uri
+             , modern-uri
 
    --------------------
    -- records libraries.
@@ -481,9 +481,11 @@ executable skeletor
   main-is:             Main.hs
 
   hs-source-dirs:      executables/skeletor
+
   other-modules: Program.Skeletor.Haskell.Main
                  Program.Skeletor.Haskell.Options
                  Program.Skeletor.Haskell.Core
+                 Program.Skeletor.Haskell.Types
 
                  Prelude_exe
 

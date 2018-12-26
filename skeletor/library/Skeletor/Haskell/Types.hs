@@ -14,14 +14,6 @@ module Skeletor.Haskell.Types where
 --------------------------------------------------
 --------------------------------------------------
 
---------------------------------------------------
---------------------------------------------------
-
--- import           "modern-uri" Text.URI (URI)
--- import qualified "modern-uri" Text.URI as URI
-
---------------------------------------------------
-
 import qualified "unordered-containers" Data.HashMap.Lazy as HashMap
 import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
@@ -83,7 +75,7 @@ defaultKnownProject = DefaultHaskellProject
 
 -}
 
-type Fiels_ = Files ()
+type Files_ = Files ()
 
 --------------------------------------------------
 
@@ -199,7 +191,8 @@ instance Hashable FileBy where
 -}
 
 data TemplateFile = TemplateFile
-  {
+
+  { 
   }
 
 --------------------------------------------------
