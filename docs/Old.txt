@@ -49,6 +49,31 @@ WhiteBlackList
 --------------------------------------------------
 
 
+{-|
+
+'ChiaroscuroFilters' is a pair of filters (a blacklist and a whitelist)
+of 'GlobPattern's.
+
+@≡ 'These' 'emptyBlacklist' 'fullWhitelist'@
+
+-}
+
+newtype ChiaroscuroFilters = ChiaroscuroFilters
+
+  (These Blacklist Whitelist)
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+type FilePathRegex = GlobPattern
+
+
+--------------------------------------------------
+
+
 
 --------------------------------------------------
 
