@@ -11,7 +11,7 @@ module Skeletor.Haskell.Location where
 
 --------------------------------------------------
 
-import Skeletor.Haskell.EnvironmentVariable
+import Skeletor.Core.EnvironmentVariable
 
 --------------------------------------------------
 --------------------------------------------------

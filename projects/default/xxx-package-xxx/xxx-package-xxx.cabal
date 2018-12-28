@@ -184,8 +184,8 @@ common Haskell2020Library
  -----------------------------
 
  include-dirs:     include
- includes:         sboo-base-feature-macros.h
- install-includes: sboo-base-feature-macros.h
+ includes:         HsSbooMacros.h
+ install-includes: HsSbooMacros.h
 
  -----------------------------
 

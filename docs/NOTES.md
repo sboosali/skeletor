@@ -51,8 +51,103 @@ Return a hash value for the argument, using the given salt.
 
 --
 
+lookupEnv :: String -> IO (Maybe String)
+
+  Return the value of the environment variable var, or Nothing if there is no such value.
+
+--
+
+splitOn
+
+  :: Text	
+     -- ^ String to split on. If this string is empty, an error will occur.
+
+  -> Text	
+     -- ^ Input text.
+
+  -> [Text]	 
+     -- ^ O(m+n) Break a Text into pieces separated by the first Text argument (which cannot be empty), consuming the delimiter. An empty delimiter is invalid, and will cause an error to be raised.
+
+Examples:
+
+    >>> splitOn "\r\n" "a\r\nb\r\nd\r\ne"
+    ["a","b","d","e"]
+
+    >>> splitOn "aaa"  "aaaXaaaXaaaXaaa"
+    ["","X","X","X",""]
+
+    >>> splitOn "x"    "x"
+    ["",""]
+
+Laws
+
+    intercalate s . splitOn s         == id
+    splitOn (singleton c)             == split (==c)
+
+--
+
+Cabal-2.4.1.0:Distribution.System.OS
+
+  These are the known OS names: 
+    Linux, Windows, OSX ,FreeBSD, OpenBSD, NetBSD, DragonFly ,Solaris, AIX, HPUX, IRIX ,HaLVM ,Hurd ,IOS, Android,Ghcjs
+
+--
+
+setEnv :: String -> String -> IO ()
+
+  setEnv name value sets the specified environment variable to value.
+
+  Throws IOException if name is the empty string or contains an equals sign.
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
+--
+
 --
 
 -}
 ```
-

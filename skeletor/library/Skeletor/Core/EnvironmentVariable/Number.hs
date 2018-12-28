@@ -1,76 +1,75 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Fetch a directory tree
-
-Possibly downloading a url, decompressing a tarball, or cloning a repository.
+{-| 
 
 -}
 
-module Skeletor.Core.Fetch where
+module Skeletor.Core.EnvironmentVariable.Number where
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
 
-import Skeletor.Core.Location
+import Skeletor.Core.EnvironmentVariable.Text
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
-import qualified "filepath" System.FilePath as File
+-- import qualified "" _ as _
+-- import           "" _ ()
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
-import qualified "base" System.IO as IO
+-- import qualified "" _ as _
+-- import           "" _ ()
 
 --------------------------------------------------
+-- Imports (Custom Prelude) ----------------------
+--------------------------------------------------
 
-import Prelude_skeletor
+import Prelude_location
 
 --------------------------------------------------
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-{-|
+getEnvironmentNumber :: EnvironmentName -> IO (Maybe Int)
 
--}
+getEnvironmentNumber ev = do
 
-fetchLocation :: String -> IO FilePath      -- TODO Managed or Cont
-fetchLocation = _
+  text <- getEnvironmentText ev
 
---------------------------------------------------
+  let int = text <&> parseEnvironmentNumber
 
-{-|
-
--}
-
-resolveLocation :: String -> IO Location
-resolveLocation = _
+  pure int
 
 --------------------------------------------------
 
-{-|
+parseEnvironmentNumber :: Text -> Maybe Int
 
--}
+parseEnvironmentNumber text = int
+  where
 
-parseLocation :: String -> Maybe Location
-parseLocation = _
+  int = go text
 
---------------------------------------------------
-
-{-|
-
--}
+  go = 
 
 --------------------------------------------------
+--------------------------------------------------
 
-{-|
+setEnvironmentNumber :: EnvironmentName -> Int -> IO ()
 
--}
+setEnvironmentNumber ev int = do
+
+  let text = show int
+
+  text <- setEnvironmentText ev
+
+  nothing
 
 --------------------------------------------------
 --------------------------------------------------

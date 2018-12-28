@@ -1,76 +1,72 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Fetch a directory tree
-
-Possibly downloading a url, decompressing a tarball, or cloning a repository.
+{-| 
 
 -}
 
-module Skeletor.Core.Fetch where
+module Skeletor.Core.EnvironmentVariable.Text where
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
 
-import Skeletor.Core.Location
+import Skeletor.Core.EnvironmentVariable.Types
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
-import qualified "filepath" System.FilePath as File
+-- import qualified "" _ as _
+-- import           "" _ ()
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
-import qualified "base" System.IO as IO
+-- import qualified "" _ as _
+-- import           "" _ ()
 
 --------------------------------------------------
+-- Imports (Custom Prelude) ----------------------
+--------------------------------------------------
 
-import Prelude_skeletor
+import Prelude_location
 
 --------------------------------------------------
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-{-|
+getEnvironmentText :: EnvironmentName -> IO (Maybe Text)
 
--}
+getEnvironmentText (EnvironmentName name) = do
 
-fetchLocation :: String -> IO FilePath      -- TODO Managed or Cont
-fetchLocation = _
+  string <- Environment.lookupEnv name
+
+  let text = string <&> T.pack
+
+  pure text
+
+--------------------------------------------------
+--------------------------------------------------
+
+setEnvironmentText :: EnvironmentName -> Text -> IO ()
+
+setEnvironmentText ev text = do
+
+  let string = T.unpack text
+
+  setEnvironmentText string
 
 --------------------------------------------------
 
-{-|
+setEnvironmentString :: EnvironmentName -> String -> IO ()
 
--}
+setEnvironmentString (EnvironmentName name) value = do
 
-resolveLocation :: String -> IO Location
-resolveLocation = _
+  Environment.setEnv name value
 
---------------------------------------------------
-
-{-|
-
--}
-
-parseLocation :: String -> Maybe Location
-parseLocation = _
-
---------------------------------------------------
-
-{-|
-
--}
-
---------------------------------------------------
-
-{-|
-
--}
+  nothing
 
 --------------------------------------------------
 --------------------------------------------------

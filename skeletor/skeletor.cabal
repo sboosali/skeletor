@@ -113,6 +113,12 @@ common sboo-haskell
  build-depends:
                base >=4.10 && <5
 
+ -----------------------------
+
+ include-dirs:     include
+ includes:         HsSbooMacros.h
+ install-includes: HsSbooMacros.h
+
  ------------------------------
 
  ghc-options:
@@ -335,7 +341,19 @@ library
 
                  Skeletor.Core
                  Skeletor.Core.Types
+
                  Skeletor.Core.Fetch
+
+                 Skeletor.Core.Location
+                 Skeletor.Core.Location.Types
+
+                 Skeletor.Core.EnvironmentVariable
+                 Skeletor.Core.EnvironmentVariable.Types
+                 Skeletor.Core.EnvironmentVariable.Name
+                 Skeletor.Core.EnvironmentVariable.Value
+                 Skeletor.Core.EnvironmentVariable.Text
+                 Skeletor.Core.EnvironmentVariable.List
+                 Skeletor.Core.EnvironmentVariable.Number
 
                  --------------
 
@@ -366,16 +384,13 @@ library
                  --------------
 
                  Skeletor.Haskell.Location
-                 Skeletor.Haskell.EnvironmentVariable
                  Prelude_location
 
                  --------------
 
- other-modules:
-               Paths_skeletor
+ other-modules: Paths_skeletor
 
- autogen-modules:
-                 Paths_skeletor
+ autogen-modules: Paths_skeletor
 
  ------------------------------
  ------------------------------

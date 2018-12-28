@@ -1,16 +1,20 @@
-/* All "Feature Macros" (defined by this file) start with
- * either « HAS_ » or « IS_ ».
+/* Macros for different platforms, compiler extensions,
+ * compiler options, compiler pragmas, and
+ * and features introduced by « base »
+ * or specific, standard-library packages (like « deepseq »).
  * 
+ * Most such "Feature Macros" (defined by this file) start with
+ * either « HAS_ » or « IS_ ».
  * 
  */
 
 /************************************************/
 
-#if !defined(HS_SBOO_BASE_FEATURE_MACROS_H)
+#if !defined(HS_SBOO_MACROS_H)
 
-#define HS_SBOO_BASE_FEATURE_MACROS_H
+#define HS_SBOO_MACROS_H
 
-/************************************************************************************************/
+/******************************************************************************/
 
 #ifndef __GLASGOW_HASKELL__
 #define __GLASGOW_HASKELL__ 000
@@ -40,17 +44,29 @@
 
 /************************************************/
 
-#define IS_OS_LINUX   defined(linux_HOST_OS)
-#define IS_OS_WINDOWS defined(mingw32_HOST_OS) || defined(cygwin32_HOST_OS) 
-#define IS_OS_APPLE   defined(darwin_HOST_OS)
-
-/* #define IS_OS_ANDRIOD defined(linux_HOST_OS) || TODO */
-/* #define IS_OS_IOS     defined(darwin_HOST_OS) || TODO */
+#define IS_ARCH_64_BIT_INTEL i386_HOST_ARCH
+#define IS_ARCH_32_BIT_INTEL x86_64_HOST_ARCH
 
 /************************************************/
 
-#define IS_ARCH_64_BIT_INTEL i386_HOST_ARCH
-#define IS_ARCH_32_BIT_INTEL x86_64_HOST_ARCH
+#define IS_OS_LINUX   defined(linux_HOST_OS)
+#define IS_OS_WINDOWS defined(mingw32_HOST_OS) || defined(cygwin32_HOST_OS) 
+#define IS_OS_APPLE   defined(darwin_HOST_OS)
+#define IS_OS_ANDRIOD defined(android_HOST_OS)
+#define IS_OS_IOS     defined(ios_HOST_OS)
+
+/************************************************/
+
+#define IS_OS_POSIX   defined(linux_HOST_OS) || defined(darwin_HOST_OS) || defined(aix_HOST_OS) || defined(hpux_HOST_OS) || defined(irix_HOST_OS) || defined(solaris_HOST_OS) || defined(freebsd_HOST_OS) || defined(opennbsd_HOST_OS) || defined(netbsd_HOST_OS) || defined(ios_HOST_OS) || defined(android_HOST_OS) || defined(hurd_HOST_OS) || defined(halvm_HOST_OS)
+
+// See « https://en.wikipedia.org/wiki/POSIX#POSIX-oriented_operating_systems »:
+//
+// POSIX-certified: AIX, HPUX, IRIX, Solaris.
+// POSIX-compliant (mostly): Linux, Darwin (OSX), FreeBSD, OpenBSD, NetBSD, IOS, Android, Hurd, HaLVM.
+
+// « Cabal-2.4.1.0:Distribution.System.OS »
+//
+// See « https://www.haskell.org/cabal/release/latest/doc/API/Cabal/Distribution-System.html#t:OS »
 
 /************************************************************************************************/
 
