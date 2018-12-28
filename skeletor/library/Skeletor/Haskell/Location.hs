@@ -62,13 +62,13 @@ import Prelude_location
 
 {-|
 
-A location can be identified by:
+A 'Location' can be identified by:
 
 * itself — i.e. inline contents literally (into a string or tree).
 * a filepath — a directory (the root of the files being located).
 * an archive — a `.tar`; to be un-archived (into the above).
 * a tarball — a `.tar.gz`; to be decompressed (into the above).
-* a URI — download it, following links (detect cycles, ditto with hardlinks of filepaths).
+* a URI — download it, following links ([TODO]: detect cycles, ditto with hardlinks of filepaths).
 * a Git repository — clone it.
 * a name — a known name (e.g. builtin into your system).
 

@@ -332,9 +332,16 @@ library
  ------------------------------
  ------------------------------
  exposed-modules:
+
+                 Skeletor.Core
+                 Skeletor.Core.Types
+                 Skeletor.Core.Fetch
+
+                 --------------
+
                  Skeletor.Haskell
-                 
                  Skeletor.Haskell.Types
+
                  Skeletor.Haskell.Core
                  Skeletor.Haskell.Derived
 
@@ -345,17 +352,24 @@ library
                  Skeletor.Haskell.Chiaroscuro.Types
 
                  Skeletor.Haskell.IO
+                 Skeletor.Haskell.Fetch
 
                  Skeletor.Haskell.Variable
                  Skeletor.Haskell.Variable.Types
                  Skeletor.Haskell.Variable.Values
 
+                 --------------
+
                  Internal.Skeletor.Haskell
                  Prelude_skeletor
+
+                 --------------
 
                  Skeletor.Haskell.Location
                  Skeletor.Haskell.EnvironmentVariable
                  Prelude_location
+
+                 --------------
 
  other-modules:
                Paths_skeletor
