@@ -236,7 +236,8 @@ import qualified "bytestring" Data.ByteString as B
 
 --------------------------------------------------
 
-
+import qualified "text"       Data.Text    as T
+import qualified "text"       Data.Text.IO as T
 
 --------------------------------------------------
 

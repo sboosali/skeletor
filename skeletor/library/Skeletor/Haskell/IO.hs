@@ -121,7 +121,7 @@ import Skeletor.Haskell.Types
 
 import Skeletor.Haskell.Find
 import Skeletor.Haskell.Core
-import Skeletor.Haskell.Variable
+-- import Skeletor.Haskell.Variable
 
 --------------------------------------------------
 
@@ -132,23 +132,7 @@ import           "filemanip"  System.FilePath.GlobPattern ((~~))
 
 --------------------------------------------------
 
-import qualified "containers" Data.Map as Map
-import           "containers" Data.Map (Map)
-
---------------------------------------------------
-
-import qualified "filepath"   System.FilePath as File
-
---------------------------------------------------
-
-import qualified "text"       Data.Text    as T
-import qualified "text"       Data.Text.IO as T
-
---------------------------------------------------
-
-import qualified "bytestring" Data.ByteString as B
-
---import qualified "bytestring" Data.ByteString.Lazy as B
+-- import qualified "filepath"   System.FilePath as File
 
 --------------------------------------------------
 

@@ -29,8 +29,8 @@ import Skeletor.Haskell.Chiaroscuro
 
 --------------------------------------------------
 
--- import qualified "filemanip"  System.FilePath.Find as Find
--- import           "filemanip"  System.FilePath.Find (FindClause)
+import qualified "filemanip"  System.FilePath.Find as Find
+import           "filemanip"  System.FilePath.Find (FindClause)
 -- import           "filemanip"  System.FilePath.Find
 --   ( (~~?), (/~?)
 --   , (==?), (/=?)
@@ -74,35 +74,25 @@ findFilesWith
   :: FileFilters
   -> (FilePath -> IO [FilePath])
 
-findFilesWith filters filepath = _
+findFilesWith filters filepath =
 
-  -- Find.find recursionPredicate filterPredicate filepath
+  Find.find shouldDescendM shouldCollectM filepath
 
-  -- where
+  where
 
-  -- recursionPredicate :: FindClause Bool
-  -- recursionPredicate = shouldRecurIntoSubdirectory <$> Find.directory
+  shouldDescendM :: FindClause Bool
+  shouldDescendM = shouldDescend <$> Find.directory
 
-  -- filterPredicate :: FindClause Bool
-  -- filterPredicate = isRegularFileM Find.&&? isGoodFilenameM
+  shouldCollectM :: FindClause Bool
+  shouldCollectM = isRegularFileM Find.&&? (shouldCollect <$> Find.fileName)
+    where
+    isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
 
-  --   where
-  --   isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
-  --   isGoodFilenameM = (shouldKeepFilename <$> Find.fileName)
+  shouldDescend :: FilePath -> Bool
+  Predicate shouldDescend = (directoryPredicate filters)
 
-  -- shouldRecurIntoSubdirectory :: FilePath -> Bool
-  -- shouldRecurIntoSubdirectory = shouldIgnoreDirectory > not
-
-  -- shouldKeepFilename :: FilePath -> Bool
-  -- shouldKeepFilename = shouldIgnoreFilename > not
-
-  -- shouldIgnoreDirectory :: FilePath -> Bool
-  -- shouldIgnoreDirectory directory =
-  --   any (directory ~~) ignoredDirectories
-
-  -- shouldIgnoreFilename :: FilePath -> Bool
-  -- shouldIgnoreFilename filename =
-  --   any (filename ~~) ignoredFiles
+  shouldCollect :: FilePath -> Bool
+  shouldCollect = (directoryPredicate filters) & getPredicate
 
 --------------------------------------------------
 --------------------------------------------------
@@ -111,9 +101,9 @@ findFilesWith filters filepath = _
 
 -}
 
-filterFile :: FileFilters -> Predicate FilePath
+filePredicate :: FileFilters -> Predicate FilePath
 
-filterFile (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
+filePredicate (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
 
   Predicate predicate
 
@@ -185,9 +175,9 @@ isFilePermittedByWhitelist = \case
 
 -}
 
-filterDirectory :: FileFilters -> Predicate FilePath
+directoryPredicate :: FileFilters -> Predicate FilePath
 
-filterDirectory (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
+directoryPredicate (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
 
   Predicate predicate
 
