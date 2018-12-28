@@ -339,6 +339,11 @@ library
                  Skeletor.Haskell.Derived
 
                  Skeletor.Haskell.Find
+                 Skeletor.Haskell.Find.Types
+
+                 Skeletor.Haskell.Chiaroscuro
+                 Skeletor.Haskell.Chiaroscuro.Types
+
                  Skeletor.Haskell.IO
 
                  Skeletor.Haskell.Variable

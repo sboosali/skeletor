@@ -13,9 +13,12 @@ e.g.
 module Skeletor.Haskell.Find where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import Skeletor.Haskell.Types
+import Skeletor.Haskell.Find.Types
+
 import Skeletor.Haskell.Core
 import Skeletor.Haskell.Variable
 
@@ -23,6 +26,12 @@ import Skeletor.Haskell.Variable
 
 import qualified "filemanip"  System.FilePath.Find as Find
 import           "filemanip"  System.FilePath.Find (FindClause)
+import           "filemanip"  System.FilePath.Find
+  ( (~~?), (/~?)
+  , (==?), (/=?)
+  , (>?), (<?), (>=?), (<=?)
+  , (&&?), (||?)
+  )
 
 import           "filemanip"  System.FilePath.GlobPattern ((~~))
 
@@ -53,6 +62,7 @@ import qualified "bytestring" Data.ByteString as B
 import Prelude_skeletor
 
 --------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 {-|
@@ -95,30 +105,46 @@ findFiles = Find.find recursionPredicate filterPredicate
 --------------------------------------------------
 --------------------------------------------------
 
-filterFilePaths :: FilePathFilters -> FindClause Bool
+filterFilePaths :: FilePathFilters -> FindClause FilePath -> FindClause Bool
 filterFilePaths = \case
 
   This  bs    -> filterBlacklist bs
   That  ws    -> filterWhitelist ws
-  These bs ws -> filterBlacklist bs Find.&&? filterWhitelist ws
+  These bs ws -> filterBlacklist bs &&? filterWhitelist ws
 
 --------------------------------------------------
 
-filterBlacklist :: Blacklist -> FindClause Bool
-filterBlacklist (Blacklist bs) =  bs
+filterBlacklist :: Blacklist -> FindClause FilePath -> FindClause Bool
+filterBlacklist (Blacklist bs) = go
+  where
+
+  go filepath = all (filepath /~?) bs
 
 --------------------------------------------------
 
-filterWhitelist :: Whitelist -> FindClause Bool
-filterWhitelist (Whitelist ws) =  ws
+filterWhitelist :: Whitelist -> FindClause FilePath -> FindClause Bool
+filterWhitelist (Whitelist ws) = go
+  where
+
+  go filepath = any (filepath ~~?) ws
 
 --------------------------------------------------
 --------------------------------------------------
 {- Notes / Old Code
 
+infix 4 (~~?) :: FindClause FilePath -> GlobPattern -> FindClause Bool
+
+  Return True if the current file's name matches the given GlobPattern.
+
+infix 4 (/~?) :: FindClause FilePath -> GlobPattern -> FindClause Bool
+
+  Return True if the current file's name does not match the given GlobPattern.
+
+(.&.?) :: Bits a => FindClause a -> a -> FindClause a infixl 7
+
+  This operator is useful to check if bits are set in a FileMode.
+
 --------------------------------------------------
-
-
 
 -}
 --------------------------------------------------

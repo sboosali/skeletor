@@ -1,3 +1,6 @@
+{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE TypeApplications #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -11,16 +14,13 @@ module Skeletor.Haskell.Core where
 --------------------------------------------------
 
 import Skeletor.Haskell.Types
-import Skeletor.Haskell.Variable
+import Skeletor.Haskell.Find.Types
+
+--import Skeletor.Haskell.Variable
 
 --------------------------------------------------
 
-import           "filemanip" System.FilePath.GlobPattern (GlobPattern)
-
---------------------------------------------------
-
-import qualified "containers" Data.Map as Map
-import           "containers" Data.Map (Map)
+--import           "filemanip" System.FilePath.GlobPattern (GlobPattern)
 
 --------------------------------------------------
 
@@ -87,34 +87,50 @@ parseKnownProject :: String -> Maybe KnownProject
 parseKnownProject = \case
 
   "default" -> return DefaultHaskellProject
+  _         -> Nothing           -- TODO MonadThrow and throwM
 
 --------------------------------------------------
+--------------------------------------------------
+
+{- | Default blacklists.
+
+For haskell (@cabal@ & @stack@), emacs, and @nix@ files that are
+local and\/or temporary.
+
+-}
+
+defaultFileFilters :: FileFilters
+defaultFileFilters = ignoredDirectories <> ignoredFiles
+
 --------------------------------------------------
 
 -- | from my standard @.gitignore@.
 
-ignoredDirectories :: [GlobPattern]
+ignoredDirectories :: FileFilters
 ignoredDirectories =
-  [ "dist"
-  , "dist-*"
-  , ".stack-work"
-  , ".cabal-sandbox"
-  , "result"
-  , "result-*"
+
+  [ blacklistedDirectory "dist"
+  , blacklistedDirectory "dist-*"
+  , blacklistedDirectory ".stack-work"
+  , blacklistedDirectory ".cabal-sandbox"
+  , blacklistedDirectory "result"
+  , blacklistedDirectory "result-*"
   ]
 
 --------------------------------------------------
 
 -- | from my standard @.gitignore@.
 
-ignoredFiles :: [GlobPattern]
-ignoredFiles = concat
-  [ haskellFiles
-  , emacsFiles
-  , nixFiles
-  ]
+ignoredFiles :: FileFilters
+ignoredFiles = fromList (blacklistedFile <$> allFiles)
 
   where
+
+  allFiles = concat @[]
+    [ haskellFiles
+    , emacsFiles
+    , nixFiles
+    ]
 
   haskellFiles =
     [ ".ghc.environment.*"

@@ -73,35 +73,110 @@ type FilePathRegex = GlobPattern
 
 --------------------------------------------------
 
+type ChiaroscuroFilter = (Either GlobPattern GlobPattern)
 
+--------------------------------------------------
+
+import "these" Data.These (These(..))
 
 --------------------------------------------------
 
 
+{-| a blacklisted pattern.
+
+= Implementation
+
+@≡ 'Left'@
+
+-}
+
+blacklist :: GlobPattern -> ChiaroscuroFilter
+blacklist = Left
+
+{-| a whitelisted pattern.
+
+= Implementation
+
+@≡ 'Right'@
+
+-}
+
+whitelist :: GlobPattern -> ChiaroscuroFilter
+whitelist = Right
 
 --------------------------------------------------
 
+blacklistChiaroscuroFilter :: (Ord a) => a -> (ChiaroscuroFilters a)
+blacklistChiaroscuroFilter = Set.singleton > go
+  where
 
+  go x = ChiaroscuroFilters (Blacklist x) mempty
 
---------------------------------------------------
+whitelistChiaroscuroFilter :: (Ord a) => a -> (ChiaroscuroFilters a)
+whitelistChiaroscuroFilter = Set.singleton >
+  go
+  where
 
-
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
-
+  go x = ChiaroscuroFilters mempty (Whitelist (Just x))
 
 --------------------------------------------------
 
+{-| a 'ChiaroscuroFilter' is a single value marked as either:
 
+* blacklisted; or
+* whitelisted.
+
+-}
+
+data ChiaroscuroFilter a = ChiaroscuroFilter
+
+  { blacklisted :: !a
+  , whitelisted :: !a
+  }
+
+  deriving stock    (Functor,Foldable,Traversable)
+
+  deriving stock    (Generic,Lift)
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+blacklistChiaroscuroFilter :: (Ord a) => a -> ChiaroscuroFilter a
+blacklistChiaroscuroFilter = 
+
+--------------------------------------------------
+
+whitelistChiaroscuroFilter :: (Ord a) => a -> ChiaroscuroFilter a
+whitelistChiaroscuroFilter = 
+
+--------------------------------------------------
+
+{-| (utility function)
+
+-}
+
+fromFileKind
+  :: FileKind
+  -> (GlobPattern -> [FilePattern])
+
+fromFileKind = \case
+
+  RegularFile   -> RegularPattern   > (:[])
+  DirectoryFile -> DirectoryPattern > (:[])
+  AnyFile       -> mkBoth
+
+  where
+  mkBoth :: GlobPattern -> [FilePattern]
+  mkBoth s = [RegularPattern s, DirectoryPattern s]
+
+--------------------------------------------------
+
+data FileKind
+
+  = RegularFile
+  | DirectoryFile
+  | AnyFile
 
 --------------------------------------------------
 
