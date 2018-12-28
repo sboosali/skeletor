@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Environment Variables whose values are @int@s.
 
 -}
 
@@ -10,6 +10,8 @@ module Skeletor.Core.EnvironmentVariable.Number where
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
+
+import Skeletor.Core.EnvironmentVariable.Types
 
 import Skeletor.Core.EnvironmentVariable.Text
 
@@ -24,8 +26,7 @@ import Skeletor.Core.EnvironmentVariable.Text
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
+import qualified "text" Data.Text as T
 
 --------------------------------------------------
 -- Imports (Custom Prelude) ----------------------
@@ -43,7 +44,7 @@ getEnvironmentNumber ev = do
 
   text <- getEnvironmentText ev
 
-  let int = text <&> parseEnvironmentNumber
+  let int = text >>= parseEnvironmentNumber
 
   pure int
 
@@ -56,20 +57,32 @@ parseEnvironmentNumber text = int
 
   int = go text
 
-  go = 
+  go = T.unpack > readMay
 
 --------------------------------------------------
 --------------------------------------------------
 
 setEnvironmentNumber :: EnvironmentName -> Int -> IO ()
 
-setEnvironmentNumber ev int = do
+setEnvironmentNumber variable int = do
 
-  let text = show int
+  let text = printEnvironmentNumber int
 
-  text <- setEnvironmentText ev
+  setEnvironmentText variable text
 
   nothing
+
+--------------------------------------------------
+--------------------------------------------------
+
+printEnvironmentNumber :: Int -> EnvironmentValue
+
+printEnvironmentNumber int = unsafeEnvironmentValue text
+  where
+
+  text = go int
+
+  go = show > T.pack
 
 --------------------------------------------------
 --------------------------------------------------

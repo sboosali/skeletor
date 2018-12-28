@@ -9,6 +9,8 @@ module Skeletor.Core.EnvironmentVariable.Types
 
   ( module Skeletor.Core.EnvironmentVariable.Types
   , module Skeletor.Core.EnvironmentVariable.Errors
+  , module Skeletor.Core.EnvironmentVariable.Name
+  , module Skeletor.Core.EnvironmentVariable.Value
   ) where
 
 --------------------------------------------------
@@ -16,6 +18,8 @@ module Skeletor.Core.EnvironmentVariable.Types
 --------------------------------------------------
 
 import Skeletor.Core.EnvironmentVariable.Errors
+import Skeletor.Core.EnvironmentVariable.Name
+import Skeletor.Core.EnvironmentVariable.Value
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
@@ -26,11 +30,6 @@ import Skeletor.Core.EnvironmentVariable.Errors
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
 --------------------------------------------------
 
 import qualified "containers" Data.Map as Map

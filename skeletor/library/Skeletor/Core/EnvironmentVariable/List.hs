@@ -3,7 +3,10 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Environment Variables whose values are lists.
+
+Lists are encoded as strings, whose items are separated
+by a separator (i.e. by 'environmentListSeparator').
 
 -}
 
@@ -12,6 +15,8 @@ module Skeletor.Core.EnvironmentVariable.List where
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
+
+import Skeletor.Core.EnvironmentVariable.Types
 
 import Skeletor.Core.EnvironmentVariable.Text
 
@@ -26,14 +31,13 @@ import Skeletor.Core.EnvironmentVariable.Text
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
+import qualified "text" Data.Text as T
 
 --------------------------------------------------
 -- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
 
-import Prelude_location
+import Prelude_location hiding (list)
 
 --------------------------------------------------
 -- Definitions -----------------------------------
@@ -45,7 +49,7 @@ getEnvironmentList ev = do
 
   text <- getEnvironmentText ev
 
-  let list = text <&> parseEnvironmentList
+  let list = text >>= parseEnvironmentList
 
   pure list
 
@@ -53,12 +57,12 @@ getEnvironmentList ev = do
 
 parseEnvironmentList :: Text -> Maybe [Text]
 
-parseEnvironmentList text = list
+parseEnvironmentList text = Just list
   where
 
   list = go text
 
-  go = T.splitOn environmentListSeparator
+  go = T.splitOn (T.singleton environmentListSeparator) -- TODO parse with backslash escaping colons
 
 --------------------------------------------------
 --------------------------------------------------

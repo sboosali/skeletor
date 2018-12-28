@@ -101,6 +101,12 @@ setEnv :: String -> String -> IO ()
 
 --
 
+getEnvironment :: IO [(String, String)]
+
+  getEnvironment retrieves the entire environment as a list of (key,value) pairs.
+  
+  If an environment entry does not contain an '=' character, the key is the whole entry and the value is the empty string.
+
 --
 
 --
@@ -151,3 +157,4 @@ setEnv :: String -> String -> IO ()
 
 -}
 ```
+

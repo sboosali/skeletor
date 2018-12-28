@@ -151,8 +151,8 @@ import Prelude_skeletor
 
 -}
 
-readProject :: ProjectIdentifier -> IO FileTree
-readProject = readProjectByIdentifier
+-- readProject :: ProjectIdentifier -> IO FileTree
+-- readProject = readProjectByIdentifier
 
 --------------------------------------------------
 
@@ -187,8 +187,8 @@ default_findProjectFilesByPath = findFilesWith defaultFileFilters -- TODO
 
 -}
 
-readProjectByIdentifier :: ProjectIdentifier -> IO FileTree
-readProjectByIdentifier = locateProject > readProjectByPath
+-- readProjectByIdentifier :: ProjectIdentifier -> IO FileTree
+-- readProjectByIdentifier = locateProject > readProjectByPath
 
 --------------------------------------------------
 
@@ -196,11 +196,10 @@ readProjectByIdentifier = locateProject > readProjectByPath
 
 -}
 
-readProjectByPath :: FilePath -> IO FileTree
-readProjectByPath project = do
-
-  files <- findProjectFilesByPath project
-  readFileTree files
+-- readProjectByPath :: FilePath -> IO FileTree
+-- readProjectByPath project = do
+--   files <- findProjectFilesByPath project
+--   readFileTree files
 
 --------------------------------------------------
 
@@ -208,22 +207,22 @@ readProjectByPath project = do
 
 -}
 
-readFileTree :: [FilePath] -> IO FileTree
-readFileTree paths = do
+-- readFileTree :: [FilePath] -> IO FileTree
+-- readFileTree paths = do
 
-  filePathsAndContents <- go `traverse` paths  -- TODO error-handling
+--   filePathsAndContents <- go `traverse` paths  -- TODO error-handling
 
-  forced <- forceIO filePathsAndContents  -- TODO error-handling
+--   forced <- forceIO filePathsAndContents  -- TODO error-handling
 
-  let wrapped = fromList forced
+--   let wrapped = fromList forced
 
-  pure wrapped
+--   pure wrapped
 
-  where
+--   where
 
-  go path = do
-    body <- readFile path
-    pure (path, body)
+--   go path = do
+--     body <- readFile path
+--     pure (path, body)
 
 --------------------------------------------------
 --------------------------------------------------

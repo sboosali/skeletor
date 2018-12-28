@@ -50,7 +50,7 @@ import Prelude_skeletor
 
 -}
 
-parseLocation = Location -> Either LocationParseError URI
+parseLocation :: Location -> Either LocationParseError URI
 parseLocation = _
 
 --------------------------------------------------

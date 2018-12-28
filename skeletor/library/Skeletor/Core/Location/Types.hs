@@ -15,7 +15,7 @@ module Skeletor.Core.Location.Types where
 --------------------------------------------------
 --------------------------------------------------
 
--- import Skeletor.Core.
+import Skeletor.Core.EnvironmentVariable
 
 --------------------------------------------------
 -- Imports ---------------------------------------
@@ -26,7 +26,14 @@ import qualified "filepath" System.FilePath as File
 --------------------------------------------------
 --------------------------------------------------
 
+import qualified "unordered-containers" Data.HashMap.Lazy as Map
+import           "unordered-containers" Data.HashMap.Lazy (HashMap)
+
+--------------------------------------------------
+
 import qualified "base" System.IO as IO
+
+--------------------------------------------------
 
 import           "base" Control.Exception (Exception(..))
 
@@ -101,6 +108,43 @@ data LocationDirectory
 
   deriving stock    (Show,Eq,Ord,Generic)
   deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+newtype FileTree = FileTree
+
+  (HashMap FilePath String)         -- TODO Text
+
+  deriving stock    (Show,Read,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+--------------------------------------------------
+
+instance IsList FileTree where
+
+  type Item FileTree = (FilePath, String)
+
+  fromList = Map.fromList > coerce
+  toList   = coerce       > Map.toList
+
+--------------------------------------------------
+
+{-|
+
+@
+≡ 'Map.empty'
+@
+
+-}
+
+emptyFileTree :: FileTree
+emptyFileTree = FileTree Map.empty
 
 --------------------------------------------------
 --------------------------------------------------

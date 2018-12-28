@@ -1,19 +1,14 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Environment Variables whose values are strings
-(i.e. 'Text').
-
-Ultimately, environment variables are all "stringly-typed".
-(Under @DOS@ and under @SH@. Some shells (e.g.
-@Powershell@, @Bash@, @Zsh@, Fish@, etc) have richer types.
+{-| 
 
 -}
 
-module Skeletor.Core.EnvironmentVariable.Text where
+module Skeletor.Core.EnvironmentVariable.Core where
 
 --------------------------------------------------
--- Imports (Project) -----------------------------
+-- Imports (Project/Internal) --------------------
 --------------------------------------------------
 
 import Skeletor.Core.EnvironmentVariable.Types
@@ -22,23 +17,11 @@ import Skeletor.Core.EnvironmentVariable.Types
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
-
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
 import qualified "text" Data.Text as T
-
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
---------------------------------------------------
-
-import "base" System.Environment as Environment
 
 --------------------------------------------------
 -- Imports (Custom Prelude) ----------------------
@@ -47,24 +30,24 @@ import "base" System.Environment as Environment
 import Prelude_location
 
 --------------------------------------------------
--- Definitions -----------------------------------
 --------------------------------------------------
 
-{-| Get the (current) value of the (given) Environment Variable.
+{-| Lookup and parse the current value
+of the (given) "well-named" Environment Variable.
+
+= Platform-Compatibility
+
+NOTE Because .
 
 -}
 
-getEnvironmentText :: EnvironmentName -> IO (Maybe Text)
+getEnvironment
+  :: (FromEnvironment a)
+  => EnvironmentName -> IO (Maybe a)
 
-getEnvironmentText (EnvironmentName name) = do
+getEnvironment (EnvironmentName name) = do
 
-  let name' = name & T.unpack
-
-  value' <- Environment.lookupEnv name'
-
-  let value = value' <&> T.pack
-
-  return value
+  return Nothing                -- TODO
 
 --------------------------------------------------
 --------------------------------------------------
@@ -78,14 +61,33 @@ NOTE Because .
 
 -}
 
-setEnvironmentText :: EnvironmentName -> EnvironmentValue -> IO ()
+setEnvironment
+  :: (ToEnvironment a)
+  => EnvironmentName -> a -> IO ()
 
-setEnvironmentText (EnvironmentName name) (EnvironmentValue value) = do
+setEnvironment (EnvironmentName name) x = do
 
-  let name'  = T.unpack name
-  let value' = T.unpack value
+  let string = T.unpack value
 
-  unsafelySetEnvironmentVariable name' (Just value')
+  unsafelySetEnvironmentVariable name (Just string)
+--------------------------------------------------
+--------------------------------------------------
+
+{-| Unset the (given) "well-named" Environment Variable.
+
+= Platform-Compatibility
+
+NOTE Because .
+
+-}
+
+unsetEnvironment :: EnvironmentName -> IO ()
+
+unsetEnvironment (EnvironmentName name) = do
+
+  let string = T.unpack value
+
+  unsafelySetEnvironmentVariable name Nothing
 
 --------------------------------------------------
 --------------------------------------------------

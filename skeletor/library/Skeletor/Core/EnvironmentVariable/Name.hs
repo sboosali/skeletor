@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Environment Variable names.
 
 -}
 
@@ -10,6 +10,8 @@ module Skeletor.Core.EnvironmentVariable.Name where
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
+
+import Skeletor.Core.EnvironmentVariable.Errors
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
@@ -87,7 +89,7 @@ instance IsString EnvironmentName where
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Unwrap trivially.
+{-| Unwrap an 'EnvironmentName' trivially.
 
 -}
 
@@ -102,8 +104,8 @@ NOTE Exposing the constructor risks invalid @EnvironmentName@s.
 
 -}
 
-unsafeToEnvironmentName :: Text -> EnvironmentName
-unsafeToEnvironmentName = EnvironmentName
+unsafeEnvironmentName :: Text -> EnvironmentName
+unsafeEnvironmentName = EnvironmentName
 
 --------------------------------------------------
 --------------------------------------------------
@@ -150,7 +152,7 @@ NOTE 'mkEnvironmentName' is a partial function. It crashes on:
 
 * empty strings;
 * strings with invalid characters;
-* strings with "unconventional" (\/ "unidiomatic") characters;
+* [TODO- optionally] strings with "unconventional" (\/ "unidiomatic") characters;
 
 -}
 
@@ -160,7 +162,7 @@ mkEnvironmentName text = go text
 
   go = toEnvironmentName > maybe (error msg) id
 
-  msg = "[EnvironmentVariable.EnvironmentName] The following string is not a valid name for a cross-platform environment-variable:\n\n    « " <> show text <> " »\n\n" -- TODO Formatting
+  msg = "[EnvironmentVariable.Name.mkEnvironmentName] The following string is not a valid name for a cross-platform environment-variable:\n\n    « " <> show text <> " »\n\n" -- TODO Formatting
 
 --------------------------------------------------
 --------------------------------------------------

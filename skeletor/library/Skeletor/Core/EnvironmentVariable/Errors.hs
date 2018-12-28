@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Core types.
+{-| Error types.
 
 Errors for Parsing and Validation of Environment Variables' names
 and their values.
@@ -10,6 +10,9 @@ and their values.
 
 * `EnvironmentNameError` — represents invalid names.
 * `EnvironmentValueError` — represents invalid values.
+
+Both are 'Exception's. They can be thrown (directly)
+into a 'MonadThrow' (via 'throwM').
 
 -}
 

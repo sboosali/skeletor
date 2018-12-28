@@ -1,16 +1,12 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Environment Variables whose values are strings
-(i.e. 'Text').
-
-Ultimately, environment variables are all "stringly-typed".
-(Under @DOS@ and under @SH@. Some shells (e.g.
-@Powershell@, @Bash@, @Zsh@, Fish@, etc) have richer types.
+{-| Environment Variables whose values are filepaths
+(i.e. 'FilePath' [TODO: rich type]).
 
 -}
 
-module Skeletor.Core.EnvironmentVariable.Text where
+module Skeletor.Core.EnvironmentVariable.Path where
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
@@ -50,13 +46,20 @@ import Prelude_location
 -- Definitions -----------------------------------
 --------------------------------------------------
 
+type Path = Text                -- TODO
+
+-- newtype Path = Path Strict.ByteString
+
+--------------------------------------------------
+--------------------------------------------------
+
 {-| Get the (current) value of the (given) Environment Variable.
 
 -}
 
-getEnvironmentText :: EnvironmentName -> IO (Maybe Text)
+getEnvironmentPath :: EnvironmentName -> IO (Maybe Path)
 
-getEnvironmentText (EnvironmentName name) = do
+getEnvironmentPath (EnvironmentName name) = do
 
   let name' = name & T.unpack
 
@@ -78,9 +81,9 @@ NOTE Because .
 
 -}
 
-setEnvironmentText :: EnvironmentName -> EnvironmentValue -> IO ()
+setEnvironmentPath :: EnvironmentName -> EnvironmentValue -> IO ()
 
-setEnvironmentText (EnvironmentName name) (EnvironmentValue value) = do
+setEnvironmentPath (EnvironmentName name) (EnvironmentValue value) = do
 
   let name'  = T.unpack name
   let value' = T.unpack value

@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Environment Variables
 
 -}
 
@@ -21,6 +21,9 @@ module Skeletor.Core.EnvironmentVariable
     -- * Environment Variables that are strings (the default, and majority).
   , module Skeletor.Core.EnvironmentVariable.Text
 
+    -- * Environment Variables that are filepaths.
+  , module Skeletor.Core.EnvironmentVariable.Path
+
     -- * Environment Variables that are lists (e.g. @$PATH@).
   , module Skeletor.Core.EnvironmentVariable.List
 
@@ -36,13 +39,13 @@ module Skeletor.Core.EnvironmentVariable
 -- Imports (Project) -----------------------------
 --------------------------------------------------
 
-import Skeletor.Core.EnvironmentVariable
 import Skeletor.Core.EnvironmentVariable.Types
 
 import Skeletor.Core.EnvironmentVariable.Name
 import Skeletor.Core.EnvironmentVariable.Value
 
 import Skeletor.Core.EnvironmentVariable.Text
+import Skeletor.Core.EnvironmentVariable.Path
 import Skeletor.Core.EnvironmentVariable.List
 import Skeletor.Core.EnvironmentVariable.Number
 
@@ -50,41 +53,13 @@ import Skeletor.Core.EnvironmentVariable.Number
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
-
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
-
---------------------------------------------------
-
-import qualified "containers" Data.Map as Map
-import           "containers" Data.Map (Map)
-
---------------------------------------------------
-
-import qualified "text" Data.Text as T
-import           "text" Data.Text (Text)
-
---------------------------------------------------
-
-import "base" Control.Exception (Exception(..))
-
-import "base" System.Environment as Environment
-
 --------------------------------------------------
 -- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
-
-import "base" Prelude (error)
-
---------------------------------------------------
-
-import Prelude_location
 
 --------------------------------------------------
 -- Definitions -----------------------------------

@@ -349,9 +349,11 @@ library
 
                  Skeletor.Core.EnvironmentVariable
                  Skeletor.Core.EnvironmentVariable.Types
+                 Skeletor.Core.EnvironmentVariable.Errors
                  Skeletor.Core.EnvironmentVariable.Name
                  Skeletor.Core.EnvironmentVariable.Value
                  Skeletor.Core.EnvironmentVariable.Text
+                 Skeletor.Core.EnvironmentVariable.Path
                  Skeletor.Core.EnvironmentVariable.List
                  Skeletor.Core.EnvironmentVariable.Number
 

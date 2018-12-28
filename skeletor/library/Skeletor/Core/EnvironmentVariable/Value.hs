@@ -1,7 +1,7 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Environment Variable values.
 
 -}
 
@@ -10,6 +10,8 @@ module Skeletor.Core.EnvironmentVariable.Value where
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
+
+import Skeletor.Core.EnvironmentVariable.Errors
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
@@ -20,11 +22,6 @@ module Skeletor.Core.EnvironmentVariable.Value where
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
 --------------------------------------------------
 
 import qualified "containers" Data.Map as Map
@@ -86,16 +83,56 @@ instance IsString EnvironmentValue where
 --------------------------------------------------
 --------------------------------------------------
 
-toEnvironmentValue :: Text -> Maybe EnvironmentValue
+{-| 
 
-toEnvironmentValue t = _
+-}
+
+toEnvironmentValue :: (MonadThrow m) => Text -> m EnvironmentValue
+
+toEnvironmentValue = EnvironmentValue > return
 
 --------------------------------------------------
 --------------------------------------------------
+
+{-| Unwrap an 'EnvironmentValue' trivially.
+
+-}
 
 fromEnvironmentValue :: EnvironmentValue -> Text
 
 fromEnvironmentValue (EnvironmentValue t) = t
+
+--------------------------------------------------
+
+{-| Wrap trivially (no checks).
+
+NOTE Exposing the constructor risks invalid @EnvironmentValue@s.
+
+-}
+
+unsafeEnvironmentValue :: Text -> EnvironmentValue
+unsafeEnvironmentValue = EnvironmentValue
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+NOTE 'mkEnvironmentValue' is a partial function. It crashes on:
+
+* empty strings;
+* strings with invalid characters;
+* [TODO- optionally] strings with "unconventional" (\/ "unidiomatic") characters;
+
+-}
+
+mkEnvironmentValue :: Text -> EnvironmentValue
+mkEnvironmentValue text = go text
+  where
+
+  go = toEnvironmentValue > maybe (error msg) id
+
+  msg = "[EnvironmentVariable.Value.mkEnvironmentValue] The following string is not a valid value for a cross-platform environment-variable:\n\n    « " <> show text <> " »\n\n" -- TODO Formatting
 
 --------------------------------------------------
 --------------------------------------------------
