@@ -8,6 +8,8 @@ e.g.
 @
 @
 
+Defines utilities: @is{File,Directory}{Unrestricted,Permitted}By*@
+
 -}
 
 module Skeletor.Haskell.Find where
@@ -16,48 +18,40 @@ module Skeletor.Haskell.Find where
 -- Imports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Types
+import Internal.Skeletor.Haskell
+
+--------------------------------------------------
+
+-- import Skeletor.Haskell.Types
 import Skeletor.Haskell.Find.Types
 
-import Skeletor.Haskell.Core
-import Skeletor.Haskell.Variable
+import Skeletor.Haskell.Chiaroscuro
 
 --------------------------------------------------
 
-import qualified "filemanip"  System.FilePath.Find as Find
-import           "filemanip"  System.FilePath.Find (FindClause)
-import           "filemanip"  System.FilePath.Find
-  ( (~~?), (/~?)
-  , (==?), (/=?)
-  , (>?), (<?), (>=?), (<=?)
-  , (&&?), (||?)
+-- import qualified "filemanip"  System.FilePath.Find as Find
+-- import           "filemanip"  System.FilePath.Find (FindClause)
+-- import           "filemanip"  System.FilePath.Find
+--   ( (~~?), (/~?)
+--   , (==?), (/=?)
+--   , (>?), (<?), (>=?), (<=?)
+--   , (&&?), (||?)
+--   )
+
+import           "filemanip"  System.FilePath.GlobPattern
+  ( (~~), (/~)
   )
 
-import           "filemanip"  System.FilePath.GlobPattern ((~~))
-
 --------------------------------------------------
 
-import qualified "containers" Data.Map as Map
-import           "containers" Data.Map (Map)
+-- import qualified "filepath"   System.FilePath as File
 
 --------------------------------------------------
-
-import qualified "filepath"   System.FilePath as File
-
 --------------------------------------------------
 
-import qualified "text"       Data.Text    as T
-import qualified "text"       Data.Text.IO as T
+import "base" Data.Functor.Contravariant (Predicate(..))
 
 --------------------------------------------------
-
-import qualified "bytestring" Data.ByteString as B
-
---import qualified "bytestring" Data.ByteString.Lazy as B
-
---------------------------------------------------
-
---import qualified "base" System.IO as IO
 
 import Prelude_skeletor
 
@@ -67,66 +61,196 @@ import Prelude_skeletor
 
 {-|
 
-Skips 'ignoredDirectories', when descending.
 
-Skips 'ignoredFiles' and non-files, when collecting.
+
+For example, see 'defaultFileFilters', which:
+
+* skips 'ignoredDirectories', when descending (into subdirectories); and
+* skips 'ignoredFiles' and non-files, when collecting (files to return).
 
 -}
 
-findFiles :: FilePathFilters -> FilePath -> IO [FilePath]
-findFiles = Find.find recursionPredicate filterPredicate
+findFilesWith
+  :: FileFilters
+  -> (FilePath -> IO [FilePath])
+
+findFilesWith filters filepath = _
+
+  -- Find.find recursionPredicate filterPredicate filepath
+
+  -- where
+
+  -- recursionPredicate :: FindClause Bool
+  -- recursionPredicate = shouldRecurIntoSubdirectory <$> Find.directory
+
+  -- filterPredicate :: FindClause Bool
+  -- filterPredicate = isRegularFileM Find.&&? isGoodFilenameM
+
+  --   where
+  --   isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
+  --   isGoodFilenameM = (shouldKeepFilename <$> Find.fileName)
+
+  -- shouldRecurIntoSubdirectory :: FilePath -> Bool
+  -- shouldRecurIntoSubdirectory = shouldIgnoreDirectory > not
+
+  -- shouldKeepFilename :: FilePath -> Bool
+  -- shouldKeepFilename = shouldIgnoreFilename > not
+
+  -- shouldIgnoreDirectory :: FilePath -> Bool
+  -- shouldIgnoreDirectory directory =
+  --   any (directory ~~) ignoredDirectories
+
+  -- shouldIgnoreFilename :: FilePath -> Bool
+  -- shouldIgnoreFilename filename =
+  --   any (filename ~~) ignoredFiles
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| Whether the (given) 'FilePath' is accepted by the 'FileFilters'.
+
+-}
+
+filterFile :: FileFilters -> Predicate FilePath
+
+filterFile (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
+
+  Predicate predicate
 
   where
 
-  recursionPredicate :: FindClause Bool
-  recursionPredicate = shouldRecurIntoSubdirectory <$> Find.directory
+  predicate :: FilePath -> Bool
+  predicate filepath
+    = isFileUnrestrictedByBlacklist chiaroscuroBlacklist filepath
+   && isFilePermittedByWhitelist    chiaroscuroWhitelist filepath
 
-  filterPredicate :: FindClause Bool
-  filterPredicate = isRegularFileM Find.&&? isGoodFilenameM
-  
+--------------------------------------------------
+
+{-| Whether the (given) 'FilePath' is not restricted by the 'Blacklist'.
+
+-}
+
+isFileUnrestrictedByBlacklist
+  :: Blacklist FilePattern
+  -> (FilePath -> Bool)
+
+isFileUnrestrictedByBlacklist (Blacklist bs) = go bs
+  where
+
+  go blacklist filepath =
+
+    all_Set (Predicate predicate) blacklist
+
     where
-    isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
-    isGoodFilenameM = (shouldKeepFilename <$> Find.fileName)
 
-  shouldRecurIntoSubdirectory :: FilePath -> Bool
-  shouldRecurIntoSubdirectory = shouldIgnoreDirectory > not
-
-  shouldKeepFilename :: FilePath -> Bool
-  shouldKeepFilename = shouldIgnoreFilename > not
-
-  shouldIgnoreDirectory :: FilePath -> Bool
-  shouldIgnoreDirectory directory =
-    any (directory ~~) ignoredDirectories
-
-  shouldIgnoreFilename :: FilePath -> Bool
-  shouldIgnoreFilename filename =
-    any (filename ~~) ignoredFiles
-
---------------------------------------------------
---------------------------------------------------
-
-filterFilePaths :: FilePathFilters -> FindClause FilePath -> FindClause Bool
-filterFilePaths = \case
-
-  This  bs    -> filterBlacklist bs
-  That  ws    -> filterWhitelist ws
-  These bs ws -> filterBlacklist bs &&? filterWhitelist ws
+    predicate :: FilePattern -> Bool
+    predicate = \case
+      RegularPattern   glob -> (filepath /~ glob)
+      DirectoryPattern _    -> False
 
 --------------------------------------------------
 
-filterBlacklist :: Blacklist -> FindClause FilePath -> FindClause Bool
-filterBlacklist (Blacklist bs) = go
+{-| Whether the (given) regular 'FilePath' is permitted by the 'Whitelist'.
+
+/NOTE/ an empty whitelist (i.e. @('mempty' :: 'Whitelist')@) permits anything.
+
+-}
+
+isFilePermittedByWhitelist
+  :: Whitelist FilePattern
+  -> (FilePath -> Bool)
+
+isFilePermittedByWhitelist = \case
+
+  Whitelist Nothing   -> const True
+  Whitelist (Just ws) -> go ws
+
   where
 
-  go filepath = all (filepath /~?) bs
+  go whitelist filepath =
+
+    any_Set (Predicate predicate) whitelist
+
+    where
+
+    predicate :: FilePattern -> Bool
+    predicate = \case
+      RegularPattern   _    -> False
+      DirectoryPattern glob -> (filepath ~~ glob)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| Whether the (given) directory 'FilePath' is accepted by the 'FileFilters'.
+
+-}
+
+filterDirectory :: FileFilters -> Predicate FilePath
+
+filterDirectory (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
+
+  Predicate predicate
+
+  where
+
+  predicate :: FilePath -> Bool
+  predicate filepath
+    = isDirectoryUnrestrictedByBlacklist chiaroscuroBlacklist filepath
+   && isDirectoryPermittedByWhitelist    chiaroscuroWhitelist filepath
 
 --------------------------------------------------
 
-filterWhitelist :: Whitelist -> FindClause FilePath -> FindClause Bool
-filterWhitelist (Whitelist ws) = go
+{-| Whether the (given) 'FilePath' is not restricted by the 'Blacklist'.
+
+-}
+
+isDirectoryUnrestrictedByBlacklist
+  :: Blacklist FilePattern
+  -> (FilePath -> Bool)
+
+isDirectoryUnrestrictedByBlacklist (Blacklist bs) = go bs
   where
 
-  go filepath = any (filepath ~~?) ws
+  go blacklist filepath =
+
+    all_Set (Predicate predicate) blacklist
+
+    where
+
+    predicate :: FilePattern -> Bool
+    predicate = \case
+      RegularPattern   glob -> (filepath /~ glob)
+      DirectoryPattern _    -> False
+
+--------------------------------------------------
+
+{-| Whether the (given) regular 'FilePath' is permitted by the 'Whitelist'.
+
+/NOTE/ an empty whitelist (i.e. @('mempty' :: 'Whitelist')@) permits anything.
+
+-}
+
+isDirectoryPermittedByWhitelist
+  :: Whitelist FilePattern
+  -> (FilePath -> Bool)
+
+isDirectoryPermittedByWhitelist = \case
+
+  Whitelist Nothing   -> const True
+  Whitelist (Just ws) -> go ws
+
+  where
+
+  go whitelist filepath =
+
+    any_Set (Predicate predicate) whitelist
+
+    where
+
+    predicate :: FilePattern -> Bool
+    predicate = \case
+      RegularPattern   _    -> False
+      DirectoryPattern glob -> (filepath ~~ glob)
 
 --------------------------------------------------
 --------------------------------------------------

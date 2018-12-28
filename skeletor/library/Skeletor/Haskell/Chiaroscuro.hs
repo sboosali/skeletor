@@ -9,11 +9,17 @@
 
 -}
 
-module Skeletor.Haskell.Chiaroscuro where
+module Skeletor.Haskell.Chiaroscuro
+
+  ( module Skeletor.Haskell.Chiaroscuro.Types
+--, module Skeletor.Haskell.Chiaroscuro
+  ) where
 
 --------------------------------------------------
 -- Imports ---------------------------------------
 --------------------------------------------------
+
+import Skeletor.Haskell.Chiaroscuro.Types
 
 --------------------------------------------------
 --------------------------------------------------

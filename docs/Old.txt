@@ -180,15 +180,59 @@ data FileKind
 
 --------------------------------------------------
 
+filterFilePaths :: FilePathFilters -> FindClause FilePath -> FindClause Bool
+filterFilePaths = \case
 
+  This  bs    -> filterBlacklist bs
+  That  ws    -> filterWhitelist ws
+  These bs ws -> filterBlacklist bs &&? filterWhitelist ws
 
 --------------------------------------------------
 
+filterFilesClause
+  :: FileFilters
+  -> (FindClause FilePath -> FindClause Bool)
 
+filterFilesClause (ChiaroscuroFilters{ chiaroscuroBlacklist, chiaroscuroWhitelist }) =
+
+  filterBlacklist chiaroscuroBlacklist &&? filterWhitelist chiaroscuroWhitelist
+
+filterBlacklistClause
+  :: Blacklist
+  -> (FindClause FilePath -> FindClause Bool)
+
+filterBlacklistClause (Blacklist bs) = go bs
+  where
+
+  go blacklist = \filepath ->
+
+    all (filepath /~?) blacklist
+
+filterWhitelistClause
+  :: Whitelist
+  -> (FindClause FilePath -> FindClause Bool)
+
+filterWhitelistClause = \case
+
+  Nothing             -> const (pure True)
+
+  Just (Whitelist ws) -> go ws
+  where
+
+  go whitelist = \filepath ->
+
+    any (filepath ~~?) whitelist
 
 --------------------------------------------------
 
+import qualified "containers" Data.Set as Set
+import           "containers" Data.Set (Set)
 
+import qualified "text"       Data.Text    as T
+import qualified "text"       Data.Text.IO as T
+
+import qualified "bytestring" Data.ByteString as B
+--import qualified "bytestring" Data.ByteString.Lazy as B
 
 --------------------------------------------------
 

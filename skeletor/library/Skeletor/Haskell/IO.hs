@@ -118,6 +118,8 @@ module Skeletor.Haskell.IO where
 --------------------------------------------------
 
 import Skeletor.Haskell.Types
+
+import Skeletor.Haskell.Find
 import Skeletor.Haskell.Core
 import Skeletor.Haskell.Variable
 
@@ -185,40 +187,10 @@ findProjectFilesByIdentifier = locateProject > findProjectFilesByPath
 
 {-|
 
-Skips 'ignoredDirectories', when descending.
-
-Skips 'ignoredFiles' and non-files, when collecting.
-
 -}
 
-findProjectFilesByPath :: FilePath -> IO [FilePath]
-findProjectFilesByPath = Find.find recursionPredicate filterPredicate
-
-  where
-
-  recursionPredicate :: FindClause Bool
-  recursionPredicate = shouldRecurIntoSubdirectory <$> Find.directory
-
-  filterPredicate :: FindClause Bool
-  filterPredicate = isRegularFileM Find.&&? isGoodFilenameM
-  
-    where
-    isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
-    isGoodFilenameM = (shouldKeepFilename <$> Find.fileName)
-
-  shouldRecurIntoSubdirectory :: FilePath -> Bool
-  shouldRecurIntoSubdirectory = shouldIgnoreDirectory > not
-
-  shouldKeepFilename :: FilePath -> Bool
-  shouldKeepFilename = shouldIgnoreFilename > not
-
-  shouldIgnoreDirectory :: FilePath -> Bool
-  shouldIgnoreDirectory directory =
-    any (directory ~~) ignoredDirectories
-
-  shouldIgnoreFilename :: FilePath -> Bool
-  shouldIgnoreFilename filename =
-    any (filename ~~) ignoredFiles
+default_findProjectFilesByPath :: FilePath -> IO [FilePath]
+default_findProjectFilesByPath = findFilesWith defaultFileFilters -- TODO
 
 --------------------------------------------------
 --------------------------------------------------
@@ -277,6 +249,9 @@ readFileTree paths = do
 -}
 
 --findFiles
+
+findProjectFilesByPath :: FilePath -> IO [FilePath]
+findProjectFilesByPath = _      -- TODO
 
 --------------------------------------------------
 --------------------------------------------------
