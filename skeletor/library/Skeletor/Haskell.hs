@@ -5,7 +5,7 @@
 
 = Usage
 
-@import qualified "skeletor" Skeletor.Haskell as Skeletor
+@import qualified "skeletor" Skeletor.Haskell as Skeletor.Haskell
 @
 
 -}

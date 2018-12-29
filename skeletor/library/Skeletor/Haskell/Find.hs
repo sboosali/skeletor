@@ -74,9 +74,9 @@ findFilesWith
   :: FileFilters
   -> (FilePath -> IO [FilePath])
 
-findFilesWith filters filepath =
+findFilesWith filters filepath = {-TODO ((fmap.fmap) RegularFile) -}
 
-  Find.find shouldDescendM shouldCollectM filepath
+  (Find.find shouldDescendM shouldCollectM filepath)
 
   where
 
@@ -86,10 +86,10 @@ findFilesWith filters filepath =
   shouldCollectM :: FindClause Bool
   shouldCollectM = isRegularFileM Find.&&? (shouldCollect <$> Find.fileName)
     where
-    isRegularFileM  = (Find.fileType Find.==? Find.RegularFile)
+    isRegularFileM = (Find.fileType Find.==? Find.RegularFile)
 
   shouldDescend :: FilePath -> Bool
-  Predicate shouldDescend = (directoryPredicate filters)
+  Predicate shouldDescend = directoryPredicate filters
 
   shouldCollect :: FilePath -> Bool
   shouldCollect = (directoryPredicate filters) & getPredicate
@@ -136,7 +136,7 @@ isFileUnrestrictedByBlacklist (Blacklist bs) = go bs
     predicate :: FilePattern -> Bool
     predicate = \case
       RegularPattern   glob -> (filepath /~ glob)
-      DirectoryPattern _    -> False
+      DirectoryPattern _    -> True
 
 --------------------------------------------------
 
@@ -165,8 +165,8 @@ isFilePermittedByWhitelist = \case
 
     predicate :: FilePattern -> Bool
     predicate = \case
-      RegularPattern   _    -> False
-      DirectoryPattern glob -> (filepath ~~ glob)
+      RegularPattern   glob -> (filepath ~~ glob)
+      DirectoryPattern _    -> False
 
 --------------------------------------------------
 --------------------------------------------------
@@ -209,8 +209,8 @@ isDirectoryUnrestrictedByBlacklist (Blacklist bs) = go bs
 
     predicate :: FilePattern -> Bool
     predicate = \case
-      RegularPattern   glob -> (filepath /~ glob)
-      DirectoryPattern _    -> False
+      RegularPattern   _    -> True
+      DirectoryPattern glob -> (filepath /~ glob)
 
 --------------------------------------------------
 

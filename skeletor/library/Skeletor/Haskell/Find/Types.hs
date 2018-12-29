@@ -58,10 +58,34 @@ type FileFilter = ChiaroscuroFilter FilePattern
 * a (regular) file; or
 * a directory;
 
-NOTE 'GlobPattern's are not regular expressions; they have only two operators:
+= GlobPattern Syntax
+
+NOTE 'GlobPattern's are not regular expressions; they have only two operators: TODO no there's more
 
 * the single-asterisk, representing one-or-more of any-character.
 * the double-asterisk, representing one-or-more (sub)directories. 
+
+From @filemanip@'s documentation:
+
+Basic glob pattern syntax is the same as for the Unix shell
+environment.
+
+* @*@ matches everything up to a directory separator or end of
+string.
+
+* @[/range/]@ matches any character in /range/.
+
+* @[!/range/]@ matches any character /not/ in /range/.
+
+There are three extensions to the traditional glob syntax, taken
+from modern Unix shells.
+
+* @\\@ escapes a character that might otherwise have special
+meaning.  For a literal @\"\\\"@ character, use @\"\\\\\"@.
+
+* @**@ matches everything, including a directory separator.
+
+* @(/s1/|/s2/|/.../)@ matches any of the strings /s1/, /s2/, etc.
 
 -}
 
@@ -77,14 +101,33 @@ data FilePattern
 --------------------------------------------------
 --------------------------------------------------
 
+{-| a (simplified) 'File' is a path ('FilePattern') to either:
+
+* a (regular) file; or
+* a directory;
+
+-}
+
+data File
+
+  = RegularFile   FilePath
+  | DirectoryFile FilePath
+
+  deriving stock    (Generic,Lift)
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
 {-| a 'FileKind' is a (subset) of the kinds of files.
 
 -}
 
 data FileKind
 
-  = RegularFile
-  | DirectoryFile
+  = REGULAR
+  | DIRECTORY
 
   deriving stock    (Enum,Bounded,Ix)
   deriving anyclass (GEnum)
@@ -103,7 +146,7 @@ data FileKind
 -}
 
 blacklistedFile :: GlobPattern -> FileFilter
-blacklistedFile = blacklistedPatternOf RegularFile
+blacklistedFile = blacklistedPatternOf REGULAR
 
 --------------------------------------------------
 
@@ -112,7 +155,7 @@ blacklistedFile = blacklistedPatternOf RegularFile
 -}
 
 whitelistedFile :: GlobPattern -> FileFilter
-whitelistedFile = whitelistedPatternOf RegularFile
+whitelistedFile = whitelistedPatternOf REGULAR
 
 --------------------------------------------------
 
@@ -121,7 +164,7 @@ whitelistedFile = whitelistedPatternOf RegularFile
 -}
 
 blacklistedDirectory :: GlobPattern -> FileFilter
-blacklistedDirectory = blacklistedPatternOf DirectoryFile
+blacklistedDirectory = blacklistedPatternOf DIRECTORY
 
 --------------------------------------------------
 
@@ -130,7 +173,7 @@ blacklistedDirectory = blacklistedPatternOf DirectoryFile
 -}
 
 whitelistedDirectory :: GlobPattern -> FileFilter
-whitelistedDirectory = whitelistedPatternOf DirectoryFile
+whitelistedDirectory = whitelistedPatternOf DIRECTORY
 
 --------------------------------------------------
 --------------------------------------------------
@@ -163,8 +206,8 @@ fromFileKind
 
 fromFileKind = \case
 
-  RegularFile   -> RegularPattern   
-  DirectoryFile -> DirectoryPattern 
+  REGULAR   -> RegularPattern   
+  DIRECTORY -> DirectoryPattern 
 
 --------------------------------------------------
 --------------------------------------------------

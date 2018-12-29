@@ -337,58 +337,62 @@ library
 
  ------------------------------
  ------------------------------
- exposed-modules:
+ exposed-modules: Skeletor
 
-                 Skeletor.Core
-                 Skeletor.Core.Types
+                  ------------
 
-                 Skeletor.Core.Fetch
+                  Skeletor.Core
+                  Skeletor.Core.Types
 
-                 Skeletor.Core.Location
-                 Skeletor.Core.Location.Types
+                  Skeletor.Core.Fetch
 
-                 Skeletor.Core.EnvironmentVariable
-                 Skeletor.Core.EnvironmentVariable.Types
-                 Skeletor.Core.EnvironmentVariable.Errors
-                 Skeletor.Core.EnvironmentVariable.Name
-                 Skeletor.Core.EnvironmentVariable.Value
-                 Skeletor.Core.EnvironmentVariable.Text
-                 Skeletor.Core.EnvironmentVariable.Path
-                 Skeletor.Core.EnvironmentVariable.List
-                 Skeletor.Core.EnvironmentVariable.Number
+                  Skeletor.Core.Location
+                  Skeletor.Core.Location.Types
 
-                 --------------
+                  Skeletor.Core.EnvironmentVariable
+                  Skeletor.Core.EnvironmentVariable.Types
+                  Skeletor.Core.EnvironmentVariable.Errors
+                  Skeletor.Core.EnvironmentVariable.Name
+                  Skeletor.Core.EnvironmentVariable.Value
+                  Skeletor.Core.EnvironmentVariable.Text
+                  Skeletor.Core.EnvironmentVariable.Path
+                  Skeletor.Core.EnvironmentVariable.List
+                  Skeletor.Core.EnvironmentVariable.Number
 
-                 Skeletor.Haskell
-                 Skeletor.Haskell.Types
+                  ------------
 
-                 Skeletor.Haskell.Core
-                 Skeletor.Haskell.Derived
+                  Skeletor.Haskell
+                  Skeletor.Haskell.Types
 
-                 Skeletor.Haskell.Find
-                 Skeletor.Haskell.Find.Types
+                  Skeletor.Haskell.Core
+                  Skeletor.Haskell.Derived
 
-                 Skeletor.Haskell.Chiaroscuro
-                 Skeletor.Haskell.Chiaroscuro.Types
+                  Skeletor.Haskell.Find
+                  Skeletor.Haskell.Find.Types
 
-                 Skeletor.Haskell.IO
-                 Skeletor.Haskell.Fetch
+                  Skeletor.Haskell.Chiaroscuro
+                  Skeletor.Haskell.Chiaroscuro.Types
 
-                 Skeletor.Haskell.Variable
-                 Skeletor.Haskell.Variable.Types
-                 Skeletor.Haskell.Variable.Values
+                  Skeletor.Haskell.IO
+                  Skeletor.Haskell.Fetch
 
-                 --------------
+                  Skeletor.Haskell.Variable
+                  Skeletor.Haskell.Variable.Types
+                  Skeletor.Haskell.Variable.Values
 
-                 Internal.Skeletor.Haskell
-                 Prelude_skeletor
+                  Skeletor.Haskell.Turtle
 
-                 --------------
+                  ------------
 
-                 Skeletor.Haskell.Location
-                 Prelude_location
+                  Internal.Skeletor.Haskell
+                  Prelude_skeletor
 
-                 --------------
+                  ------------
+
+                  Skeletor.Haskell.Location
+                  Prelude_location
+
+                  ------------
 
  other-modules: Paths_skeletor
 
@@ -438,6 +442,7 @@ library
              , filepath
              , directory
              , filemanip
+             , turtle    >= 1.5
 
    --------------------
    -- web libraries.

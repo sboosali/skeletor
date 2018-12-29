@@ -109,7 +109,17 @@ getEnvironment :: IO [(String, String)]
 
 --
 
+data FileType = BlockDevice
+              | CharacterDevice
+              | NamedPipe
+              | RegularFile
+              | Directory
+              | SymbolicLink
+              | Socket
+              | Unknown
+
 --
+
 
 --
 

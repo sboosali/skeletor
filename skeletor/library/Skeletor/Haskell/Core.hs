@@ -110,11 +110,14 @@ ignoredDirectories :: FileFilters
 ignoredDirectories =
 
   [ blacklistedDirectory "dist"
+  , blacklistedDirectory "dist-newstyle"
   , blacklistedDirectory "dist-*"
   , blacklistedDirectory ".stack-work"
   , blacklistedDirectory ".cabal-sandbox"
   , blacklistedDirectory "result"
   , blacklistedDirectory "result-*"
+
+  , blacklistedDirectory "/home/sboo/haskell/skeletor/projects/default/dist-newstyle" --TODO
   ]
 
 --------------------------------------------------
@@ -153,15 +156,6 @@ ignoredFiles = fromList (blacklistedFile <$> allFiles)
   nixFiles =
     [ "result"
     ]
-
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
-
 
 --------------------------------------------------
 --------------------------------------------------
