@@ -9,25 +9,42 @@
 
 -}
 
-module Skeletor.Haskell.Types where
+module Skeletor.Haskell.Types
+
+  ( module Skeletor.Haskell.Types
+  , module Skeletor.Haskell.Binding.Types
+  , module Skeletor.Haskell.Variable.Types
+  ) where
 
 --------------------------------------------------
--- Imports ---------------------------------------
+-- Exports ---------------------------------------
+--------------------------------------------------
+
+import Skeletor.Haskell.Binding.Types
+import Skeletor.Haskell.Variable.Types
+
+--------------------------------------------------
+-- Imports (Project) -----------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Imports (External) ----------------------------
 --------------------------------------------------
 
 import qualified "unordered-containers" Data.HashMap.Lazy as HashMap
 import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
 --------------------------------------------------
+-- Imports (Standard Library) --------------------
 --------------------------------------------------
 
-import qualified "containers" Data.Map as Map
-import           "containers" Data.Map (Map)
+import           "text" Data.Text (Text)
 
 --------------------------------------------------
+-- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
 
-import Prelude_skeletor
+import Prelude_skeletor hiding (Text)
 
 --------------------------------------------------
 -- Types -----------------------------------------
@@ -200,6 +217,49 @@ data TemplateFile = TemplateFile
 
   { 
   }
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data SrcDst = SrcDst
+
+  { input  :: Src
+  , output :: Dst
+  }
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|  
+
+-}
+
+data Src
+
+  = SrcStdin
+  | SrcFile  FilePath
+  | SrcLines [Text]
+
+  deriving stock    (Show,Read,Eq,Ord,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+{-|  
+
+-}
+
+data Dst
+
+  = DstStdout
+  | DstFile   FilePath
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
 --------------------------------------------------

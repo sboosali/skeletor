@@ -376,6 +376,9 @@ library
                   Skeletor.Haskell.IO
                   Skeletor.Haskell.Fetch
 
+                  Skeletor.Haskell.Binding
+                  Skeletor.Haskell.Binding.Types
+
                   Skeletor.Haskell.Variable
                   Skeletor.Haskell.Variable.Types
                   Skeletor.Haskell.Variable.Values
@@ -456,6 +459,7 @@ library
 
    --          , lens
    --          , generic-lens
+             , dhall
               
    --------------------
    -- (miscellaneous libraries).
