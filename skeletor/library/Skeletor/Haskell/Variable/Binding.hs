@@ -5,17 +5,17 @@
 
 -}
 
-module Skeletor.Haskell.Binding
+module Skeletor.Haskell.Variable.Binding
 
-  ( module Skeletor.Haskell.Binding.Types
---, module Skeletor.Haskell.Binding
+  ( module Skeletor.Haskell.Variable.Binding.Types
+--, module Skeletor.Haskell.Variable.Binding
   ) where
 
 --------------------------------------------------
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Binding.Types
+import Skeletor.Haskell.Variable.Binding.Types
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
@@ -41,7 +41,7 @@ import Skeletor.Haskell.Binding.Types
 -- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
 
-import Prelude_skeletor
+--import Prelude_skeletor
 
 --------------------------------------------------
 -- Definitions -----------------------------------

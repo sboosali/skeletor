@@ -26,10 +26,13 @@ module Skeletor.Haskell
 
     -- * Read (or Copy) and parse Project Files.
   , module Skeletor.Haskell.IO
-  
+
     -- * Find Files (like @findutils@' @find@ program).
   , module Skeletor.Haskell.Find
-  
+
+    -- * Scripting (via the @turtle@ package).
+  , module Skeletor.Haskell.Turtle
+
   ) where
 
 --------------------------------------------------
@@ -40,6 +43,7 @@ import Skeletor.Haskell.Derived
 import Skeletor.Haskell.Variable
 import Skeletor.Haskell.IO
 import Skeletor.Haskell.Find
+import Skeletor.Haskell.Turtle
 
 --------------------------------------------------
 --------------------------------------------------

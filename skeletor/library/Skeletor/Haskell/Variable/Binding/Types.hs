@@ -5,7 +5,7 @@
 
 -}
 
-module Skeletor.Haskell.Binding.Types where
+module Skeletor.Haskell.Variable.Binding.Types where
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
