@@ -2,8 +2,34 @@
 
 (N.B. this is an incoherent reference document for the library author).
 
-## The Filesystem
+## Templates
 
+e.g.
+
+
+```haskell
+>>> :set -XOverloadedStrings -XOverloadedLists
+>>> sedTemplate (TemplateBinding [ ("", ""), ("", "") ]) (SrcDst { input  = "", output = "" })
+```
+
+## Usage
+
+e.g.
+
+
+```haskell
+sedTemplate
+
+  (TemplateBinding [ ("", "")
+                   , ("", "")
+                   ])
+
+  SrcDst { input  = ""
+         , output = ""
+         }
+```
+
+## The Filesystem
 
 
 

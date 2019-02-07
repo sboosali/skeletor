@@ -376,8 +376,8 @@ library
                   Skeletor.Haskell.IO
                   Skeletor.Haskell.Fetch
 
-                  Skeletor.Haskell.Binding
-                  Skeletor.Haskell.Binding.Types
+                  Skeletor.Haskell.Variable.Binding
+                  Skeletor.Haskell.Variable.Binding.Types
 
                   Skeletor.Haskell.Variable
                   Skeletor.Haskell.Variable.Types
@@ -451,7 +451,14 @@ library
    -- web libraries.
    --------------------
 
+             , http-client
              , modern-uri
+
+   --------------------
+   -- terminal libraries.
+   --------------------
+
+             , terminal
 
    --------------------
    -- records libraries.

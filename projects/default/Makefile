@@ -96,6 +96,8 @@ CheckNix?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
+Cabal2nix ?=cabal2nix
+
 ##################################################
 # Makefile Variables: File/Directory Paths
 ##################################################
@@ -257,6 +259,15 @@ configure-7-10:
 	$(Cabal) $(EnableNix) new-configure -w ghc-7.10.3
 
 .PHONY: configure-7-10
+
+##################################################
+# Nix: generate and validate `.nix` files
+##################################################
+
+shell.nix: $(DefaultPackageName)/*.cabal
+	$(Cabal2nix) --shell $(DefaultPackageName)/*.cabal > $@
+
+#------------------------------------------------#
 
 ##################################################
 # Configuring: install non-Haskell dependencies.

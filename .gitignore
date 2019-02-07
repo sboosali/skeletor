@@ -27,6 +27,7 @@ dist/
 # nix
 result-*/
 result/
+result
 
 # Emacs
 *~
