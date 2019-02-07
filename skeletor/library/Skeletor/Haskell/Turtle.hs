@@ -55,6 +55,20 @@ import Prelude_skeletor hiding (Text)
 
 {-| Run @sed@ on the given template file with the given substitutions.
 
+e.g.
+
+@
+sedTemplate
+
+  (TemplateBinding [ ("xxx-package-xxx", "example-package")
+                   , ("Xxx_Module_xxX",  "ExamplePackage")
+                   ])
+
+  SrcDst { input  = "~/haskell/skeletor/projects/default/xxx-package-xxx/xxx-package-xxx.cabal"
+         , output = "/tmp/skeletor/default/xxx-package-xxx/xxx-package-xxx.cabal"
+         }
+@
+
 -}
 
 -- :: _ -> _
@@ -86,7 +100,7 @@ sedTemplate (TemplateBinding bindings) SrcDst{ input, output } =
   patterns = getAlt (bindings & Map.foldMapWithKey toPatternAny)
 
   toPatternAny :: Text -> Text -> Alt Pattern Text
-  toPatternAny variable value = Alt (value <$ H.has (H.text variable))
+  toPatternAny variable value = Alt (H.has (H.text variable) $> value)
 
 --------------------------------------------------
 --------------------------------------------------

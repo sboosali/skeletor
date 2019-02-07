@@ -125,10 +125,10 @@ import Skeletor.Haskell.Core
 
 --------------------------------------------------
 
-import qualified "filemanip"  System.FilePath.Find as Find
-import           "filemanip"  System.FilePath.Find (FindClause)
+--import qualified "filemanip"  System.FilePath.Find as Find
+--import           "filemanip"  System.FilePath.Find (FindClause)
 
-import           "filemanip"  System.FilePath.GlobPattern ((~~))
+--import           "filemanip"  System.FilePath.GlobPattern ((~~))
 
 --------------------------------------------------
 

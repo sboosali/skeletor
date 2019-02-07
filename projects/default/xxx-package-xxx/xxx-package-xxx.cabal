@@ -34,7 +34,7 @@ category: __Categories__
 
 --------------------------------------------------
 
-description: __Synopsis__
+description: __Synopsis__.
              .
              __Description__
              .
@@ -65,7 +65,7 @@ tested-with: GHC   == 8.6.3
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
-copyright:           2018 __Name__
+copyright:           2019 __Name__
 
 -- license:             GPL-3.0-or-later
 -- license:             BSD-4-Clause
@@ -76,6 +76,7 @@ copyright:           2018 __Name__
 
 extra-source-files: README.md
                     LICENSE.txt
+                    CHANGELOG.md
 
   --TODO: how to include project files (parent directory) in package?
   --
@@ -102,8 +103,8 @@ data-files: golden/*.txt
 -- Repository ------------------------------------
 --------------------------------------------------
 
-homepage:            http://github.com/__GithubUser__/__Repository__#readme
-bug-reports:         http://github.com/__GithubUser__/__Repository__/issues
+homepage:    https://github.com/__GithubUser__/__Repository__#readme
+bug-reports: https://github.com/__GithubUser__/__Repository__/issues
 
 --------------------------------------------------
 
@@ -127,7 +128,7 @@ flag develop
 
   default:     False
 
-  description: Dynamic checking and exposed internals (for development).
+  description: Exposed internals and/or dynamic typechecking (for development).
 
   manual:      True
 
@@ -416,6 +417,7 @@ common Haskell2020Library
  if impl(ghc >= 8.6)
 
     default-extensions: StarIsType
+                      , BlockArguments
 
     -- ^ Enabling « StarIsType » is necessary for forwards-compatibility.
     --
@@ -603,6 +605,14 @@ library
   --------------------
 
              -- , pkg
+
+ -----------------------------
+
+ -- -- « if !os(posix) »
+ -- if !(os(linux) || os(darwin) || os(aix) || os(hpux) || os(irix) || os(solaris) || os(freebsd) || os(opennbsd) || os(netbsd) || os(ios) || os(android) || os(hurd) || os(halvm))
+ --    buildable: false
+
+ -----------------------------
 
 --------------------------------------------------
 -- Tests -----------------------------------------

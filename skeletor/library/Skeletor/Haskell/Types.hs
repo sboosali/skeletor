@@ -12,7 +12,7 @@
 module Skeletor.Haskell.Types
 
   ( module Skeletor.Haskell.Types
-  , module Skeletor.Haskell.Binding.Types
+  , module Skeletor.Haskell.Variable.Binding.Types
   , module Skeletor.Haskell.Variable.Types
   ) where
 
@@ -20,7 +20,7 @@ module Skeletor.Haskell.Types
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Binding.Types
+import Skeletor.Haskell.Variable.Binding.Types
 import Skeletor.Haskell.Variable.Types
 
 --------------------------------------------------
@@ -249,6 +249,12 @@ data Src
 
 --------------------------------------------------
 
+instance IsString Src where
+  fromString = SrcFile
+
+--------------------------------------------------
+--------------------------------------------------
+
 {-|  
 
 -}
@@ -260,6 +266,11 @@ data Dst
 
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+instance IsString Dst where
+  fromString = DstFile
 
 --------------------------------------------------
 --------------------------------------------------

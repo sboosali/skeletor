@@ -39,8 +39,8 @@ import Prelude_skeletor
 
 {-|
 
-'ChiaroscuroFilters' is a pair of filters (a blacklist and a whitelist)
-of 'GlobPattern's.
+'ChiaroscuroFilters' is a pair (i.e. a blacklist and a whitelist)
+of filters on 'GlobPattern's.
 
 @≡ 'These' 'emptyBlacklist' 'fullWhitelist'@
 

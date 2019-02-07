@@ -13,7 +13,7 @@ module Skeletor.Haskell.Derived where
 --------------------------------------------------
 
 --import Skeletor.Haskell.Types
---import Skeletor.Haskell.Core
+import Skeletor.Haskell.Core
 
 --------------------------------------------------
 
