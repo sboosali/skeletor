@@ -346,9 +346,14 @@ library
 
                   Skeletor.Core.File
                   Skeletor.Core.File.Types
+                  Skeletor.Core.File.Read
 
                   Skeletor.Core.FileTree
                   Skeletor.Core.FileTree.Types
+
+                  Skeletor.Core.URI
+                  Skeletor.Core.URI.Types
+                  Skeletor.Core.URI.Read
 
                   Skeletor.Core.Fetch
 
