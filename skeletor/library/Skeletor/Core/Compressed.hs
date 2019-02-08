@@ -10,6 +10,11 @@ module Skeletor.Core.Compressed where
 --------------------------------------------------
 --------------------------------------------------
 
+import Skeletor.Core.File.Types
+
+--------------------------------------------------
+--------------------------------------------------
+
 import qualified "zlib" Codec.Compression.GZip as GZip
 import qualified "zlib" Codec.Compression.Zlib as Zlib
 

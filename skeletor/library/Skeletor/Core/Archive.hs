@@ -10,6 +10,11 @@ module Skeletor.Core.Archive where
 --------------------------------------------------
 --------------------------------------------------
 
+import Skeletor.Core.File.Types
+
+--------------------------------------------------
+--------------------------------------------------
+
 import qualified "tar" Codec.Archive.Tar as Tar
 
 --------------------------------------------------
@@ -19,7 +24,13 @@ import qualified "bytestring" Data.ByteString.Lazy as ByteString
 --------------------------------------------------
 --------------------------------------------------
 
+{-| De-archive the (given) archive;
+into a directory (of files).
 
+-}
+
+readArchive :: ArchiveFile -> IO (_)
+readArchive = _
 
 --------------------------------------------------
 --------------------------------------------------

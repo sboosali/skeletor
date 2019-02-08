@@ -124,27 +124,6 @@ newtype FileTree = FileTree
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
---------------------------------------------------
-
-instance IsList FileTree where
-
-  type Item FileTree = (FilePath, String)
-
-  fromList = Map.fromList > coerce
-  toList   = coerce       > Map.toList
-
---------------------------------------------------
-
-{-|
-
-@
-≡ 'Map.empty'
-@
-
--}
-
-emptyFileTree :: FileTree
-emptyFileTree = FileTree Map.empty
 
 --------------------------------------------------
 --------------------------------------------------

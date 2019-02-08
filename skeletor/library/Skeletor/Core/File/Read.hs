@@ -7,11 +7,23 @@
 
 -}
 
-module Skeletor.Core.File.Read where
+module Skeletor.Core.File.Read
 
+  ( readTarball
+  , readArchive
+  , readCompressed
+  , readUTF8
+
+  ) where
+
+--------------------------------------------------
 --------------------------------------------------
 
 import Skeletor.Core.File.Types
+
+import Skeletor.Core.Tarball    (readTarball)
+import Skeletor.Core.Compressed (readCompressed)
+import Skeletor.Core.Archive    (readArchive)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -62,16 +74,6 @@ into a directory (of files).
 
 readTarball :: TarballFile -> IO (_)
 readTarball = _
-
---------------------------------------------------
-
-{-| De-archive the (given) archive;
-into a directory (of files).
-
--}
-
-readArchive :: ArchiveFile -> IO (_)
-readArchive = _
 
 --------------------------------------------------
 

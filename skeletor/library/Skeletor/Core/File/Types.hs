@@ -107,24 +107,14 @@ See 'readFile'.
 
 data File a
 
-  = FilePath     FilePath
+  = FileLocation FilePath
   | FileContents !a
 
+  deriving stock    (Functor)
   deriving stock    (Show,Eq,Ord,Generic)
   deriving anyclass (NFData)
 
 --------------------------------------------------
-
-
-
---------------------------------------------------
---------------------------------------------------
-
-{-| An in-memory directory (with all its children files).
-
--}
-
-type FileTree = (HashMap FilePath (Maybe Text)) -- TODO value should be (Maybe Text) to represent an empty directory?
 
 --------------------------------------------------
 --------------------------------------------------
