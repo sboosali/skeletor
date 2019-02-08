@@ -365,6 +365,10 @@ library
                   Skeletor.Core.EnvironmentVariable.List
                   Skeletor.Core.EnvironmentVariable.Number
 
+                  Skeletor.Core.Archive
+                  Skeletor.Core.Compressed
+                  Skeletor.Core.Tarball
+
                   ------------
 
                   Skeletor.Haskell
@@ -452,6 +456,13 @@ library
              , directory
              , filemanip
              , turtle    >= 1.5
+
+   --------------------
+   -- file libraries.
+   --------------------
+
+             , tar
+             , zlib
 
    --------------------
    -- web libraries.
