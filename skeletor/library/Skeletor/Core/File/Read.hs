@@ -57,16 +57,6 @@ import Prelude_location
 --------------------------------------------------
 --------------------------------------------------
 
-{-| De-archive the (given) archive;
-into a directory (of files).
-
--}
-
-readArchive :: ArchiveFile -> IO (_)
-readArchive = _
-
---------------------------------------------------
-
 {-| De-compress and de-archive the (given) tarball;
 into a directory (of files).
 
@@ -74,6 +64,16 @@ into a directory (of files).
 
 readTarball :: TarballFile -> IO (_)
 readTarball = _
+
+--------------------------------------------------
+
+{-| De-archive the (given) archive;
+into a directory (of files).
+
+-}
+
+readArchive :: ArchiveFile -> IO (_)
+readArchive = _
 
 --------------------------------------------------
 
@@ -118,7 +118,7 @@ readFileWith reader parser = \case
 
 -}
 
-readLazyTextFile :: File StrictText.Text -> IO StrictText.Text
+readLazyTextFile :: File LazyText.Text -> IO LazyText.Text
 readLazyTextFile = readFileWith reader parser
 
   where
@@ -137,7 +137,7 @@ readLazyTextFile = readFileWith reader parser
 
 -}
 
-readStrictTextFile :: File LazyText.Text -> IO LazyText.Text
+readStrictTextFile :: File StrictText.Text -> IO StrictText.Text
 readStrictTextFile = readFileWith reader parser
 
   where
@@ -157,7 +157,7 @@ readStrictTextFile = readFileWith reader parser
 
 -}
 
-readLazyByteStringFile :: File StrictByteString.ByteString -> IO StrictByteString.ByteString
+readLazyByteStringFile :: File LazyByteString.ByteString -> IO LazyByteString.ByteString
 readLazyByteStringFile = readFileWith reader parser
 
   where
@@ -176,7 +176,7 @@ readLazyByteStringFile = readFileWith reader parser
 
 -}
 
-readStrictByteStringFile :: File LazyByteString.ByteString -> IO LazyByteString.ByteString
+readStrictByteStringFile :: File StrictByteString.ByteString -> IO StrictByteString.ByteString
 readStrictByteStringFile = readFileWith reader parser
 
   where
