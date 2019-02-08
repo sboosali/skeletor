@@ -365,6 +365,11 @@ library
                   Skeletor.Core.Location
                   Skeletor.Core.Location.Types
 
+                  --Skeletor.Core.Git
+                  Skeletor.Core.Git.Types
+                  Skeletor.Core.SHA
+                  Skeletor.Core.SHA.Types
+
                   Skeletor.Core.EnvironmentVariable
                   Skeletor.Core.EnvironmentVariable.Types
                   Skeletor.Core.EnvironmentVariable.Errors

@@ -12,10 +12,10 @@ module Skeletor.Haskell.Fetch where
 --------------------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Types
+import Skeletor.Core.Location
 
+import Skeletor.Haskell.Types
 import Skeletor.Haskell.Core
-import Skeletor.Haskell.Location
 
 --------------------------------------------------
 -- Imports ---------------------------------------

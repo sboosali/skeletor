@@ -11,17 +11,17 @@
 
 -}
 
-module Skeletor.Haskell.Location
+module Skeletor.Core.Location
   (
     -- * (Types and instances.)
-    module Skeletor.Haskell.Location.Types
+    module Skeletor.Core.Location.Types
 
   , readLocation
   ) where
 
 --------------------------------------------------
 
-import Skeletor.Haskell.Location.Types
+import Skeletor.Core.Location.Types
 
 --------------------------------------------------
 --------------------------------------------------
@@ -117,7 +117,7 @@ readLocation = \case
   LocationInlineDirectory x -> readInlineDirectory x
   LocationDirectory       x -> readDirectory x
 
-  LocationURL             x -> readURL x
+  LocationURL             x -> readURI_GET x
   LocationGit             x -> readGit x
 
   LocationArchive         x -> readArchive x
@@ -148,55 +148,6 @@ readDirectoryPath path = do
   
 
   return $ ""
-
---------------------------------------------------
---------------------------------------------------
-
--- | wraps ''.
-
-readURI :: (MonadIO m, MonadThrow m) => URI -> m (Text)
-readURI (uri) = do
-
-  request <- HTTP.parseRequest (T.pack uri)
-
-  manager <- do
-          if   HTTP.secure request
-          then HTTP.newTlsManager
-          else HTTP.newManager HTTP.defaultManagerSettings
-
-  response <- HTTP.httpLbs (request { HTTP.method = HTTP.methodGet }) manager
-
-  let status = HTTP.responseStatus response
-
-  let headers = HTTP.responseHeaders response
-
-  handleStatus response headers status
-
-  where
-
-  handleStatus response headers status
-
-    | status == HTTP.ok200 = do
-
-        let bytestring = HTTP.responseBody response
-        let body = handleBody headers bytestring
-        return body
-
-    | status == HTTP.created201 = do
-
-        let location = HTTP.hLocation
-        return ""
-
-    | status == HTTP.found302 = do
-
-        return ""
-
-    | otherwise = return ""
-
-  handleBody headers bytestring = _
-
-  lookupHeader :: ResponseHeaders -> HeaderName -> Maybe ByteString
-  lookupHeader = List.lookup
 
 --------------------------------------------------
 --------------------------------------------------
