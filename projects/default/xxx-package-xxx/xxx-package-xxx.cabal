@@ -584,6 +584,22 @@ library
              , hashable
              , unordered-containers
 
+-- async
+-- bytestring
+-- containers
+-- mtl
+-- stm
+-- text
+-- transformers
+-- unordered-containers
+-- vector
+-- filepath
+-- directory
+-- process
+-- unix
+-- deepseq
+-- optparse-applicative
+
   --------------------
   -- Parsing ---------
   --------------------

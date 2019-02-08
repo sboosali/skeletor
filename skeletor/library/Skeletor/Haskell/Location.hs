@@ -1,23 +1,39 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 {-# LANGUAGE BinaryLiterals #-}
 
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| Locations of templates.
+
+(Re-export all types and functions of this module's submodules.)
 
 -}
 
-module Skeletor.Haskell.Location where
+module Skeletor.Haskell.Location
+  (
+    -- * (Types and instances.)
+    module Skeletor.Haskell.Location.Types
+
+  , readLocation
+  ) where
 
 --------------------------------------------------
 
-import Skeletor.Core.EnvironmentVariable
+import Skeletor.Haskell.Location.Types
 
 --------------------------------------------------
 --------------------------------------------------
 
 import           "modern-uri" Text.URI (URI)
 import qualified "modern-uri" Text.URI as URI
+
+--------------------------------------------------
+
+import qualified "http-types"      Network.HTTP.Types
+import qualified "http-client"     Network.HTTP.Client hiding (path)
+import qualified "http-client-tls" Network.HTTP.Client.TLS
 
 --------------------------------------------------
 
@@ -46,7 +62,12 @@ import qualified "bytestring" Data.ByteString as B
 
 --------------------------------------------------
 
+import qualified "base" System.Environment as IO
 --import qualified "base" System.IO as IO
+
+import qualified "base" Data.List as List
+
+--------------------------------------------------
 
 import Prelude_location
 
@@ -64,99 +85,254 @@ import Prelude_location
 
 A 'Location' can be identified by:
 
-* itself — i.e. inline contents literally (into a string or tree).
-* a filepath — a directory (the root of the files being located).
-* an archive — a `.tar`; to be un-archived (into the above).
-* a tarball — a `.tar.gz`; to be decompressed (into the above).
-* a URI — download it, following links ([TODO]: detect cycles, ditto with hardlinks of filepaths).
-* a Git repository — clone it.
-* a name — a known name (e.g. builtin into your system).
+* itself           — i.e. inline contents (into a string or tree).
+* a filepath       — a directory (the root of the files being located).
+* an archive       — a @.tar@; to be un-archived (into the above).
+* a tarball        — a @.tar.gz@; to be decompressed (into the above).
+* a URI            — download it, following links ([TODO]: detect cycles,
+                     ditto with hardlinks of filepaths).
+* a Git repo       — clone the repository.
+* a name           — a known name (e.g. built-into your system).
+* an env-var       — TODO read the environment variable
+                     (containing one of the kinds of locations above).
 
 -}
 
-data Location
+readLocation :: (MonadIO m) => Location -> m (Located Text)
+readLocation = \case
 
-  = LocationInlineFile  Text         -- ^ Write this string.
-  | LocationFile        FilePath     -- ^ Copy this file.
+  LocationInlineFile      x -> readInlineFile x
+  LocationFile            x -> readFile x
 
-  | LocationInlineDirectory FileTree -- ^ Write these strings.
-  | LocationDirectory       FilePath -- ^ Copy this directory, recursively.
+  LocationInlineDirectory x -> readInlineDirectory x
+  LocationDirectory       x -> readDirectory x
 
-  | LocationURL         URI          -- ^ Download this URL.
-  | LocationGit         URI          -- ^ Clone this Git repository.
+  LocationURL             x -> readURL x
+  LocationGit             x -> readGit x
 
-  | LocationArchive     FilePath     -- ^ Un-Archive this file, then copy the 'LocationDirectory'.
-  | LocationTarball     FilePath     -- ^ Un-Compress this file, un-archive it, then copy the 'LocationDirectory'.
+  LocationArchive         x -> readArchive x
+  LocationTarball         x -> readTarball x
 
-  | LocationEnvironment EV           -- ^ Read (TODO: a path or URI?) from this environment variable.
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData)
-
---------------------------------------------------
-
-{-TODO
-
-instance Hashable Location where
-
-  hashWithSalt :: Int -> Location -> Int
-  hashWithSalt salt = \case
-
-    LocationInline      x -> c1 `hashWithSalt` salt `hashWithSalt` x
-    LocationFile        x -> c2 `hashWithSalt` salt `hashWithSalt` x
-    LocationEnvironment x -> c3 `hashWithSalt` salt `hashWithSalt` x
-    LocationURL         x -> c4 `hashWithSalt` salt `hashWithSalt` (show x) --TODO
-
-    where
-
-    c0 :: Int
-    c0 = 0b0000000000000000000000000000000000000000000000000000000000000000
-
-    c1 :: Int
-    c1 = 0b0101010101010101010101010101010101010101010101010101010101010101
-
-    c2 :: Int
-    c2 = 0b0011001100110011001100110011001100110011001100110011001100110011
-
-    c3 :: Int
-    c3 = 0b0000111100001111000011110000111100001111000011110000111100001111
-
-    c4 :: Int
-    c4 = 0b0000000011111111000000001111111100000000111111110000000011111111
-
-    c5 :: Int
-    c5 = 0b0000000000000000111111111111111100000000000000001111111111111111
-
-    c6 :: Int
-    c6 = 0b0000000000000000000000000000000011111111111111111111111111111111
-
-    -- c7 :: Int
-    -- c7 = 0b
-
-    -- c8 :: Int
-    -- c8 = 0b
-
-    -- c9 :: Int
-    -- c9 = 0b
-
-    -- c10 :: Int
-    -- c10 = 0b
--}
+  LocationEnvironment     x -> readEnvironmentVariable x
 
 --------------------------------------------------
 --------------------------------------------------
 
-{-| An in-memory directory (with all its children files).
+-- | wraps 'Data.Text.IO.readFile'.
 
--}
+readFilePath :: (MonadIO m) => FilePath -> m (Text)
+readFilePath path = do
 
-type FileTree = (HashMap FilePath (Maybe Text)) -- TODO value should be (Maybe Text) to represent an empty directory?
+  contents <- T.readFile path
+
+  return $ contents
 
 --------------------------------------------------
 --------------------------------------------------
+
+-- | wraps ''.
+
+readDirectoryPath :: (MonadIO m) => FilePath -> m (FileTree)
+readDirectoryPath path = do
+
+  
+
+  return $ ""
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- | wraps ''.
+
+readURI :: (MonadIO m, MonadThrow m) => URI -> m (Text)
+readURI (uri) = do
+
+  request <- HTTP.parseRequest (T.pack uri)
+
+  manager <- do
+          if   HTTP.secure request
+          then HTTP.newTlsManager
+          else HTTP.newManager HTTP.defaultManagerSettings
+
+  response <- HTTP.httpLbs (request { HTTP.method = HTTP.methodGet }) manager
+
+  let status = HTTP.responseStatus response
+
+  let headers = HTTP.responseHeaders response
+
+  handleStatus response headers status
+
+  where
+
+  handleStatus response headers status
+
+    | status == HTTP.ok200 = do
+
+        let bytestring = HTTP.responseBody response
+        let body = handleBody headers bytestring
+        return body
+
+    | status == HTTP.created201 = do
+
+        let location = HTTP.hLocation
+        return ""
+
+    | status == HTTP.found302 = do
+
+        return ""
+
+    | otherwise = return ""
+
+  handleBody headers bytestring = _
+
+  lookupHeader :: ResponseHeaders -> HeaderName -> Maybe ByteString
+  lookupHeader = List.lookup
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- | wraps ''.
+
+read :: (MonadIO m) =>  -> m (Text)
+read () = do
+
+  
+
+  return $ ""
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- | wraps ''.
+
+read :: (MonadIO m) =>  -> m (Text)
+read () = do
+
+  
+
+  return $ ""
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- | wraps 'System.Environment.lookupEnv'.
+
+readEnvironmentVariable :: (MonadIO m) => EV -> m (Text)
+readEnvironmentVariable (EV k) = do
+
+  v <- IO.lookupEnv (T.unpack k) <&> go
+
+  return $ v
+
+  where
+  go = maybe "" id > T.pack
+
+--------------------------------------------------
+--------------------------------------------------
+
 {- Notes / Old Code
 
 
+
+HTTP.hContentType
+
+
+
+
+
+read :: (MonadIO m) =>  -> m (Text)
+read () = do
+
+  
+
+  return $ ""
+
+
+
+
+The HTTP 201 Created success status response code indicates that the request has succeeded and has led to the creation of a resource. The new resource is effectively created before this response is sent back and the new resource is returned in the body of the message, its location being either the URL of the request, or the content of the Location header.
+
+The common use case of this status code is as the result of a POST request.
+
+
+
+
+
+Client request:
+
+GET /index.html HTTP/1.1
+Host: www.example.com
+
+Server response:
+
+HTTP/1.1 302 Found
+Location: http://www.iana.org/domains/example/
+
+
+
+
+httpLbs :: Request -> Manager -> IO (Response ByteString)
+
+responseHeaders :: Response body -> ResponseHeaders
+
+responseBody :: Response body -> body
+
+type Header = (HeaderName, ByteString) Source#
+
+Header
+
+type HeaderName = CI ByteString Source#
+
+Header name
+
+type RequestHeaders = [Header] Source#
+
+Request Headers
+
+type ResponseHeaders = [Header] Source#
+
+Response Headers
+
+
+
+
+Cookie	 
+cookie_name :: ByteString	 
+cookie_value :: ByteString	 
+cookie_expiry_time :: UTCTime	 
+cookie_domain :: ByteString	 
+cookie_path :: ByteString	 
+cookie_creation_time :: UTCTime	 
+cookie_last_access_time :: UTCTime	 
+cookie_persistent :: Bool	 
+cookie_host_only :: Bool	 
+cookie_secure_only :: Bool	 
+cookie_http_only :: Bool
+
+
+
+data URI Source
+
+Represents a general universal resource identifier using its component parts.
+
+For example, for the URI
+
+  foo://anonymous@www.haskell.org:42/ghc?query#frag
+the components are:
+
+Constructors
+
+URI	 
+uriScheme :: String
+ foo:
+uriAuthority :: Maybe URIAuth
+ //anonymous@www.haskell.org:42
+uriPath :: String
+ /ghc
+uriQuery :: String
+ ?query
+uriFragment :: String
+ #frag
 
 
 

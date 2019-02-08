@@ -344,6 +344,12 @@ library
                   Skeletor.Core
                   Skeletor.Core.Types
 
+                  Skeletor.Core.File
+                  Skeletor.Core.File.Types
+
+                  Skeletor.Core.FileTree
+                  Skeletor.Core.FileTree.Types
+
                   Skeletor.Core.Fetch
 
                   Skeletor.Core.Location
@@ -451,8 +457,11 @@ library
    -- web libraries.
    --------------------
 
-             , http-client
              , modern-uri
+
+             , http-types
+             , http-client
+             , http-client-tls
 
    --------------------
    -- terminal libraries.
