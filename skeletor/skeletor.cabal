@@ -22,13 +22,11 @@ version:             0.0.0
 -- Metadata --------------------------------------
 --------------------------------------------------
 
-synopsis:
- Haskell project scaffolding
+synopsis: Haskell project scaffolding
 
-description:
- Create a haskell project from a template.
+description: Create a haskell project from a template.
 
-category:            Data
+category: Data
 
 --------------------------------------------------
 
@@ -93,10 +91,13 @@ source-repository head
 -- Flags -----------------------------------------
 --------------------------------------------------
 
--- flag ...
---   default:     False
---   description: Enable ...
---   manual:      True
+flag develop
+
+  default:     False
+
+  description: Exposed internals and/or dynamic typechecking (for development).
+
+  manual:      True
 
 --------------------------------------------------
 -- Common Stanzas --------------------------------
@@ -146,20 +147,23 @@ common sboo-haskell
              -fwarn-tabs
               
   --------------------
-  -- typed-holes
-  --------------------
-
-  -- use `typed-holes`, not `undefined`, during development
-
-             -fdefer-typed-holes
-             -Wtyped-holes
-
-  --------------------
   -- (miscellaneous warnings)
   --------------------
 
   -- raise a warning into an error
   -- -Werror=missing-fields
+
+ if flag(develop)
+    ghc-options:
+
+        --------------------
+        -- typed-holes
+        --------------------
+
+         -- use `typed-holes`, not `undefined`, during development
+
+             -fdefer-typed-holes
+             -Wtyped-holes
 
  ------------------------------
  

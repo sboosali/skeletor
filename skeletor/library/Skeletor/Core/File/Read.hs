@@ -36,20 +36,18 @@ import qualified "filepath"   System.FilePath as File
 
 --------------------------------------------------
 
-import qualified "text"       Data.Text      as StrictText
-import qualified "text"       Data.Text.Lazy as LazyText
+import qualified "text" Data.Text         as StrictText
+import qualified "text" Data.Text.Lazy    as LazyText
 
-import qualified "text"       Data.Text.IO      as StrictText
-import qualified "text"       Data.Text.Lazy.IO as LazyText
+import qualified "text" Data.Text.IO      as StrictText
+import qualified "text" Data.Text.Lazy.IO as LazyText
 
 --------------------------------------------------
 
-import qualified "bytestring"       Data.ByteString      as StrictByteString
-import qualified "bytestring"       Data.ByteString.Lazy as LazyByteString
+import qualified "bytestring" Data.ByteString      as StrictByteString
+import qualified "bytestring" Data.ByteString.Lazy as LazyByteString
 
-import qualified "bytestring"       Data.ByteString.IO      as StrictByteString
-import qualified "bytestring"       Data.ByteString.Lazy.IO as LazyByteString
-
+--------------------------------------------------
 --------------------------------------------------
 
 import Prelude_location

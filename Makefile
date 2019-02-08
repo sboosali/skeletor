@@ -38,6 +38,9 @@ DefaultLibraryTarget="lib:$(DefaultPackageName)"
 DefaultExecutableTarget="skeletor:exe:skeletor"
 #                          ^ [Customize]
 
+Component ?="skeletor"
+#                          ^ [Customize]
+
 DefaultTarget="all"
 #                          ^ [Customize]
 #        e.g.
@@ -127,7 +130,7 @@ TagsScript ="$(TagsCommand)\n:q\n"
 # the `default` and `all` targets
 ##################################################
 
-default: build
+default: develop
 
 .PHONY: default
 
@@ -139,6 +142,17 @@ all: build-all test-all docs-all check-all tarball-all
 	@echo '=================================================='
 
 .PHONY: all
+
+##################################################
+
+develop:
+	@echo '=================================================='
+	@echo '[Build] SUCCESS =================================='
+	@echo '=================================================='
+
+	$(Cabal) new-build -fdevelop $(Component)
+
+.PHONY: develop
 
 ##################################################
 # `cabal` wrapper targets
@@ -229,9 +243,6 @@ repl: repl-default
 ##################################################
 
 build: build-default
-	@echo '=================================================='
-	@echo '[Build] SUCCESS =================================='
-	@echo '=================================================='
 
 .PHONY: build
 

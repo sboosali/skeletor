@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE BinaryLiterals #-}
 
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 
 --------------------------------------------------
@@ -21,35 +22,37 @@ module Skeletor.Core.File.Encoding where
 --------------------------------------------------
 --------------------------------------------------
 
-import qualified "filepath"   System.FilePath as File
+-- import qualified "filepath"   System.FilePath as File
 
 --------------------------------------------------
 
-import qualified "text" Data.Text      as StrictText
-import qualified "text" Data.Text.Lazy as LazyText
+import qualified "text" Data.Text               as StrictText
+import qualified "text" Data.Text.Lazy          as LazyText
 
-import qualified "text" Data.Text.IO      as StrictText
-import qualified "text" Data.Text.Lazy.IO as LazyText
+-- import qualified "text" Data.Text.IO            as StrictText
+-- import qualified "text" Data.Text.Lazy.IO       as LazyText
 
-import qualified "text" Data.Text.Encoding      as StrictEncoding
-import qualified "text" Data.Text.Lazy.Encoding as LazyEncoding
+import qualified "text" Data.Text.Encoding      as StrictText
+import qualified "text" Data.Text.Lazy.Encoding as LazyText
 
 --------------------------------------------------
 
-import qualified "bytestring"       Data.ByteString      as StrictByteString
-import qualified "bytestring"       Data.ByteString.Lazy as LazyByteString
-
-import qualified "bytestring"       Data.ByteString.IO      as StrictByteString
-import qualified "bytestring"       Data.ByteString.Lazy.IO as LazyByteString
+import qualified "bytestring" Data.ByteString      as StrictByteString
+import qualified "bytestring" Data.ByteString.Lazy as LazyByteString
 
 --------------------------------------------------
 --------------------------------------------------
 
-import qualified "base" GHC.IO as GHC
+import qualified "base" GHC.IO.Handle as GHC
 
+--------------------------------------------------
 --------------------------------------------------
 
 import Prelude_location
+
+--------------------------------------------------
+
+import Prelude (error)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -82,7 +85,7 @@ type family Decoder t :: * where
 
 -}
 
-data TextStrictness :: * -> * where
+data Strictness :: * -> * where
 
   StrictText :: Strictness StrictText.Text
   LazyText   :: Strictness LazyText.Text
@@ -202,30 +205,30 @@ fromNewlineConversion = \case
 
 -}
 
-encode :: TextStrictness text -> Encoding -> Encoder text
+encode :: Strictness text -> Encoding -> Encoder text
 encode = \case
 
   StrictText -> \case
 
-    UTF8_Encoding               -> encodeUtf8
-    ASCII_Encoding              -> encodeUtf8
-    Latin1_Encoding             -> encodeLatin1
+    UTF8_Encoding               -> StrictText.encodeUtf8
+    ASCII_Encoding              -> StrictText.encodeUtf8
+    Latin1_Encoding             -> error "TODO: « encode StrictText Latin1_Encoding »"
     CP1252_Encoding             -> error "TODO: « encode StrictText CP1252_Encoding »"
-    UTF16_LittleEndian_Encoding -> encodeUtf16LE
-    UTF16_BigEndian_Encoding    -> encodeUtf16BE
-    UTF32_LittleEndian_Encoding -> encodeUtf32LE
-    UTF32_BigEndian_Encoding    -> encodeUtf32BE
+    UTF16_LittleEndian_Encoding -> StrictText.encodeUtf16LE
+    UTF16_BigEndian_Encoding    -> StrictText.encodeUtf16BE
+    UTF32_LittleEndian_Encoding -> StrictText.encodeUtf32LE
+    UTF32_BigEndian_Encoding    -> StrictText.encodeUtf32BE
 
   LazyText   -> \case
 
-    UTF8_Encoding               -> encodeUtf8
-    ASCII_Encoding              -> encodeUtf8
-    Latin1_Encoding             -> encodeLatin1
+    UTF8_Encoding               -> LazyText.encodeUtf8
+    ASCII_Encoding              -> LazyText.encodeUtf8
+    Latin1_Encoding             -> error "TODO: « encode StrictText Latin1_Encoding »"
     CP1252_Encoding             -> error "TODO: « encode LazyText CP1252_Encoding »"
-    UTF16_LittleEndian_Encoding -> encodeUtf16LE
-    UTF16_BigEndian_Encoding    -> encodeUtf16BE
-    UTF32_LittleEndian_Encoding -> encodeUtf32LE
-    UTF32_BigEndian_Encoding    -> encodeUtf32BE
+    UTF16_LittleEndian_Encoding -> LazyText.encodeUtf16LE
+    UTF16_BigEndian_Encoding    -> LazyText.encodeUtf16BE
+    UTF32_LittleEndian_Encoding -> LazyText.encodeUtf32LE
+    UTF32_BigEndian_Encoding    -> LazyText.encodeUtf32BE
 
 {-# INLINE encode #-}
 
@@ -236,30 +239,30 @@ encode = \case
 
 -}
 
-decode :: TextStrictness text -> Encoding -> Decoder text
+decode :: Strictness text -> Encoding -> Decoder text
 decode = \case
 
   StrictText -> \case
 
-    UTF8_Encoding               -> decodeUtf8
-    ASCII_Encoding              -> decodeUtf8
-    Latin1_Encoding             -> decodeLatin1
+    UTF8_Encoding               -> StrictText.decodeUtf8
+    ASCII_Encoding              -> StrictText.decodeUtf8
+    Latin1_Encoding             -> StrictText.decodeLatin1
     CP1252_Encoding             -> error "TODO: « decode StrictText CP1252_Encoding »"
-    UTF16_LittleEndian_Encoding -> decodeUtf16LE
-    UTF16_BigEndian_Encoding    -> decodeUtf16BE
-    UTF32_LittleEndian_Encoding -> decodeUtf32LE
-    UTF32_BigEndian_Encoding    -> decodeUtf32BE
+    UTF16_LittleEndian_Encoding -> StrictText.decodeUtf16LE
+    UTF16_BigEndian_Encoding    -> StrictText.decodeUtf16BE
+    UTF32_LittleEndian_Encoding -> StrictText.decodeUtf32LE
+    UTF32_BigEndian_Encoding    -> StrictText.decodeUtf32BE
 
   LazyText   -> \case
 
-    UTF8_Encoding               -> decodeUtf8
-    ASCII_Encoding              -> decodeUtf8
-    Latin1_Encoding             -> decodeLatin1
+    UTF8_Encoding               -> LazyText.decodeUtf8
+    ASCII_Encoding              -> LazyText.decodeUtf8
+    Latin1_Encoding             -> LazyText.decodeLatin1
     CP1252_Encoding             -> error "TODO: « decode LazyText CP1252_Encoding »"
-    UTF16_LittleEndian_Encoding -> decodeUtf16LE
-    UTF16_BigEndian_Encoding    -> decodeUtf16BE
-    UTF32_LittleEndian_Encoding -> decodeUtf32LE
-    UTF32_BigEndian_Encoding    -> decodeUtf32BE
+    UTF16_LittleEndian_Encoding -> LazyText.decodeUtf16LE
+    UTF16_BigEndian_Encoding    -> LazyText.decodeUtf16BE
+    UTF32_LittleEndian_Encoding -> LazyText.decodeUtf32LE
+    UTF32_BigEndian_Encoding    -> LazyText.decodeUtf32BE
 
 {-# INLINE decode #-}
 
