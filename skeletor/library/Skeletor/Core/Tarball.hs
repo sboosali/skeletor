@@ -114,6 +114,8 @@ Rethrows these exceptions under 'MonadThrow':
 * 'IOException'
 * 'DecompressError'
 
+(Other exceptions may be thrown under @IO@.)
+
 Dispatches to:
 
 * 'readTarballGZip' — on @".tar.gz"@ files, or if 'GZIP' is given; and to

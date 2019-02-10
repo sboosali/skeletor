@@ -21,6 +21,13 @@ import Skeletor.Core.EnvironmentVariable
 -- Imports ---------------------------------------
 --------------------------------------------------
 
+--------------------------------------------------
+
+import           "modern-uri" Text.URI (URI)
+import qualified "modern-uri" Text.URI as URI
+
+--------------------------------------------------
+
 import qualified "filepath" System.FilePath as File
 
 --------------------------------------------------
@@ -43,6 +50,38 @@ import Prelude_skeletor
 
 --------------------------------------------------
 -- Definitions -----------------------------------
+--------------------------------------------------
+
+{-| Syntax for (i.e. a concrete, human-readable representation of) locations.
+
+Locate by (any of) these syntaxes:
+
+* URI  — e.g. @file://D:\\@, @https://github.com/sboosali/skeletor.git@, @git://git@github.com:sboosali/skeletor.git@
+* Path — e.g. @/usr/local/share@, @~/.local/share@, @./.@
+
+Examples URIs:
+
+* @file://D:\\@
+* @https://github.com/sboosali/skeletor@
+* @git://git@github.com:sboosali/skeletor.git@
+
+Example Paths:
+
+* @./.@
+* @~/.local/share@
+* @/usr/local/share@
+
+-}
+
+data LocationSyntax
+
+  = LocationURI  URI
+  | LocationPath Path
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData)
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-| Locate either a 'LocationFile' or a 'LocationDirectory'.

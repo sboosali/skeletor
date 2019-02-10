@@ -7,7 +7,7 @@
 
 -}
 
-module Skeletor.Haskell.Location.Types where
+module Skeletor.Haskell.Location.File where
 
 --------------------------------------------------
 

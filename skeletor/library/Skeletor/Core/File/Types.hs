@@ -61,41 +61,6 @@ import Prelude_location
 --------------------------------------------------
 --------------------------------------------------
 
-{-| an Archive is an archive-file;
-i.e. a directory of files, "linked" into a single file. 
-
-Its file-extension should be @.tar@.
-
--}
-
-type ArchiveFile = File ByteString
-
---------------------------------------------------
-
-{-| a Tarball is a compressed archive-file: 
-i.e. a directory of files, "linked" into a single file,
-then compressed (into a smaller file).
-
-Its file-extension should be @.tar.gz@.
-
--}
-
-type TarballFile = File ByteString
-
---------------------------------------------------
-
-{-| a @UTF8File@ is an regular-file;
-its contents are @UTF-8@-encoded text.
-
-Its file-extension can be anything; in particular, @.txt@.
-
--}
-
-type UTF8File = File Text
-
---------------------------------------------------
---------------------------------------------------
-
 {-| a 'File' represents either:
 
 * a file's location; or
@@ -115,6 +80,64 @@ data File a
   deriving anyclass (NFData)
 
 --------------------------------------------------
+--------------------------------------------------
+
+{-| an Archive is an archive-file;
+i.e. a directory of files, "linked" into a single file. 
+
+Its file-extension should be @.tar@.
+
+-}
+
+type ArchiveFile = File ByteString
+
+--------------------------------------------------
+
+-- pattern Archiveocation  :: FilePath   -> ArchiveFile
+-- pattern ArchiveContents :: ByteString -> ArchiveFile
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| a Tarball is a compressed archive-file: 
+i.e. a directory of files, "linked" into a single file,
+then compressed (into a smaller file).
+
+Its file-extension should be @.tar.gz@.
+
+-}
+
+type TarballFile = File ByteString
+
+--------------------------------------------------
+
+-- TarballFile
+-- FileLocation FilePath
+-- FileContents ByteString
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| a @UTF8File@ is an regular-file;
+its contents are @UTF-8@-encoded text.
+
+Its file-extension can be anything; in particular, @.txt@.
+
+-}
+
+type UTF8File = File Text
+
+
+--------------------------------------------------
+
+-- UTF8File
+-- FileLocation FilePath
+-- FileContents Text
+
+--------------------------------------------------
+--------------------------------------------------
+
+
 
 --------------------------------------------------
 --------------------------------------------------
