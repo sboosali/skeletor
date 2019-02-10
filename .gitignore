@@ -9,7 +9,7 @@ temporary/
 
 # Haskell
 .ghc.environment.*
-cabal.project.local
+*.project.local
 *.o
 *.hi
 *.chi
