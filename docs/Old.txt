@@ -258,11 +258,39 @@ read () = do
 
 --------------------------------------------------
 
+{-| An in-memory directory (with all its children files).
 
+-}
+
+type UTF8Directory = Directory Text
 
 --------------------------------------------------
 
+{-| An on-disk directory.
 
+-}
+
+type PathDirectory = Directory Void
+
+--------------------------------------------------
+
+{-|
+
+NOTE: the "leaves" of this "file tree" must be 'File's;
+thus, empty directories can't be represented (c.f. @git@).
+
+-}
+
+type Directory0 = Directory _
+
+{-|
+
+NOTE: the "leaves" of this "file tree" can be @Nothing@s;
+thus, empty directories can be represented.
+
+-}
+
+type Directory1 = Directory _
 
 --------------------------------------------------
 

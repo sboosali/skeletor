@@ -9,8 +9,9 @@
 module Skeletor.Core.Directory.Types where
 
 --------------------------------------------------
+--------------------------------------------------
 
---import Skeletor.Core.
+import Skeletor.Core.File.Types
 
 --------------------------------------------------
 --------------------------------------------------
@@ -22,6 +23,11 @@ import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
 import qualified "filepath" System.FilePath as FilePath
 
+--------------------------------------------------
+
+import qualified "directory" System.Directory as Directory
+
+--------------------------------------------------
 --------------------------------------------------
 
 import qualified "text"       Data.Text    as T
@@ -38,67 +44,70 @@ import qualified "bytestring" Data.ByteString as B
 --import qualified "base" System.IO as IO
 
 --------------------------------------------------
+--------------------------------------------------
 
 import Prelude_location
 
 --------------------------------------------------
+-- Declarations ----------------------------------
 --------------------------------------------------
 
-{-|
+--------------------------------------------------
+--------------------------------------------------
+
+{-| A polymorphic directory.
+
+(e.g. with paths as keys, and files as values).
+
+
 
 -}
 
---------------------------------------------------
+newtype Directory f a = Directory
 
-{-| An in-memory directory (with all its children files).
-
--}
-
-type UTF8Tree = Directory Text
-
---------------------------------------------------
-
-{-| An on-disk directory.
-
--}
-
-type PathTree = Directory Void
-
---------------------------------------------------
---------------------------------------------------
-
-{-| An in-memory directory (with all its children files).
-
--}
-
-newtype Directory a = Directory
-
-  (HashMap FilePath (File a))
+  (HashMap FilePath (f a))
 
   -- TODO value should be (Maybe Text) to represent an empty directory?
 
-  deriving stock    (Show,Read,Generic)
+  deriving stock    (Show{-,Read-},Generic)
+  deriving stock    (Functor)
   deriving newtype  (Eq,Ord)
   deriving newtype  (Semigroup,Monoid)
-  deriving newtype  (NFData,Hashable)
+  deriving newtype  (NFData{-,Hashable-})
 
 --------------------------------------------------
 
-instance IsList (Directory a) where
+instance IsList (Directory f a) where
 
-  type Item (Directory a) = (FilePath, a)
+  type Item (Directory f a) = (FilePath, a)
 
   fromList = HashMap.fromList > coerce
   toList   = coerce           > HashMap.toList
 
 --------------------------------------------------
 
--- instance (Semigroup a) => Semigroup (Directory a) where
+-- instance (Semigroup a) => Semigroup (Directory f a) where
 
 --   (Directory xs) <> (Directory ys) = Directory zs
 
 --     where
 --     zs = HashMap.unionWith (<>) xs ys
+
+--------------------------------------------------
+
+-- | @= 'defaultDirectory'@
+
+instance Default (Directory f a) where
+  def = defaultDirectory
+
+--------------------------------------------------
+-- Definitions -----------------------------------
+--------------------------------------------------
+
+-- | @= 'emptyDirectory'@
+
+defaultDirectory :: Directory
+defaultDirectory = emptyDirectory
 
 --------------------------------------------------
 --------------------------------------------------
@@ -111,12 +120,13 @@ instance IsList (Directory a) where
 
 -}
 
-emptyDirectory :: Directory a
+emptyDirectory :: Directory f a
 emptyDirectory = Directory HashMap.empty
 
 --------------------------------------------------
 --------------------------------------------------
 {- Notes / Old Code
+
 
 
 -}

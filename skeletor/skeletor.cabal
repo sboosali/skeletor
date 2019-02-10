@@ -366,7 +366,7 @@ library
 
                   Skeletor.Core.Path
                   Skeletor.Core.Path.Types
-                  Skeletor.Core.Path.Value
+                  Skeletor.Core.Path.Values
 
                   Skeletor.Core.Fetch
 
