@@ -8,6 +8,7 @@ packages: ./skeletor
 --         ./skeletor-emacs/
 
          ./projects/default/xxx-package-xxx/
+--         ./projects/simple/xxx-package-xxx/
 
 ----------------------------------------
 
@@ -39,11 +40,17 @@ jobs: 6
 -- Repositories ----------------------------------
 --------------------------------------------------
 
--- repository stackage-lts-13.0
---   url: https://www.stackage.org/lts-13.0
+repository stackage-lts-13.6
+  url: https://www.stackage.org/lts-13.6
 
---   -- From:
---   -- https://www.stackage.org/lts-13.0/cabal.config?global=true
+  -- From:
+  -- https://www.stackage.org/lts-13.__/cabal.config?global=true
+
+--------------------------------------------------
+
+repository hackage.haskell.org
+  url: http://hackage.haskell.org/
+  -- ^ central Hackage server (the default repository).
 
 -- --------------------------------------------------
 
