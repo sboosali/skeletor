@@ -360,6 +360,10 @@ library
                   Skeletor.Core.URI.Types
                   Skeletor.Core.URI.Read
 
+                  Skeletor.Core.Path
+                  Skeletor.Core.Path.Types
+                  Skeletor.Core.Path.Value
+
                   Skeletor.Core.Fetch
 
                   Skeletor.Core.Location
@@ -369,6 +373,12 @@ library
                   Skeletor.Core.Git.Types
                   Skeletor.Core.SHA
                   Skeletor.Core.SHA.Types
+
+                  Skeletor.Core.Program
+                  Skeletor.Core.Program.Types
+                  Skeletor.Core.Program.Version
+                  Skeletor.Core.Program.Invoke
+                  Skeletor.Core.Program.Git
 
                   Skeletor.Core.EnvironmentVariable
                   Skeletor.Core.EnvironmentVariable.Types
@@ -417,7 +427,6 @@ library
 
                   ------------
 
-                  Skeletor.Haskell.Location
                   Prelude_location
 
                   ------------
@@ -469,11 +478,19 @@ library
 
              , filepath
              , directory
+
+             , temporary
              , filemanip
-             , turtle    >= 1.5
 
    --------------------
-   -- file libraries.
+   -- shell libraries.
+   --------------------
+
+             , typed-process
+             , turtle        >= 1.5
+
+   --------------------
+   -- file-format libraries.
    --------------------
 
              , tar
@@ -502,7 +519,14 @@ library
    --          , lens
    --          , generic-lens
              , dhall
-              
+
+   --------------------
+   -- parsing libraries.
+   --------------------
+
+   --        , megaparsec
+             , trifecta
+
    --------------------
    -- (miscellaneous libraries).
    --------------------
