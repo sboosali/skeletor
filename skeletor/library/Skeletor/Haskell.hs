@@ -24,8 +24,8 @@ module Skeletor.Haskell
     -- * Derived defined.
   , module Skeletor.Haskell.Derived
 
-    -- * Read (or Copy) and parse Project Files.
-  , module Skeletor.Haskell.IO
+  --   -- * Read (or Copy) and parse Project Files.
+  -- , module Skeletor.Haskell.IO
 
     -- * Find Files (like @findutils@' @find@ program).
   , module Skeletor.Haskell.Find
@@ -41,7 +41,7 @@ import Skeletor.Haskell.Types
 import Skeletor.Haskell.Core
 import Skeletor.Haskell.Derived
 import Skeletor.Haskell.Variable
-import Skeletor.Haskell.IO
+--import Skeletor.Haskell.IO
 import Skeletor.Haskell.Find
 import Skeletor.Haskell.Turtle
 

@@ -227,8 +227,8 @@ data TemplateFile = TemplateFile
 
 data SrcDst = SrcDst
 
-  { input  :: Src
-  , output :: Dst
+  { src :: Src
+  , dst :: Dst
   }
 
 --------------------------------------------------

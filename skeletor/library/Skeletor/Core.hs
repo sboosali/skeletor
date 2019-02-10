@@ -10,20 +10,21 @@
 
 -}
 
-module Skeletor.Core
-  (
-    -- * Core types (datatypes, typeclasses, and instances).
-    module Skeletor.Core.Types
+module Skeletor.Core where      -- TODO
 
-    -- * Fetching 'Location's.
-  , module Skeletor.Core.Fetch
+--   (
+--     -- * Core types (datatypes, typeclasses, and instances).
+--     module Skeletor.Core.Types
 
-  ) where
+--     -- * Fetching 'Location's.
+--   , module Skeletor.Core.Fetch
 
---------------------------------------------------
+--   ) where
 
-import Skeletor.Core.Types
-import Skeletor.Core.Fetch
+-- --------------------------------------------------
 
---------------------------------------------------
---------------------------------------------------
+-- import Skeletor.Core.Types
+-- import Skeletor.Core.Fetch
+
+-- --------------------------------------------------
+-- --------------------------------------------------

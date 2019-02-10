@@ -69,8 +69,8 @@ newtype Directory f a = Directory
 
   -- TODO value should be (Maybe Text) to represent an empty directory?
 
-  deriving stock    (Show{-,Read-},Generic)
   deriving stock    (Functor)
+  deriving stock    (Show{-,Read-},Generic)
   deriving newtype  (Eq,Ord)
   deriving newtype  (Semigroup,Monoid)
   deriving newtype  (NFData{-,Hashable-})
@@ -106,7 +106,7 @@ instance Default (Directory f a) where
 
 -- | @= 'emptyDirectory'@
 
-defaultDirectory :: Directory
+defaultDirectory :: Directory f a
 defaultDirectory = emptyDirectory
 
 --------------------------------------------------

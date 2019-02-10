@@ -346,57 +346,57 @@ library
                   ------------
 
                   Skeletor.Core
-                  Skeletor.Core.Types
+                  -- Skeletor.Core.Types
 
-                  Skeletor.Core.File
-                  Skeletor.Core.File.Types
-                  Skeletor.Core.File.Read
-                  Skeletor.Core.File.Encoding
+                  -- Skeletor.Core.File
+                  -- Skeletor.Core.File.Types
+                  -- Skeletor.Core.File.Read
+                  -- Skeletor.Core.File.Encoding
 
-                  Skeletor.Core.Directory
-                  Skeletor.Core.Directory.Types
-                  Skeletor.Core.Directory.Values
+                  -- Skeletor.Core.Directory
+                  -- Skeletor.Core.Directory.Types
+                  -- Skeletor.Core.Directory.Values
                   
-                  Skeletor.Core.FileTree
-                  Skeletor.Core.FileTree.Types
+                  -- Skeletor.Core.FileTree
+                  -- Skeletor.Core.FileTree.Types
 
-                  Skeletor.Core.URI
-                  Skeletor.Core.URI.Types
-                  Skeletor.Core.URI.Read
+                  -- Skeletor.Core.URI
+                  -- Skeletor.Core.URI.Types
+                  -- Skeletor.Core.URI.Read
 
-                  Skeletor.Core.Path
-                  Skeletor.Core.Path.Types
-                  Skeletor.Core.Path.Values
+                  -- Skeletor.Core.Path
+                  -- Skeletor.Core.Path.Types
+                  -- Skeletor.Core.Path.Values
 
-                  Skeletor.Core.Fetch
+                  -- Skeletor.Core.Fetch
 
-                  Skeletor.Core.Location
-                  Skeletor.Core.Location.Types
+                  -- Skeletor.Core.Location
+                  -- Skeletor.Core.Location.Types
 
-                  --Skeletor.Core.Git
-                  Skeletor.Core.Git.Types
-                  Skeletor.Core.SHA
-                  Skeletor.Core.SHA.Types
+                  -- --Skeletor.Core.Git
+                  -- Skeletor.Core.Git.Types
+                  -- Skeletor.Core.SHA
+                  -- Skeletor.Core.SHA.Types
 
-                  Skeletor.Core.Program
-                  Skeletor.Core.Program.Types
-                  Skeletor.Core.Program.Version
-                  Skeletor.Core.Program.Invoke
-                  Skeletor.Core.Program.Git
+                  -- Skeletor.Core.Program
+                  -- Skeletor.Core.Program.Types
+                  -- Skeletor.Core.Program.Version
+                  -- Skeletor.Core.Program.Invoke
+                  -- Skeletor.Core.Program.Git
 
-                  Skeletor.Core.EnvironmentVariable
-                  Skeletor.Core.EnvironmentVariable.Types
-                  Skeletor.Core.EnvironmentVariable.Errors
-                  Skeletor.Core.EnvironmentVariable.Name
-                  Skeletor.Core.EnvironmentVariable.Value
-                  Skeletor.Core.EnvironmentVariable.Text
-                  Skeletor.Core.EnvironmentVariable.Path
-                  Skeletor.Core.EnvironmentVariable.List
-                  Skeletor.Core.EnvironmentVariable.Number
+                  -- Skeletor.Core.EnvironmentVariable
+                  -- Skeletor.Core.EnvironmentVariable.Types
+                  -- Skeletor.Core.EnvironmentVariable.Errors
+                  -- Skeletor.Core.EnvironmentVariable.Name
+                  -- Skeletor.Core.EnvironmentVariable.Value
+                  -- Skeletor.Core.EnvironmentVariable.Text
+                  -- Skeletor.Core.EnvironmentVariable.Path
+                  -- Skeletor.Core.EnvironmentVariable.List
+                  -- Skeletor.Core.EnvironmentVariable.Number
 
-                  Skeletor.Core.Archive
-                  Skeletor.Core.Compressed
-                  Skeletor.Core.Tarball
+                  -- Skeletor.Core.Archive
+                  -- Skeletor.Core.Compressed
+                  -- Skeletor.Core.Tarball
 
                   ------------
 
@@ -412,15 +412,14 @@ library
                   Skeletor.Haskell.Chiaroscuro
                   Skeletor.Haskell.Chiaroscuro.Types
 
-                  Skeletor.Haskell.IO
-                  Skeletor.Haskell.Fetch
-
-                  Skeletor.Haskell.Variable.Binding
-                  Skeletor.Haskell.Variable.Binding.Types
+                  -- Skeletor.Haskell.IO
+                  -- Skeletor.Haskell.Fetch
 
                   Skeletor.Haskell.Variable
                   Skeletor.Haskell.Variable.Types
                   Skeletor.Haskell.Variable.Values
+                  Skeletor.Haskell.Variable.Binding
+                  Skeletor.Haskell.Variable.Binding.Types
 
                   Skeletor.Haskell.Turtle
 
@@ -455,6 +454,7 @@ library
    --------------------
 
                spiros >= 0.3.1
+--TODO rename spiros to sboo.
                --TODO , spiros-base
    --          , enumerate
 
@@ -587,7 +587,7 @@ test-suite property
 
 -- see « Skeletor.Haskell.Core ».
 
-executable skeletor
+executable skeletor-haskell
 
   import: sboo-haskell
   import: sboo-main

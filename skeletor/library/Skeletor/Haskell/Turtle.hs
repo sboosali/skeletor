@@ -71,11 +71,8 @@ sedTemplate
 
 -}
 
--- :: _ -> _
--- = _
-
 sedTemplate :: TemplateBinding -> SrcDst -> IO ()
-sedTemplate (TemplateBinding bindings) SrcDst{ input, output } =
+sedTemplate (TemplateBinding bindings) SrcDst{ src=input, dst=output } =
 
   program
 

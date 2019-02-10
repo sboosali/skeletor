@@ -18,18 +18,16 @@ optional-packages: ../spiros/spiros/
 -- LocalFlags (i.e. only for project/vendored packages)
 --------------------------------------------------
 
-documentation:            False
--- True
-
+documentation:            True
 haddock-hyperlink-source: True
 
 --------------------------------------------------
 -- GlobalFlags (i.e. only for installed/dependency packages)
 --------------------------------------------------
 
-profiling: True
+--profiling: True
 ---optimization: 2
-        
+
 --------------------------------------------------
 
 package *
