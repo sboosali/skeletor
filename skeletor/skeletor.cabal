@@ -353,6 +353,10 @@ library
                   Skeletor.Core.File.Read
                   Skeletor.Core.File.Encoding
 
+                  Skeletor.Core.Directory
+                  Skeletor.Core.Directory.Types
+                  Skeletor.Core.Directory.Values
+                  
                   Skeletor.Core.FileTree
                   Skeletor.Core.FileTree.Types
 

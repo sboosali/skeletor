@@ -1,4 +1,3 @@
-{-# LANGUAGE BinaryLiterals #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -7,11 +6,11 @@
 
 -}
 
-module Skeletor.Core.FileTree.Types where
+module Skeletor.Core.Directory.Types where
 
 --------------------------------------------------
 
-import Skeletor.Core.File
+--import Skeletor.Core.
 
 --------------------------------------------------
 --------------------------------------------------
@@ -21,7 +20,7 @@ import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
 --------------------------------------------------
 
-import qualified "filepath" System.FileTreePath as FileTree
+import qualified "filepath" System.FilePath as FilePath
 
 --------------------------------------------------
 
@@ -55,7 +54,7 @@ import Prelude_location
 
 -}
 
-type UTF8Tree = FileTree Text
+type UTF8Tree = Directory Text
 
 --------------------------------------------------
 
@@ -63,7 +62,7 @@ type UTF8Tree = FileTree Text
 
 -}
 
-type PathTree = FileTree Void
+type PathTree = Directory Void
 
 --------------------------------------------------
 --------------------------------------------------
@@ -72,7 +71,7 @@ type PathTree = FileTree Void
 
 -}
 
-newtype FileTree a = FileTree
+newtype Directory a = Directory
 
   (HashMap FilePath (File a))
 
@@ -85,18 +84,18 @@ newtype FileTree a = FileTree
 
 --------------------------------------------------
 
-instance IsList (FileTree a) where
+instance IsList (Directory a) where
 
-  type Item (FileTree a) = (FilePath, a)
+  type Item (Directory a) = (FilePath, a)
 
   fromList = HashMap.fromList > coerce
   toList   = coerce           > HashMap.toList
 
 --------------------------------------------------
 
--- instance (Semigroup a) => Semigroup (FileTree a) where
+-- instance (Semigroup a) => Semigroup (Directory a) where
 
---   (FileTree xs) <> (FileTree ys) = FileTree zs
+--   (Directory xs) <> (Directory ys) = Directory zs
 
 --     where
 --     zs = HashMap.unionWith (<>) xs ys
@@ -112,8 +111,8 @@ instance IsList (FileTree a) where
 
 -}
 
-emptyFileTree :: FileTree a
-emptyFileTree = FileTree HashMap.empty
+emptyDirectory :: Directory a
+emptyDirectory = Directory HashMap.empty
 
 --------------------------------------------------
 --------------------------------------------------
