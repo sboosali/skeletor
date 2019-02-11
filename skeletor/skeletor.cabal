@@ -585,7 +585,7 @@ test-suite property
 -- Executables -----------------------------------
 --------------------------------------------------
 
--- see « Skeletor.Haskell.Core ».
+-- See « Skeletor.Haskell.Core ».
 
 executable skeletor-haskell
 

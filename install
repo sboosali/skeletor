@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+### -*- mode: conf-unix; -*-
+
+##################################################
+
+command -v cabal
+
+##################################################
+
+cabal new-build "skeletor:exe:skeletor-haskell"
+
+source <(cabal new-exec -- skeletor-haskell --bash-completion-script `cabal new-exec -- which skeletor-haskell`)
+
+##################################################

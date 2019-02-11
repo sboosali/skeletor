@@ -1,6 +1,8 @@
 ##################################################
-# Makefile Directives
+# Makefile Settings
 ##################################################
+
+SHELL=bash
 
 .EXPORT_ALL_VARIABLES:
 
@@ -31,17 +33,20 @@ DefaultCompilerVersion=8.4.3
 DefaultPackageVersion=0.0.0
 #                          ^ [Customize]
 
-DefaultLibraryTarget="lib:$(DefaultPackageName)"
+DefaultLibraryTarget ?=lib:$(DefaultPackageName)
 #                          ^ [Customize]
 #                          ^  e.g. "lib:skeletor"
 
-DefaultExecutableTarget="skeletor:exe:skeletor"
+DefaultExecutableProgram=skeletor-haskell
 #                          ^ [Customize]
 
-Component ?="skeletor"
+DefaultExecutableTarget ?=skeletor:exe:$(DefaultExecutableProgram)
 #                          ^ [Customize]
 
-DefaultTarget="all"
+Component ?=skeletor
+#                          ^ [Customize]
+
+DefaultTarget ?=all
 #                          ^ [Customize]
 #        e.g.
 #             "all"
@@ -51,6 +56,9 @@ DefaultTarget="all"
 
 DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
+
+DefaultTemplateName ?=default
+#                          ^ [Customize]
 
 ##################################################
 # Makefile Variables: Haskell Compiler.
@@ -130,7 +138,7 @@ TagsScript ="$(TagsCommand)\n:q\n"
 # the `default` and `all` targets
 ##################################################
 
-default: develop
+default: all
 
 .PHONY: default
 
@@ -153,6 +161,87 @@ develop:
 	$(Cabal) new-build -fdevelop $(Component)
 
 .PHONY: develop
+
+##################################################
+# Components: by name ############################
+##################################################
+
+lib:
+	$(Cabal) new-run $(DefaultLibraryTarget)
+
+.PHONY: lib
+
+##################################################
+
+skeletor-haskell:
+	$(Cabal) new-run skeletor-haskell
+
+.PHONY: skeletor-haskell
+
+##################################################
+
+# skeletor-elisp:
+# 	$(Cabal) new-run skeletor-elisp
+
+# .PHONY: skeletor-elisp
+
+# ##################################################
+
+# skeletor-nix:
+# 	$(Cabal) new-run skeletor-nix
+
+# .PHONY: skeletor-nix
+
+# ##################################################
+
+# skeletor-python:
+# 	$(Cabal) new-run skeletor-python
+
+# .PHONY: skeletor-python
+
+##################################################
+
+unittest:
+	$(Cabal) new-run "$(Component):test:unit"
+
+.PHONY: unittest
+
+##################################################
+
+doctest:
+	$(Cabal) new-run "$(Component):test:doc"
+
+.PHONY: doctest
+
+##################################################
+
+quickcheck:
+	$(Cabal) new-run "$(Component):test:property"
+
+.PHONY: quickcheck
+
+##################################################
+# Components: project packages ###################
+##################################################
+
+# haskell-project:
+# 	find -L "./projects/$(DefaultTemplateName)" -type f -name "*.cabal" -prune -o -wholename '.stack-work' -o -wholename 'dist' -o -wholename 'dist-*' -o -wholename 'result' -o -wholename 'result-*' -exec $(Cabal) new-build '{}' \;
+#TODO#
+# .PHONY: haskell-project
+
+##################################################
+
+haskell-project-default:
+	$(Cabal) new-build ./projects/default/xxx-package-xxx/xxx-package-xxx.cabal
+
+.PHONY: haskell-project-default
+
+##################################################
+
+haskell-project-simple:
+	$(Cabal) new-build ./projects/simple/xxx-package-xxx.cabal
+
+.PHONY: haskell-project-simple
 
 ##################################################
 # `cabal` wrapper targets
@@ -274,10 +363,30 @@ test: test-default
 # Executables: building/running/registering them.
 ##################################################
 
-build-example:
-	$(Cabal) new-build skeletor
+build-executable:
+	$(Cabal) new-build $(DefaultExecutableTarget)
 
-.PHONY: build-example
+.PHONY: build-executable
+
+##################################################
+
+run:
+	$(Cabal) new-build $(DefaultExecutableTarget)
+
+.PHONY: run
+
+##################################################
+
+locate-executable:
+	@$(Cabal) new-exec which -- $(DefaultExecutableProgram)
+
+.PHONY: locate-executable
+
+# e.g. « /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell »
+
+# Usage (Command-Line):
+#
+#   $(make locate-executable 2>/dev/null)
 
 ##################################################
 # Documentation: building/copying/opening
@@ -504,6 +613,22 @@ clean:
 .PHONY: clean
 
 ##################################################
+# Installation: executables, tab-completion.
+##################################################
+
+install: #TODO
+	$(Cabal) new-build "skeletor:exe:skeletor-haskell"
+	source <($(Cabal) new-exec -- skeletor-haskell --bash-completion-script `cabal new-exec -- which skeletor-haskell`)
+
+#TODO the « source » is run in a subshell, so it won't take for your terminal.
+
+.PHONY: install
+
+# source <(cabal new-exec -- /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell --bash-completion-script `which /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell`)
+
+#------------------------------------------------#
+
+##################################################
 # Development: developing this package
 ##################################################
 
@@ -542,10 +667,9 @@ release-all: docs-haskell tarball
 
 ##################################################
 
-install:
-	$(Cabal) new-build all --prefix=$(InstallDirectory)
-
-.PHONY: install
+# install:
+# 	$(Cabal) new-build all --prefix=$(InstallDirectory)
+# .PHONY: install
 
 ##################################################
 

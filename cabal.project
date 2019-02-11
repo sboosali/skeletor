@@ -22,6 +22,10 @@ documentation:            True
 haddock-hyperlink-source: True
 
 --------------------------------------------------
+
+tests: True
+
+--------------------------------------------------
 -- GlobalFlags (i.e. only for installed/dependency packages)
 --------------------------------------------------
 
