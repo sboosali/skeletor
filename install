@@ -1,16 +1,48 @@
 #!/bin/bash
 set -eu
-
 ### -*- mode: conf-unix; -*-
 
 ##################################################
 
+ProgramName=skeletor-haskell
+
+echo ----------------------------------------
+echo
+echo "${ProgramName}"
+echo
+
+echo ----------------------------------------
+echo
+
 command -v cabal
 
-##################################################
+echo
+echo ----------------------------------------
+echo
 
-cabal new-build "skeletor:exe:skeletor-haskell"
+echo ----------------------------------------
+echo
 
-source <(cabal new-exec -- skeletor-haskell --bash-completion-script `cabal new-exec -- which skeletor-haskell`)
+cabal new-build "skeletor:exe:${ProgramName}"
 
-##################################################
+echo
+echo ----------------------------------------
+
+ProgramPath=$(cabal new-exec -- which "${ProgramName}")
+
+echo
+echo "${ProgramPath}"
+echo
+echo ----------------------------------------
+echo
+
+touch "${ProgramName}"
+ln -sf "${ProgramPath}" "./${ProgramName}"
+
+echo ----------------------------------------
+echo
+
+"${ProgramPath}" --bash-completion-script "${ProgramPath}"
+
+echo
+echo ----------------------------------------

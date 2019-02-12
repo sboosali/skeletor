@@ -32,9 +32,16 @@ data Config = Config
 
   { verbosity    :: Verbosity
   , dryrun       :: Dryness
-  , filepath     :: Maybe FilePath
-  , project      :: Maybe String
+  , version      :: Bool
+  , license      :: Bool
+
+  , configpath   :: Maybe FilePath
+
+  , projectpath  :: Maybe Location
+  , projectname  :: Maybe String
+
   , subdirectory :: WhichPackageDirectory
+  , bindings     :: Assoc String String
   }
 
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
@@ -54,11 +61,16 @@ instance Default Config where
 defaultConfig :: Config
 defaultConfig = Config{..}
   where
+
   verbosity    = def
   dryrun       = def
-  filepath     = def
-  project      = Just defaultProjectName
+  version      = False
+  license      = False
+  configpath   = def
+  projectpath  = Nothing
+  projectname  = Just defaultProjectName
   subdirectory = def
+  bindings     = def
 
 --------------------------------------------------
 
@@ -115,6 +127,20 @@ instance Default Dryness where def = defaultDryness
 
 defaultDryness :: Dryness
 defaultDryness = TrueRun
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|  
+
+-}
+
+type Assoc k v = [(k, v)]
+
+--------------------------------------------------
+--------------------------------------------------
+
+type Location = FilePath
 
 --------------------------------------------------
 --------------------------------------------------

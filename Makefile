@@ -389,6 +389,26 @@ locate-executable:
 #   $(make locate-executable 2>/dev/null)
 
 ##################################################
+
+install-skeletor-haskell:
+
+	@mkdir -p "./bin/bash_completion.d"
+
+	@touch "./bin/$(DefaultExecutableProgram)"
+	@chmod 700 "./bin/$(DefaultExecutableProgram)"
+
+	@touch "./bin/bash_completion.d/$(DefaultExecutableProgram)"
+	@chmod 700 "./bin/bash_completion.d/$(DefaultExecutableProgram)"
+
+	$(Cabal) new-build "skeletor:exe:$(DefaultExecutableProgram)"
+
+	ln -sf `$(Cabal) new-exec which -- $(DefaultExecutableProgram)` "./bin/$(DefaultExecutableProgram)"
+
+	$(Cabal) new-exec -- $(DefaultExecutableProgram) --bash-completion-script `$(Cabal) new-exec which -- $(DefaultExecutableProgram)` > "./bin/bash_completion.d/$(DefaultExecutableProgram)"
+
+.PHONY: install-skeletor-haskell
+
+##################################################
 # Documentation: building/copying/opening
 ##################################################
 

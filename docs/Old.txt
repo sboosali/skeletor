@@ -302,7 +302,29 @@ data SrcDst = SrcDst
 
 --------------------------------------------------
 
+>>> :set -XImplicitPrelude
+>>> toConfig [] == Right defaultConfig
+True
+>>> toConfig [] == toConfig ["--subdir"]
+True
+>>> toConfig (concat [ ["-v"],  ["--no-subdir"], ["-f", ".\/my-haskell-project-skeleton"] ])
+Right (Config {verbosity = Verbose, filepath = Just ".\/my-haskell-project-skeleton", project = Nothing, subdirectory = PackageInRootDirectory})
 
+:set -XPackageImports
+:set -XImplicitPrelude
+import qualified "optparse-applicative" Options.Applicative as P
+parseConfig (concat [ ["-v"],  ["--no-subdir"], ["-f", "./my-haskell-project-skeleton"] ])
+
+    P.Failure (P.ParserFailure k) -> Left $ show (k "")
+
+-- P.mkCompleter getCompletions
+
+  <*> (P.flag PackageInNamesakeSubdirectory PackageInRootDirectory)
+        ( P.long    "--no-subdir"
+       <> P.metavar "SUBDIR?"
+       <> P.help    "Whether the (singleton-package) project has (the default, without any flag) or doesn't have (with this flag) a separate subdirectory for its package."
+       <> P.value
+        )
 
 --------------------------------------------------
 

@@ -59,14 +59,16 @@
 
 #define IS_OS_POSIX   defined(linux_HOST_OS) || defined(darwin_HOST_OS) || defined(aix_HOST_OS) || defined(hpux_HOST_OS) || defined(irix_HOST_OS) || defined(solaris_HOST_OS) || defined(freebsd_HOST_OS) || defined(opennbsd_HOST_OS) || defined(netbsd_HOST_OS) || defined(ios_HOST_OS) || defined(android_HOST_OS) || defined(hurd_HOST_OS) || defined(halvm_HOST_OS)
 
-// See « https://en.wikipedia.org/wiki/POSIX#POSIX-oriented_operating_systems »:
-//
-// POSIX-certified: AIX, HPUX, IRIX, Solaris.
-// POSIX-compliant (mostly): Linux, Darwin (OSX), FreeBSD, OpenBSD, NetBSD, IOS, Android, Hurd, HaLVM.
+/* See « https://en.wikipedia.org/wiki/POSIX#POSIX-oriented_operating_systems »:
+ *
+ * POSIX-certified: AIX, HPUX, IRIX, Solaris.
+ * POSIX-compliant (mostly): Linux, Darwin (OSX), FreeBSD, OpenBSD, NetBSD, IOS, Android, Hurd, HaLVM.
+ */
 
-// « Cabal-2.4.1.0:Distribution.System.OS »
-//
-// See « https://www.haskell.org/cabal/release/latest/doc/API/Cabal/Distribution-System.html#t:OS »
+/* « Cabal-2.4.1.0:Distribution.System.OS »
+ *
+ * See « https://www.haskell.org/cabal/release/latest/doc/API/Cabal/Distribution-System.html#t:OS »
+ */
 
 /************************************************************************************************/
 

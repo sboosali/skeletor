@@ -846,6 +846,478 @@ withTempDirectory targetDir template =
 
 
 
+
+
+
+
+
+## `ansi-terminal`.
+
+### module `System.Console.ANSI`
+
+### Types
+
+```haskell
+data Color = Black
+           | Red
+           | Green
+           | Yellow
+           | Blue
+           | Magenta
+           | Cyan
+           | White
+
+
+           deriving (Eq, Ord, Bounded, Enum, Show, Read, Ix)
+```
+
+```haskell
+data ColorIntensity = Dull
+                    | Vivid
+
+
+                    deriving (Eq, Ord, Bounded, Enum, Show, Read, Ix)
+```
+
+```haskell
+data ConsoleLayer = Foreground
+                  | Background
+
+
+                  deriving (Eq, Ord, Bounded, Enum, Show, Read, Ix)
+```
+
+```haskell
+-- | ANSI blink speeds: values other than 'NoBlink' are not widely supported
+
+
+data BlinkSpeed = SlowBlink -- ^ Less than 150 blinks per minute
+                | RapidBlink -- ^ More than 150 blinks per minute
+                | NoBlink
+
+
+                deriving (Eq, Ord, Bounded, Enum, Show, Read, Ix)
+```
+
+```haskell
+data Underlining
+  = SingleUnderline
+  -- | Not widely supported. Not supported natively on Windows 10
+  | DoubleUnderline
+  | NoUnderline
+
+
+  deriving (Eq, Ord, Bounded ,Enum, Show, Read, Ix)
+```
+
+```haskell
+-- | ANSI general console intensity: usually treated as setting the font style
+-- (e.g. 'BoldIntensity' causes text to be bold)
+
+
+data ConsoleIntensity
+  = BoldIntensity
+  -- | Not widely supported: sometimes treated as concealing text. Not supported
+  -- natively on Windows 10
+  | FaintIntensity
+  | NormalIntensity
+
+
+  deriving (Eq, Ord, Bounded, Enum, Show, Read, Ix)
+```
+
+ANSI Select Graphic Rendition (SGR) command:
+
+```haskell
+data SGR
+  -- | Default rendition, cancels the effect of any preceding occurrence of SGR
+  -- (implementation-defined)
+  = Reset
+  -- | Set the character intensity. Partially supported natively on Windows 10
+  | SetConsoleIntensity !ConsoleIntensity
+  -- | Set italicized. Not widely supported: sometimes treated as swapping
+  -- foreground and background. Not supported natively on Windows 10
+  | SetItalicized !Bool
+  -- | Set or clear underlining. Partially supported natively on Windows 10
+  | SetUnderlining !Underlining
+  -- | Set or clear character blinking. Not supported natively on Windows 10
+  | SetBlinkSpeed !BlinkSpeed
+  -- | Set revealed or concealed. Not widely supported. Not supported natively
+  -- on Windows 10
+  | SetVisible !Bool
+  -- | Set negative or positive image. Supported natively on Windows 10
+  | SetSwapForegroundBackground !Bool
+  -- | Set a color from the standard palette of 16 colors (8 colors by 2
+  -- color intensities). Many terminals allow the palette colors to be
+  -- customised
+  | SetColor !ConsoleLayer !ColorIntensity !Color
+  -- | Set a true color (24 bit color depth). Supported natively on Windows 10
+  -- from the Creators Update (April 2017)
+  --
+  -- @since 0.7
+  | SetRGBColor !ConsoleLayer !(Colour Float)
+  -- | Set a color from a palette of 256 colors using a numerical index
+  -- (0-based). Supported natively on Windows 10 from the Creators Update (April
+  -- 2017) but not on legacy Windows native terminals. See 'xtermSystem',
+  -- 'xterm6LevelRGB' and 'xterm24LevelGray' to construct indices based on
+  -- xterm's standard protocol for a 256-color palette.
+  --
+  -- @since 0.9
+  | SetPaletteColor !ConsoleLayer !Word8
+
+
+  deriving (Eq, Show, Read)
+```
+
+
+
+
+
+
+
+
+
+
+## `ansi-wl-pprint`
+
+### `nest`
+
+`nest :: Int -> Doc -> Doc`:
+
+> The document (nest i x) renders document x with the current indentation level increased by i.
+
+for example, this documents:
+
+```
+nest 2 (text "hello" <$> text "world") <$> text "!"
+```
+
+renders as:
+
+```
+hello
+  world
+!
+```
+
+### ANSI Docs
+
+ANSI formatting combinators
+
+> This terminal formatting functionality is, as far as possible, portable across platforms with their varying terminals. However, note that to display ANSI colors and formatting will only be displayed on Windows consoles if the Doc value is output using the putDoc function or one of its friends. Rendering the Doc to a String and then outputting that will only work on Unix-style operating systems.
+
+```
+Forecolor combinators
+black :: Doc -> Doc 
+
+Displays a document with the black forecolor
+
+red :: Doc -> Doc 
+
+Displays a document with the red forecolor
+
+green :: Doc -> Doc 
+
+Displays a document with the green forecolor
+
+yellow :: Doc -> Doc 
+
+Displays a document with the yellow forecolor
+
+blue :: Doc -> Doc 
+
+Displays a document with the blue forecolor
+
+magenta :: Doc -> Doc 
+
+Displays a document with the magenta forecolor
+
+cyan :: Doc -> Doc 
+
+Displays a document with the cyan forecolor
+
+white :: Doc -> Doc 
+
+Displays a document with the white forecolor
+
+dullblack :: Doc -> Doc 
+
+Displays a document with the dull black forecolor
+```
+
+Emboldening combinators:
+
+```
+bold :: Doc -> Doc 
+
+Displays a document in a heavier font weight
+
+debold :: Doc -> Doc 
+
+Displays a document in the normal font weight
+```
+
+
+Underlining combinators:
+
+```
+underline :: Doc -> Doc 
+
+Displays a document with underlining
+
+deunderline :: Doc -> Doc 
+
+Displays a document with no underlining
+```
+
+Formatting elimination combinators:
+
+
+```
+plain :: Doc -> Doc 
+
+Removes all colorisation, emboldening and underlining from a document
+```
+
+### Implementation
+
+see `ansi-terminal`.
+
+
+
+
+
+## `optparse-applicative`
+
+<https://github.com/pcapriotti/optparse-applicative/blob/master/README.md>
+
+<http://hackage.haskell.org/package/optparse-applicative-0.14.2.0/docs/Options-Applicative.html>
+
+### Code
+
+```haskell
+switch = flag False True
+```
+
+```haskell
+data ParserHelp
+	 
+helpError       :: Chunk Doc	 
+helpSuggestions :: Chunk Doc	 
+helpHeader      :: Chunk Doc	 
+helpUsage       :: Chunk Doc	 
+helpBody        :: Chunk Doc	 
+helpFooter      :: Chunk Doc	 
+```
+
+```haskell
+data ParserPrefs = ParserPrefs
+
+  { prefMultiSuffix     :: String -- ^ metavar suffix for multiple options
+
+  , prefDisambiguate    :: Bool   -- ^ automatically disambiguate abbreviations
+                                  -- (default: False)
+
+  , prefShowHelpOnError :: Bool   -- ^ always show help text on parse errors
+                                  -- (default: False)
+
+  , prefShowHelpOnEmpty :: Bool   -- ^ show the help text for a command or subcommand
+                                  -- if it fails with no input (default: False)
+
+  , prefBacktrack       :: Bool   -- ^ backtrack to parent parser when a
+                                  -- subcommand fails (default: True)
+
+  , prefColumns         :: Int    -- ^ number of columns in the terminal, used to
+                                  -- format the help page (default: 80)
+  }
+```
+
+```haskell
+data OptName
+
+  = OptShort !Char
+  | OptLong  !String
+```
+
+`ReadM`:
+
+```haskell
+eitherReader :: (String -> Either String a) -> ReadM
+
+-- a Left will hold the error message for a parse failure.
+
+-- e.g.:
+
+parseFluxCapacitor :: ReadM FluxCapacitor
+parseFluxCapacitor = eitherReader $ \s -> ...
+
+option parseFluxCapacitor ( long "flux-capacitor" )
+```
+
+
+### Bash, Zsh, and Fish Completions
+optparse-applicative
+
+`--bash-completion-script`: this takes the full path of the program as argument, and prints a bash script, which, when sourced into a bash session, will install the necessary machinery to make bash completion work. For a quick test, you can run something like (for a program called foo on the PATH):
+
+    $ source <(foo --bash-completion-script `which foo`)
+
+
+### Customising the help screen
+
+The progDesc, header, and footer functions can be used to specify a brief description or tagline for the program, and detailed information surrounding the generated option and command descriptions.
+Internally we actually use the ansi-wl-pprint library, and one can use the headerDoc combinator and friends if additional customisation is required.
+
+
+
+
+
+
+### Command groups
+
+One experimental feature which may be useful for programs with many subcommands is command group separation.
+
+```
+data Sample
+  = Hello [String]
+  | Goodbye
+  deriving (Eq, Show)
+
+hello :: Parser Sample
+hello = Hello <$> many (argument str (metavar "TARGET..."))
+
+sample :: Parser Sample
+sample = subparser
+
+       ( command "hello" (info hello (progDesc "Print greeting"))
+      <> command "goodbye" (info (pure Goodbye) (progDesc "Say goodbye"))
+       )
+
+      <|> subparser
+
+       ( command "bonjour" (info hello (progDesc "Print greeting"))
+      <> command "au-revoir" (info (pure Goodbye) (progDesc "Say goodbye"))
+      <> commandGroup "French commands:"
+      <> hidden
+       )
+```
+
+This will logically separate the usage text for the two subparsers (these would normally appear together if the commandGroup modifier was not used). The hidden modifier suppresses the metavariable for the second subparser being show in the brief usage line, which is desirable in some cases.
+
+
+### 
+
+flag
+
+  :: a	
+  default value
+  
+  -> a	
+  active value
+  
+  -> Mod FlagFields a	
+  option modifier
+  
+  -> Parser a	 
+  Builder for a flag parser.
+  
+A flag that switches from a "default value" to an "active value" when encountered. For a simple boolean value, use switch instead.
+
+Note: Because this parser will never fail, it can not be used with combinators such as some or many, as these combinators continue until a failure occurs. See flag'.
+
+### 
+
+strOption :: IsString s => Mod OptionFields s -> Parser s
+
+Builder for an option taking a String argument.
+
+### 
+
+option :: ReadM a -> Mod OptionFields a -> Parser a
+
+Builder for an option using the given reader.
+
+This is a regular option, and should always have either a long or short name specified in the modifiers (or both).
+
+nameParser = option str ( long "name" <> short 'n' )
+
+### 
+
+prefs :: PrefsMod -> ParserPrefs
+
+Create a ParserPrefs given a modifier
+
+ParserPrefs	 
+
+  prefMultiSuffix :: String	
+  metavar suffix for multiple options
+  
+  prefDisambiguate :: Bool	
+  automatically disambiguate abbreviations (default: False)
+  
+  prefShowHelpOnError :: Bool	
+  always show help text on parse errors (default: False)
+  
+  prefShowHelpOnEmpty :: Bool	
+  show the help text for a command or subcommand if it fails with no input (default: False)
+  
+  prefBacktrack :: Bool	
+  backtrack to parent parser when a subcommand fails (default: True)
+  
+  prefColumns :: Int	
+  number of columns in the terminal, used to format the help page (default: 80)
+
+disambiguate :: PrefsMod
+
+Turn on disambiguation.
+
+See https://github.com/pcapriotti/optparse-applicative#disambiguation
+
+showHelpOnError :: PrefsMod
+
+Show full help text on any error.
+
+showHelpOnEmpty :: PrefsMod
+
+Show the help text if the user enters only the program name or subcommand.
+
+This will suppress a Missing: error and show the full usage instead if a user just types the name of the program.
+
+### 
+
+mkCompleter :: (String -> IO [String]) -> Completer
+
+Smart constructor for a Completer
+
+listIOCompleter :: IO [String] -> Completer
+
+Create a Completer from an IO action
+
+listCompleter :: [String] -> Completer
+
+Create a Completer from a constant list of strings.
+
+bashCompleter :: String -> Completer
+
+Run a compgen completion action.
+
+Common actions include file and directory. See http://www.gnu.org/software/bash/manual/html_node/Programmable-Completion-Builtins.html#Programmable-Completion-Builtins for a complete list.
+
+### 
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
 ## ``
 
 ### module ``

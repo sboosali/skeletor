@@ -3,9 +3,8 @@
 ignore/ 
 temporary/
 
-# ghcid
-*.ghcid
-.ghcid.d/
+# project-specific
+bin/skeletor-haskell
 
 # Haskell
 .ghc.environment.*
@@ -23,6 +22,10 @@ dist-*/
 dist/
 .stack-work/
 .styx/
+
+# ghcid
+*.ghcid
+.ghcid.d/
 
 # nix
 result-*/
