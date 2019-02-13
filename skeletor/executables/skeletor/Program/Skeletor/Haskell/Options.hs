@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedLists   #-}
 {-# LANGUAGE ApplicativeDo     #-}
 
 --------------------------------------------------
@@ -316,23 +317,27 @@ options = do
         , P.help    "A configuration variable binding. e.g. « -b \"name=Sam Boosalis\" » (NOTE the quotes are stripped from the argument by the shell, they group the « name=value » into a single argument, when the « value » has whitespace.)."
         ]))
 
-  environment <- (P.option rBindings (mconcat
+  environment <- defaulting [] (P.option rBindings (mconcat
 
-        [ P.long    "binding."
+        [ P.long    "bindings"
         , P.short   'e'
         , P.metavar "VARIABLE_BINDING..."
         , P.help    "A set of configuration variable bindings. e.g. « -e 'user=sboosali:name=Sam Boosalis:' ». one « --bindings _ » is equivalent to multiple « --binding _ --binding _ ...»."
         ]))
 
-  license <- P.switch (mconcat   -- TODO -- subcommand, not option.
+  license <- defaulting "BSD-3-Clause" (P.strOption (mconcat
 
         [ P.long    "license"
         , P.metavar "LICENSE"
-        , P.completeWith (licenseId <$> allLicenses)
+        , P.completeWith knownLicenseIds
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
-        ])
+        ]))
 
   return Config{..}
+
+  where
+
+  defaulting x p = maybe x id <$> optional p
 
 --------------------------------------------------
 {- Notes -----------------------------------------

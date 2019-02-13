@@ -47,6 +47,7 @@ import Skeletor.Haskell.Variable
 --import Skeletor.Haskell.IO
 import Skeletor.Haskell.Find
 import Skeletor.Haskell.Turtle
+import Skeletor.Haskell.License
 
 --------------------------------------------------
 --------------------------------------------------

@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeApplications #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -12,18 +14,47 @@ module Skeletor.Haskell.License
   ) where
 
 --------------------------------------------------
--- Imports (Project) -----------------------------
+-- Exports ---------------------------------------
 --------------------------------------------------
 
 import Skeletor.Haskell.License.Types
 
 --------------------------------------------------
+-- Imports (Project) -----------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Imports (External) ----------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+-- Imports (Standard Library) --------------------
+--------------------------------------------------
+
+import qualified "containers" Data.Map as Map
+--import           "containers" Data.Map (Map)
+
+--------------------------------------------------
+-- Imports (Custom Prelude) ----------------------
+--------------------------------------------------
+
+import Prelude_skeletor
+
+--------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 -- | @≡ @
 
 allLicenses :: [SpdxLicenseIdentifier]
-allLicenses = _
+allLicenses = constructors (Proxy @SpdxLicenseIdentifier)
+
+--------------------------------------------------
+
+-- | @≡ @
+
+knownLicenseIds :: [String]
+knownLicenseIds = (licenseId <$> allLicenses)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -31,7 +62,14 @@ allLicenses = _
 -- | Inverts 'licenseId'
 
 readSpdxLicenseIdentifier :: String -> Maybe SpdxLicenseIdentifier
-readSpdxLicenseIdentifier = _
+readSpdxLicenseIdentifier s = Map.lookup s table
+  where
+
+  table = Map.fromList entries
+
+  entries = entry <$> allLicenses
+
+  entry license = (licenseId license, license)
 
 --------------------------------------------------
 

@@ -212,8 +212,26 @@ Reserved Exit Codes:
 
 
 
+## Bash Completion
 
+e.g.:
 
+```sh
+$ /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell --license BSD-<TAB>
+
+BSD-1-Clause                          BSD-2-Clause-Patent                   BSD-3-Clause-LBNL                     BSD-4-Clause                          
+BSD-2-Clause                          BSD-3-Clause                          BSD-3-Clause-No-Nuclear-License       BSD-4-Clause-UC                       
+BSD-2-Clause-FreeBSD                  BSD-3-Clause-Attribution              BSD-3-Clause-No-Nuclear-License-2014  BSD-Protection                        
+BSD-2-Clause-NetBSD                   BSD-3-Clause-Clear                    BSD-3-Clause-No-Nuclear-Warranty      BSD-Source-Code                       
+```
 
 
 ## 
+
+
+## 
+
+
+## 
+
+
