@@ -1,3 +1,5 @@
+{-# LANGUAGE DuplicateRecordFields #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -50,6 +52,7 @@ import Prelude_skeletor
 -}
 
 data DelimiterBrackets = DelimiterBrackets
+
   { open  :: String
   , close :: String
   }

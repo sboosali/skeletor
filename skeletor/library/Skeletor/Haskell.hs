@@ -33,6 +33,9 @@ module Skeletor.Haskell
     -- * Scripting (via the @turtle@ package).
   , module Skeletor.Haskell.Turtle
 
+    -- * Licenses (@SPDX).
+  , module Skeletor.Haskell.License
+
   ) where
 
 --------------------------------------------------

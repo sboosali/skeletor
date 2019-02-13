@@ -1095,9 +1095,32 @@ see `ansi-terminal`.
 
 ### Code
 
+####
+
 ```haskell
 switch = flag False True
 ```
+
+####
+
+```haskell
+eitherReader :: (String -> Either String a) -> ReadM a
+```
+
+Convert a function producing an Either into a reader.
+
+As an example, one can create a ReadM from an attoparsec Parser easily with
+```
+
+```haskell
+import qualified Data.Attoparsec.Text as A
+import qualified Data.Text as T
+
+attoparsecReader :: A.Parser a -> ReadM a
+attoparsecReader p = eitherReader (A.parseOnly p . T.pack)
+```
+
+####
 
 ```haskell
 data ParserHelp
@@ -1318,12 +1341,112 @@ Common actions include file and directory. See http://www.gnu.org/software/bash/
 
 
 
-## ``
+## `attoparsec`
 
-### module ``
+### module `Data.Attoparsec.Text`
+
+#### 
 
 ```haskell
+parse :: Parser a -> Text -> Result a
 ```
+#### 
+
+```haskell
+takeWhile1 :: (Char -> Bool) -> Parser Text
+```
+
+Consume input as long as the predicate returns True, and return the consumed input.
+
+This parser requires the predicate to succeed on at least one character of input: it will fail if the predicate never returns True or if there is no input left.
+
+#### 
+
+```haskell
+isEndOfLine :: Char -> Bool
+```
+
+A predicate that matches either a carriage return '\r' or newline '\n' character.
+
+#### 
+
+```haskell
+isHorizontalSpace :: Char -> Bool
+```
+
+A predicate that matches either a space ' ' or horizontal tab '\t' character.
+
+#### 
+
+```haskell
+-- | Attempt a parse, and if it fails, rewind the input so that no
+-- input appears to have been consumed.
+--
+-- This combinator is provided for compatibility with Parsec.
+-- attoparsec parsers always backtrack on failure.
+
+try :: Parser i a -> Parser i a
+try p = p
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+#### 
+
+```haskell
+
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ## ``
 

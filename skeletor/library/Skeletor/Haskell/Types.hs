@@ -1,3 +1,5 @@
+{-# LANGUAGE DuplicateRecordFields #-}
+
 {-# LANGUAGE BinaryLiterals #-}
 
 --------------------------------------------------

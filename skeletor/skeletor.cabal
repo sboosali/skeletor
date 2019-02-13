@@ -412,6 +412,9 @@ library
                   Skeletor.Haskell.Chiaroscuro
                   Skeletor.Haskell.Chiaroscuro.Types
 
+                  Skeletor.Haskell.License
+                  Skeletor.Haskell.License.Types
+
                   -- Skeletor.Haskell.IO
                   -- Skeletor.Haskell.Fetch
 
@@ -528,8 +531,9 @@ library
    -- parsing libraries.
    --------------------
 
-   --        , megaparsec
              , trifecta
+   --        , megaparsec
+             , attoparsec
 
    --------------------
    -- (miscellaneous libraries).
@@ -608,6 +612,10 @@ executable skeletor-haskell
                 skeletor
               , spiros
               , optparse-applicative
+
+              , text
+              , attoparsec
+                -- TODO rm attoparsec, export helpers from library
 
 --------------------------------------------------
 --------------------------------------------------

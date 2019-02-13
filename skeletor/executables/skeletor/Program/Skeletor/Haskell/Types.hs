@@ -32,8 +32,11 @@ data Config = Config
 
   { verbosity    :: Verbosity
   , dryrun       :: Dryness
-  , version      :: Bool
-  , license      :: Bool
+
+  , printVersion :: Bool
+  , printLicense :: Bool
+
+  , license      :: String
 
   , configpath   :: Maybe FilePath
 
@@ -41,10 +44,11 @@ data Config = Config
   , projectname  :: Maybe String
 
   , subdirectory :: WhichPackageDirectory
-  , bindings     :: Assoc String String
+  , bindings     :: [Binding] --TODO Bindings
+  , environment  :: Bindings
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving stock    (Show,Read,Eq,Ord,Generic)
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
@@ -64,14 +68,30 @@ defaultConfig = Config{..}
 
   verbosity    = def
   dryrun       = def
-  version      = False
-  license      = False
+  printVersion = False
+  printLicense = False
+  license      = def
   configpath   = def
   projectpath  = Nothing
   projectname  = Just defaultProjectName
   subdirectory = def
   bindings     = def
+  environment  = def
 
+--------------------------------------------------
+--------------------------------------------------
+
+{-|  
+
+-}
+
+data Options = Options
+
+  { verbosity    :: Verbosity
+  , license      :: License
+  }
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-|

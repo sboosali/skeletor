@@ -329,6 +329,21 @@ parseConfig (concat [ ["-v"],  ["--no-subdir"], ["-f", "./my-haskell-project-ske
 --------------------------------------------------
 
 
+{-|
+
+-}
+
+pBindingDefault :: Parser Binding
+pBindingDefault = pBinding def
+
+--------------------------------------------------
+
+P.failureCode :: Int
+ exit code — when a parse error occurs.
+
+P.headerDoc   
+P.progDescDoc ""
+P.footerDoc   
 
 --------------------------------------------------
 

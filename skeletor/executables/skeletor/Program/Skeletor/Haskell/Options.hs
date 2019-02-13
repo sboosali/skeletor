@@ -1,4 +1,5 @@
-{-# LANGUAGE ApplicativeDo #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ApplicativeDo     #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -12,12 +13,30 @@
 module Program.Skeletor.Haskell.Options where
 
 --------------------------------------------------
+-- Imports (Internal) ----------------------------
+--------------------------------------------------
 
 import Program.Skeletor.Haskell.Types
 
 --------------------------------------------------
 
 import Skeletor.Haskell
+import Skeletor.Haskell.Variable.Binding
+
+--------------------------------------------------
+-- Imports (External) ----------------------------
+--------------------------------------------------
+
+import qualified "attoparsec" Data.Attoparsec.Text as A
+
+--------------------------------------------------
+-- Imports (Standard Library) --------------------
+--------------------------------------------------
+
+import qualified "text" Data.Text as T
+import           "text" Data.Text (Text)
+
+-- NOTE « attoparsec » uses strict « Text ».
 
 --------------------------------------------------
 --------------------------------------------------
@@ -136,7 +155,26 @@ mergeConfigs extraConfig@Config{ projectname = extraProject } Config{ projectnam
 -}
 
 parser :: P.ParserInfo Config
-parser = P.info options P.fullDesc
+parser = P.info options information
+
+--------------------------------------------------
+
+{-| Uses:
+
+* 'P.fullDesc'
+* 'options'
+* 'P.info'
+
+-}
+
+information :: P.InfoMod a
+information = mconcat
+
+  [ P.fullDesc
+  , P.failureCode 2 -- exit code — when a parse error occurs.
+  , P.headerDoc $ Just  "----------------------------------------"
+  , P.footerDoc $ Just  "----------------------------------------"
+  ]
 
 --------------------------------------------------
 
@@ -156,6 +194,36 @@ preferences = P.prefs (mconcat
   , P.showHelpOnEmpty
   ])
 
+--------------------------------------------------
+--------------------------------------------------
+
+rBindings :: P.ReadM Bindings
+rBindings = P.eitherReader (A.parseOnly p . T.pack)
+  where
+
+  p = pBindings bindingSyntax
+
+--------------------------------------------------
+
+rBinding :: P.ReadM Binding
+rBinding = P.eitherReader (A.parseOnly p . T.pack)
+  where
+
+  p = pBinding bindingSyntax
+
+--------------------------------------------------
+
+{- | a colon.
+
+(while a « = » (the equals sign) is more natural,
+on the cmdln, it would be gobbled under « optparse-applicative »'s syntax)
+
+-}
+
+bindingSyntax :: BindingSyntax
+bindingSyntax = posixBindingSyntax
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-|
@@ -178,13 +246,13 @@ options = do
         , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: [1] parsing these command-line options; and [2] defaulting the values of any optional options)."
         ])
 
-  version <- P.switch (mconcat
+  printVersion <- P.switch (mconcat
 
         [ P.long    "version"
         , P.help    "Print the version of this program. The format is, for example, « 0.0.0 ». No other text is printed."
         ])
 
-  license <- P.switch (mconcat
+  printLicense <- P.switch (mconcat   -- TODO -- subcommand, not option.
 
         [ P.long    "license"
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
@@ -240,7 +308,29 @@ options = do
         , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an « INI » file (c.f. a UNIX-style « .conf » file). Relative filepaths are interpreted relative: to (1) the current directory from which this command was invoked; (2) to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
         ]))
 
-  bindings <- pure []
+  bindings <- many (P.option rBinding (mconcat
+
+        [ P.long    "binding"
+        , P.short   'b'
+        , P.metavar "VARIABLE_BINDING"
+        , P.help    "A configuration variable binding. e.g. « -b \"name=Sam Boosalis\" » (NOTE the quotes are stripped from the argument by the shell, they group the « name=value » into a single argument, when the « value » has whitespace.)."
+        ]))
+
+  environment <- (P.option rBindings (mconcat
+
+        [ P.long    "binding."
+        , P.short   'e'
+        , P.metavar "VARIABLE_BINDING..."
+        , P.help    "A set of configuration variable bindings. e.g. « -e 'user=sboosali:name=Sam Boosalis:' ». one « --bindings _ » is equivalent to multiple « --binding _ --binding _ ...»."
+        ]))
+
+  license <- P.switch (mconcat   -- TODO -- subcommand, not option.
+
+        [ P.long    "license"
+        , P.metavar "LICENSE"
+        , P.completeWith (licenseId <$> allLicenses)
+        , P.help    "Print the SPDX license identifier of this program, then print out the license text."
+        ])
 
   return Config{..}
 
