@@ -54,11 +54,8 @@ jobs: 6
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-13.6
-  url: https://www.stackage.org/lts-13.6
-
-  -- From:
-  -- https://www.stackage.org/lts-13.__/cabal.config?global=true
+repository stackage-lts-13.7
+  url: https://www.stackage.org/lts-13.7
 
 --------------------------------------------------
 

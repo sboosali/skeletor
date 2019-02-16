@@ -36,8 +36,8 @@ import Prelude_exe
 
 main :: IO ()
 main = do
-  config <- getConfig
-  program config
+  options <- getOptions
+  program options
 
 --------------------------------------------------
 --------------------------------------------------

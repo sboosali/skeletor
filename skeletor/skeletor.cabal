@@ -348,6 +348,9 @@ library
                   Skeletor.Core
                   -- Skeletor.Core.Types
 
+                  Skeletor.Core.Hash
+                  Skeletor.Core.Hash.Types
+
                   -- Skeletor.Core.File
                   -- Skeletor.Core.File.Types
                   -- Skeletor.Core.File.Read
@@ -437,9 +440,8 @@ library
 
                   ------------
 
- other-modules: Paths_skeletor
-
- autogen-modules: Paths_skeletor
+ -- other-modules:   Paths_skeletor
+ -- autogen-modules: Paths_skeletor
 
  ------------------------------
  ------------------------------
@@ -523,8 +525,8 @@ library
    -- records libraries.
    --------------------
 
-   --          , lens
-   --          , generic-lens
+             , lens
+             , generic-lens
              , dhall
 
    --------------------
@@ -536,9 +538,20 @@ library
              , attoparsec
 
    --------------------
+   -- cryptography / hashing libraries.
+   --------------------
+
+             , cryptohash-sha256
+             , base16-bytestring
+
+           -- , raaz
+           -- , cryptonite
+
+   --------------------
    -- (miscellaneous libraries).
    --------------------
              , these
+             , case-insensitive
 
 --------------------------------------------------
 -- Tests -----------------------------------------
@@ -602,10 +615,15 @@ executable skeletor-haskell
   hs-source-dirs:      executables/skeletor
 
   other-modules: Program.Skeletor.Haskell.Main
-                 Program.Skeletor.Haskell.Options
-                 Program.Skeletor.Haskell.Core
                  Program.Skeletor.Haskell.Types
-
+                 Program.Skeletor.Haskell.Core
+                 Program.Skeletor.Haskell.Utilities
+                 Program.Skeletor.Haskell.Options
+                 Program.Skeletor.Haskell.Options.Types
+                 Program.Skeletor.Haskell.Action
+                 Program.Skeletor.Haskell.Action.Types
+                 Program.Skeletor.Haskell.Config
+                 Program.Skeletor.Haskell.Config.Types
                  Prelude_exe
 
   build-depends:
@@ -614,6 +632,7 @@ executable skeletor-haskell
               , optparse-applicative
 
               , text
+              , case-insensitive
               , attoparsec
                 -- TODO rm attoparsec, export helpers from library
 

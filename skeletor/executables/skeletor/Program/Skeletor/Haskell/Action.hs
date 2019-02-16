@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedLists #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -7,29 +9,24 @@
 
 -}
 
-module Program.Skeletor.Haskell.Core
-
-  ( program
-  ) where
+module Program.Skeletor.Haskell.Action where
 
 --------------------------------------------------
-
-import Skeletor.Haskell
-
+-- Imports (Internal) ----------------------------
 --------------------------------------------------
 
+--import Skeletor.Haskell.Types
 import Program.Skeletor.Haskell.Types
-import Program.Skeletor.Haskell.Options
-import Program.Skeletor.Haskell.Config
 
 --------------------------------------------------
-
--- import qualified "" _ as _
-
+-- Imports (External) ----------------------------
 --------------------------------------------------
 
--- import           "base" _
+--------------------------------------------------
+-- Imports (Standard Library) --------------------
+--------------------------------------------------
 
+--------------------------------------------------
 --------------------------------------------------
 
 import Prelude_exe
@@ -41,24 +38,12 @@ import Prelude_exe
 
 -}
 
-programWithOptions :: Options -> IO ()
-programWithOptions options@Options{..} = do
+toActions :: (MonadThrow m) => Options -> m Actions
+toActions Options{..} = do
 
-  config <- toConfig options
+  let actions = []
 
-  programWithConfig config
-
---------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
-programWithConfig :: Config -> IO ()
-programWithConfig config@Config{..} = do
-
-  print config
+  return actions
 
 --------------------------------------------------
 --------------------------------------------------

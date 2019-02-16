@@ -58,44 +58,44 @@ import Prelude_exe
 {-| Calls:
 
 * 'preferences', 'parser'.
-* 'mergeConfigs', 'defaultConfig'.
+* 'mergeOptions', 'defaultOptions'.
 
 -}
 
-getConfig :: IO Config
-getConfig = do
+getOptions :: IO Options
+getOptions = do
 
   config_CommandLine <- P.customExecParser preferences parser
-  let config_Default = defaultConfig
+  let config_Default = defaultOptions
   
-  let config = mergeConfigs config_CommandLine config_Default
+  let config = mergeOptions config_CommandLine config_Default
 
   return config
 
 --------------------------------------------------
 
-{-| A pure 'getConfig'.
+{-| A pure 'getOptions'.
 
 Calls:
 
-* 'toConfig'.
+* 'toOptions'.
 
 @
 >>> :set -XImplicitPrelude
->>> parseConfig [] == Right defaultConfig
+>>> parseOptions [] == Right defaultOptions
 True
->>> parseConfig (concat [ ["-v"],  ["--no-subdir"], ["-f", ".\/my-haskell-project-skeleton"] ])
-Right (Config {verbosity = Verbose, filepath = Just ".\/my-haskell-project-skeleton", project = Just "default", subdirectory = PackageInRootDirectory})
+>>> parseOptions (concat [ ["-v"],  ["--no-subdir"], ["-f", ".\/my-haskell-project-skeleton"] ])
+Right (Options {verbosity = Verbose, filepath = Just ".\/my-haskell-project-skeleton", project = Just "default", subdirectory = PackageInRootDirectory})
 @
 
 -}
 
-parseConfig :: [String] -> Either String Config
-parseConfig args = mergedConfig
+parseOptions :: [String] -> Either String Options
+parseOptions args = mergedOptions
 
   where
-  mergedConfig = parsedConfig <&> (\x -> mergeConfigs x defaultConfig)
-  parsedConfig = toConfig args
+  mergedOptions = parsedOptions <&> (\x -> mergeOptions x defaultOptions)
+  parsedOptions = toOptions args
 
 --------------------------------------------------
 
@@ -103,12 +103,12 @@ parseConfig args = mergedConfig
 
 @
 >>> :set -XImplicitPrelude
->>> toConfig []
-Right (Config {verbosity = Concise, filepath = Nothing, project = Nothing, subdirectory = PackageInNamesakeSubdirectory})
->>> toConfig [] == toConfig ["--subdir"]
+>>> toOptions []
+Right (Options {verbosity = Concise, filepath = Nothing, project = Nothing, subdirectory = PackageInNamesakeSubdirectory})
+>>> toOptions [] == toOptions ["--subdir"]
 True
->>> toConfig (concat [ ["-v"],  ["--no-subdir"], ["-f", ".\/my-haskell-project-skeleton"] ])
-Right (Config {verbosity = Verbose, filepath = Just "./my-haskell-project-skeleton", project = Nothing, subdirectory = PackageInRootDirectory})
+>>> toOptions (concat [ ["-v"],  ["--no-subdir"], ["-f", ".\/my-haskell-project-skeleton"] ])
+Right (Options {verbosity = Verbose, filepath = Just "./my-haskell-project-skeleton", project = Nothing, subdirectory = PackageInRootDirectory})
 @
 
 See 'options'.
@@ -116,11 +116,11 @@ See 'options'.
 -}
 
 
-toConfig :: [String] -> Either String Config
-toConfig args = resultConfig
+toOptions :: [String] -> Either String Options
+toOptions args = resultOptions
 
   where
-  resultConfig = case go args of
+  resultOptions = case go args of
     P.Success x -> Right x
     P.Failure k -> Left $ show k
     _           -> Left ""
@@ -132,16 +132,16 @@ toConfig args = resultConfig
 {-| 
 
 @
-mergeConfigs extraConfig baseConfig
+mergeOptions extraOptions baseOptions
 @
 
 -}
 
-mergeConfigs :: Config -> Config -> Config
-mergeConfigs extraConfig@Config{ projectname = extraProject } Config{ projectname = baseProject } = updateConfig extraConfig
+mergeOptions :: Options -> Options -> Options
+mergeOptions extraOptions@Options{ projectname = extraProject } Options{ projectname = baseProject } = updateOptions extraOptions
 
   where
-  updateConfig = case extraProject of
+  updateOptions = case extraProject of
     Nothing -> (\x -> x{ projectname = baseProject })
     Just{}  -> id
 
@@ -155,7 +155,7 @@ mergeConfigs extraConfig@Config{ projectname = extraProject } Config{ projectnam
 
 -}
 
-parser :: P.ParserInfo Config
+parser :: P.ParserInfo Options
 parser = P.info options information
 
 --------------------------------------------------
@@ -214,10 +214,10 @@ rBinding = P.eitherReader (A.parseOnly p . T.pack)
 
 --------------------------------------------------
 
-{- | a colon.
+{- | 'posixBindingSyntax'.
 
-(while a « = » (the equals sign) is more natural,
-on the cmdln, it would be gobbled under « optparse-applicative »'s syntax)
+(a « = » (the equals sign) is more natural than a « : » (colon);
+TODO ensure that, on the cmdln, it won't be gobbled under « optparse-applicative »'s syntax)
 
 -}
 
@@ -237,14 +237,21 @@ Options, Arguments, and Flags include:
 
 -}
 
-options :: P.Parser Config
+options :: P.Parser Options
 options = do
 
   verbosity <- (P.flag Concise Verbose) (mconcat
 
         [ P.long    "verbose"
         , P.short   'v'
-        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: [1] parsing these command-line options; and [2] defaulting the values of any optional options)."
+        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: ① parsing these command-line options; and ② defaulting the values of any optional options)."
+        ])
+
+  dryrun <- (P.flag TrueRun DryRun) (mconcat
+
+        [ P.long    "dryrun"
+        , P.short   'i'
+        , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
         ])
 
   printVersion <- P.switch (mconcat
@@ -259,12 +266,9 @@ options = do
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
         ])
 
-  dryrun <- (P.flag TrueRun DryRun) (mconcat
+  resolveConfiguration <- P.switch (mconcat [])
 
-        [ P.long    "dryrun"
-        , P.short   'i'
-        , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
-        ])
+  
 
   projectpath <- optional (P.strOption (mconcat
 
@@ -306,7 +310,7 @@ options = do
         , P.short   'c'
         , P.metavar "CONFIG_FILE"
         , P.action  "file"
-        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an « INI » file (c.f. a UNIX-style « .conf » file). Relative filepaths are interpreted relative: to (1) the current directory from which this command was invoked; (2) to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
+        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an « INI » file (c.f. a UNIX-style « .conf » file). Relative filepaths are interpreted relative: to ① the current directory from which this command was invoked; ② to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
         ]))
 
   bindings <- many (P.option rBinding (mconcat
@@ -333,7 +337,7 @@ options = do
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
         ]))
 
-  return Config{..}
+  return Options{..}
 
   where
 

@@ -12,6 +12,9 @@ module Skeletor.Core.URI
     -- * (Types and instances.)
     module Skeletor.Core.URI.Types
 
+    -- * URI Schemes (@file://@, @https://@, @git://@, etc).
+  , module Skeletor.Core.URI.Schemes
+
     -- * "Reading" (downloading) different 'URI's.
   , module Skeletor.Core.URI.Read
   ) where
@@ -20,6 +23,7 @@ module Skeletor.Core.URI
 --------------------------------------------------
 
 import Skeletor.Core.URI.Types
+import Skeletor.Core.URI.Schemes
 import Skeletor.Core.URI.Read
 
 --------------------------------------------------

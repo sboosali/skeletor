@@ -196,7 +196,7 @@ instance Exception LocationParseError where
 --displayException = show
   displayException = \case
 
-    LocationParseError msg -> "«LocationParseError.LocationParseError» " <>
+    LocationParseError msg -> "« LocationParseError.LocationParseError » " <>
       msg
 
 --------------------------------------------------

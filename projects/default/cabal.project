@@ -22,6 +22,9 @@ haddock-hyperlink-source: True
 --------------------------------------------------
 
 profiling:    True
+
+--------------------------------------------------
+
 ---optimization: 2
 
 --------------------------------------------------
@@ -34,11 +37,12 @@ jobs: 6
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-12.20
-  url: http://www.stackage.org/lts-12.20
+repository stackage-lts-13.7
+  url: http://www.stackage.org/lts-13.7
+  -- « ghc-8.6.3 »
 
   -- From:
-  -- https://www.stackage.org/lts-12.12/cabal.config?global=true
+  -- https://www.stackage.org/lts-13.7/cabal.config?global=true
 
 --------------------------------------------------
 

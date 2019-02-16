@@ -61,15 +61,8 @@ knownLicenseIds = (licenseId <$> allLicenses)
 
 -- | Inverts 'licenseId'
 
-readSpdxLicenseIdentifier :: String -> Maybe SpdxLicenseIdentifier
-readSpdxLicenseIdentifier s = Map.lookup s table
-  where
-
-  table = Map.fromList entries
-
-  entries = entry <$> allLicenses
-
-  entry license = (licenseId license, license)
+readSpdxLicenseIdentifier :: (MonadThrow m) => String -> m SpdxLicenseIdentifier
+readSpdxLicenseIdentifier = (mkParserFromPrinterWith "" licenseId) allLicenses
 
 --------------------------------------------------
 

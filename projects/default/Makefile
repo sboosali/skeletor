@@ -76,7 +76,11 @@ CabalOptions?=--project-file $(ProjectFile) -w $(CompilerProgram)
 # Makefile Variables: Programs.
 ##################################################
 
-Cabal?=cabal
+Cabal ?=cabal
+
+Ghc ?=ghc
+GhcPkg ?=ghc-pkg
+Ghci ?=ghci
 
 Markdown?=multimarkdown
  #TODO pandoc
@@ -124,7 +128,14 @@ InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 # Makefile Variables: (Miscellaneous) Strings
 ##################################################
 
-TagsCommand?=":etags"
+Tags ?=etags
+# ^ [Customize]
+#
+# Values:
+#
+# Tags=etags make tags
+# Tags=ctags make tags
+#
 
 ##################################################
 # the `default` and `all` targets
@@ -334,7 +345,7 @@ build-example:
 
 tags:
 #	$(Cabal) new-repl $(Target) < <(echo -e $(TagsScript))
-	ghci -e $(TagsCommand)
+	$(Ghci) -e ":$(Tags)"
 
         # ^ NOTE:
         # * the « <(...) » is a Process Substitution, while
@@ -499,13 +510,43 @@ check-nix:
 # .PHONY: check-text
 
 #	find */$(DocumentDirectory)/ -name "*" -type f -print0 -exec $(CheckText) \{\} \;
-        # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' ) 
+        # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' )
 
 #------------------------------------------------#
 
 # check-cabal:
 # 	find $(Directory) -name "*.cabal" -print0 -exec $(CheckCabal) \{\} \;
 # .PHONY: check-cabal
+
+##################################################
+# Information: print out m isc info, dry-runs.
+##################################################
+
+print-platform:
+	@$(Ghci) -e ":unset +t" -e "putStrLn System.Info.arch" -e "putStrLn System.Info.os" 2>/dev/null
+
+# e.g.
+#
+# $ make print-platform
+#
+#   x86_64
+#   linux
+
+.PHONY: print-platform
+
+#------------------------------------------------#
+
+print-architecture:
+	@$(Ghci) -e ":unset +t" -e "putStrLn System.Info.arch" 2>/dev/null
+
+.PHONY: print-architecture
+
+#------------------------------------------------#
+
+print-operating-system:
+	@$(Ghci) -e ":unset +t" -e "putStrLn System.Info.os" 2>/dev/null
+
+.PHONY: print-operating-system
 
 ##################################################
 # Tarballs: zip them and unzip them.

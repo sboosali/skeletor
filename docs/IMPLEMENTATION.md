@@ -1448,6 +1448,348 @@ try p = p
 
 
 
+## `moder-uri`
+
+### module `Text.URI`
+
+```haskell
+
+data URI = URI
+
+  { uriScheme :: Maybe (RText 'Scheme)
+
+    -- ^ URI scheme, if 'Nothing', then the URI reference is relative
+
+  , uriAuthority :: Either Bool Authority
+
+    -- ^ 'Authority' component in 'Right' or a 'Bool' value in 'Left'
+    -- indicating if 'uriPath' path is absolute ('True') or relative
+    -- ('False'); if we have an 'Authority' component, then the path is
+    -- necessarily absolute, see 'isPathAbsolute'
+
+  , uriPath :: Maybe (Bool, NonEmpty (RText 'PathPiece))
+
+    -- ^ 'Nothing' represents the empty path, while 'Just' contains an
+    -- indication 'Bool' whether the path component has a trailing slash,
+    -- and the collection of path pieces @'NonEmpty' ('RText' 'PathPiece')@.
+    
+  , ...
+  
+  }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `dhall`
+
+### module `Dhall.Import`
+
+```haskell
+
+-- | Hash a fully resolved expression
+
+hashExpression :: StandardVersion -> Expr s X -> (Crypto.Hash.Digest SHA256)
+hashExpression _standardVersion expression =
+    Crypto.Hash.hash (encodeExpression _standardVersion expression)
+
+{-| Convenience utility to hash a fully resolved expression and return the
+    base-16 encoded hash with the @sha256:@ prefix
+
+    In other words, the output of this function can be pasted into Dhall
+    source code to add an integrity check to an import
+-}
+
+hashExpressionToCode :: StandardVersion -> Expr s X -> Text
+hashExpressionToCode _standardVersion expr =
+    "sha256:" <> Text.pack (show (hashExpression _standardVersion expr))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `raaz`
+
+### Example
+
+```haskell
+import qualified "raaz" Raaz.Hash as Hash
+import           "raaz" Raaz.Hash ()
+
+
+```
+
+### module ``
+
+```haskell
+-- | Compute the hash of file.
+
+hashFile :: ( Hash h, Recommendation h)
+         => FilePath                    -- ^ File to be hashed
+         -> IO h
+
+hashFile fileName = withBinaryFile fileName ReadMode hashSource
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `cryptohash-sha256`
+
+> `cryptohash-sha256` is a drop-in cryptohash replacement (of `cryptohash` a.k.a. `cryptonite`) for clients that only need SHA-256.
+
+> A practical incremental and one-pass, pure API to
+> the [SHA-256 cryptographic hash algorithm](https://en.wikipedia.org/wiki/SHA-2) according
+> to [FIPS 180-4](http://dx.doi.org/10.6028/NIST.FIPS.180-4)
+> with performance close to the fastest implementations available in other languages.
+> .
+> The core SHA-256 algorithm is implemented in C and is thus expected
+> to be as fast as the standard [sha256sum(1) tool](https://linux.die.net/man/1/sha256sum);
+> for instance, on an /Intel Core i7-3770/ at 3.40GHz this implementation can
+> compute a SHA-256 hash over 230 MiB of data in under one second.
+> (If, instead, you require a pure Haskell implementation and performance is secondary, please refer to the [SHA package](https://hackage.haskell.org/package/SHA).)
+> .
+> 
+> .
+> Additionally, this package provides support for
+> .
+> - HMAC-SHA-256: SHA-256-based [Hashed Message Authentication Codes](https://en.wikipedia.org/wiki/HMAC) (HMAC)
+> - HKDF-SHA-256: [HMAC-SHA-256-based Key Derivation Function](https://en.wikipedia.org/wiki/HKDF) (HKDF)
+> .
+> conforming to [RFC6234](https://tools.ietf.org/html/rfc6234), [RFC4231](https://tools.ietf.org/html/rfc4231), [RFC5869](https://tools.ietf.org/html/rfc5869), et al..
+> .
+ 
+### Example
+
+```haskell
+import qualified "cryptohash-sha256" Crypto.Hash.SHA256 as SHA256
+import           "cryptohash-sha256" Crypto.Hash.SHA256 ()
+
+
+```
+
+### module `Crypto.Hash.SHA256`
+
+```haskell
+    -- * Incremental API
+    --
+    -- | This API is based on 4 different functions, similar to the
+    -- lowlevel operations of a typical hash:
+    --
+    --  - 'init': create a new hash context
+    --  - 'update': update non-destructively a new hash context with a strict bytestring
+    --  - 'updates': same as update, except that it takes a list of strict bytestrings
+    --  - 'finalize': finalize the context and returns a digest bytestring.
+    --
+    -- all those operations are completely pure, and instead of
+    -- changing the context as usual in others language, it
+    -- re-allocates a new context each time.
+    --
+    -- Example:
+    --
+    -- > import qualified Data.ByteString
+    -- > import qualified Crypto.Hash.SHA256 as SHA256
+    -- >
+    -- > main = print digest
+    -- >   where
+    -- >     digest = SHA256.finalize ctx
+    -- >     ctx    = foldl SHA256.update ctx0 (map Data.ByteString.pack [ [1,2,3], [4,5,6] ])
+    -- >     ctx0   = SHA256.init
+
+      Ctx(..)
+    , init     -- :: Ctx
+    , update   -- :: Ctx -> ByteString -> Ctx
+    , updates  -- :: Ctx -> [ByteString] -> Ctx
+    , finalize -- :: Ctx -> ByteString
+    , finalizeAndLength -- :: Ctx -> (ByteString,Word64)
+
+    -- * Single Pass API
+    --
+    -- | This API use the incremental API under the hood to provide
+    -- the common all-in-one operations to create digests out of a
+    -- 'ByteString' and lazy 'L.ByteString'.
+    --
+    --  - 'hash': create a digest ('init' + 'update' + 'finalize') from a strict 'ByteString'
+    --  - 'hashlazy': create a digest ('init' + 'update' + 'finalize') from a lazy 'L.ByteString'
+    --  - 'hashlazyAndLength': create a digest ('init' + 'update' + 'finalizeAndLength') from a lazy 'L.ByteString'
+    --
+    -- Example:
+    --
+    -- > import qualified Data.ByteString
+    -- > import qualified Crypto.Hash.SHA256 as SHA256
+    -- >
+    -- > main = print $ SHA256.hash (Data.ByteString.pack [0..255])
+    --
+    -- __NOTE__: The returned digest is a binary 'ByteString'. For
+    -- converting to a base16/hex encoded digest the
+    -- <https://hackage.haskell.org/package/base16-bytestring base16-bytestring>
+    -- package is recommended.
+
+    , hash     -- :: ByteString -> ByteString
+    , hashlazy -- :: L.ByteString -> ByteString
+    , hashlazyAndLength -- :: L.ByteString -> (ByteString,Int64)
+
+    -- ** HMAC-SHA-256
+    --
+    -- | <https://tools.ietf.org/html/rfc2104 RFC2104>-compatible
+    -- <https://en.wikipedia.org/wiki/HMAC HMAC>-SHA-256 digests
+
+    , hmac     -- :: ByteString -> ByteString -> ByteString
+    , hmaclazy -- :: ByteString -> L.ByteString -> ByteString
+    , hmaclazyAndLength -- :: ByteString -> L.ByteString -> (ByteString,Word64)
+
+    -- ** HKDF-SHA-256
+    --
+    -- | <https://tools.ietf.org/html/rfc5869 RFC5869>-compatible
+    -- <https://en.wikipedia.org/wiki/HKDF HKDF>-SHA-256 key derivation function
+
+    , hkdf
+    )
+```
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `cryptonite`
+
+> A repository of cryptographic primitives:
+> 
+> * Symmetric ciphers: AES, DES, 3DES, CAST5, Blowfish, Twofish, Camellia, RC4, Salsa, XSalsa, ChaCha.
+> 
+> * Hash: SHA1, SHA2, SHA3, SHAKE, MD2, MD4, MD5, Keccak, Skein, Ripemd, Tiger, Whirlpool, Blake2
+> 
+> * MAC: HMAC, Poly1305
+> 
+> * Asymmetric crypto: DSA, RSA, DH, ECDH, ECDSA, ECC, Curve25519, Curve448, Ed25519, Ed448
+> 
+> * Key Derivation Function: PBKDF2, Scrypt, HKDF, Argon2
+> 
+> * Cryptographic Random generation: System Entropy, Deterministic Random Generator
+> 
+> * Data related: Anti-Forensic Information Splitter (AFIS)
+
+### module `Crypto.Hash`
+
+```haskell
+import qualified "cryptonite" Crypto.Hash as Hash
+import           "cryptonite" Crypto.Hash (SHA256)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `base16-bytestring`
+
+> Fast base16 (hex) encoding and decoding for ByteStrings
+
+### Example
+
+```haskell
+>>> import qualified "base16-bytestring" Data.ByteString.Base16.Lazy as Base16
+>>> import qualified "bytestring"        Data.ByteString.Lazy as ByteString
+
+>>> :set -XOverloadedStrings 
+
+>>> (ByteString.length (Base16.encode "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"))
+```
+
+### module `Data.ByteString.Base16.Lazy`
+
+```haskell
+-- | Encode a string into base16 form.  The result will always be a
+-- multiple of 2 bytes in length.
+--
+-- Example:
+--
+-- > encode "foo"  == "666f6f"
+
+encode :: ByteString -> ByteString
+encode (Chunk c cs) = Chunk (B16.encode c) (encode cs)
+encode Empty        = Empty
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## ``
 
 ### module ``
@@ -1455,40 +1797,19 @@ try p = p
 ```haskell
 ```
 
-## ``
 
-### module ``
 
-```haskell
-```
 
-## ``
 
-### module ``
 
-```haskell
-```
 
-## ``
 
-### module ``
 
-```haskell
-```
 
-## ``
 
-### module ``
 
-```haskell
-```
 
-## ``
 
-### module ``
-
-```haskell
-```
 
 ## ``
 

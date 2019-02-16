@@ -17,7 +17,7 @@ ORIGINAL=${1:?"$MESSAGE"}
 RENAMED=${2:?"$MESSAGE"}
 
 DIRECTORY=${3:?.}
-OPTIONS="${@:3}"
+OPTIONS="" # ${@:3}
 
 ##################################################
 

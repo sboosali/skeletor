@@ -5,25 +5,29 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
-
-
+{-| Module that re-exports most package types.
 
 -}
 
 module Skeletor.Haskell.Types
 
   ( module Skeletor.Haskell.Types
-  , module Skeletor.Haskell.Variable.Binding.Types
+  , module Skeletor.Haskell.Chiaroscuro.Types
+  , module Skeletor.Haskell.License.Types
   , module Skeletor.Haskell.Variable.Types
+  , module Skeletor.Haskell.Variable.Binding.Types
+  , module EXPORTS
   ) where
 
 --------------------------------------------------
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Haskell.Variable.Binding.Types
+import Skeletor.Haskell.License.Types
+--import Skeletor.Haskell.Location.Types
+import Skeletor.Haskell.Chiaroscuro.Types
 import Skeletor.Haskell.Variable.Types
+import Skeletor.Haskell.Variable.Binding.Types
 
 --------------------------------------------------
 -- Imports (Project) -----------------------------
@@ -40,7 +44,7 @@ import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
-import           "text" Data.Text (Text)
+import           "text" Data.Text as EXPORTS (Text)
 
 --------------------------------------------------
 -- Imports (Custom Prelude) ----------------------
