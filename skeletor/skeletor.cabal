@@ -616,14 +616,22 @@ executable skeletor-haskell
 
   other-modules: Program.Skeletor.Haskell.Main
                  Program.Skeletor.Haskell.Types
-                 Program.Skeletor.Haskell.Core
+
+                 Program.Skeletor.Haskell.Version
+                 Program.Skeletor.Haskell.License
                  Program.Skeletor.Haskell.Utilities
+
+                 Program.Skeletor.Haskell.Core
+                 Program.Skeletor.Haskell.Core.Types
+                 Program.Skeletor.Haskell.Command
+                 Program.Skeletor.Haskell.Command.Types
                  Program.Skeletor.Haskell.Options
                  Program.Skeletor.Haskell.Options.Types
                  Program.Skeletor.Haskell.Action
                  Program.Skeletor.Haskell.Action.Types
                  Program.Skeletor.Haskell.Config
                  Program.Skeletor.Haskell.Config.Types
+
                  Prelude_exe
 
   build-depends:
@@ -633,6 +641,7 @@ executable skeletor-haskell
 
               , text
               , case-insensitive
+              , generic-lens
               , attoparsec
                 -- TODO rm attoparsec, export helpers from library
 

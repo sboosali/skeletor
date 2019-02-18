@@ -356,17 +356,39 @@ data Config f = Config
 
 --------------------------------------------------
 
+{-| 
+
+-}
+
+mkLocation projectpath projectname = getFirst $ sconcat
+
+  [ First projectpath
+  , First projectname
+  , First def
+  ]
 
 --------------------------------------------------
 
+programVersion :: Version
+programVersion = Version
 
+  { versionBranch = (majorVersion ++ minorVersion)
+  , versionTags   = []
+  }
+
+  where
+
+  majorVersion = [0,1]
+  minorVersion = [0]
+
+versionBranch = [a,b,c]
 
 --------------------------------------------------
 
-
+import           "base" Data.Maybe
+import           "base" Data.Semigroup
 
 --------------------------------------------------
-
 
 
 --------------------------------------------------

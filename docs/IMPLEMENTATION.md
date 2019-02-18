@@ -17,6 +17,16 @@ import           "" _      ()
 
 ## `base`
 
+
+### `Data.Maybe`
+
+```haskell
+catMaybes :: [Maybe a] -> [a]
+
+listToMaybe :: [a] -> Maybe a
+```
+
+
 ### `Data.Monoid`
 
 ```haskell
@@ -24,6 +34,23 @@ newtype Alt f a
 
 -- Monoid under <|>.
 ```
+
+
+### `System.IO`
+
+```haskell
+getLine :: IO String
+
+-- Read a line from the standard input device (same as hGetLine stdin).
+```
+
+```haskell
+putStr :: String -> IO ()
+
+-- Write a string to the standard output device (same as hPutStr stdout).
+```
+
+
 
 ### `Control.Exception`
 
@@ -1790,11 +1817,15 @@ encode Empty        = Empty
 
 
 
-## ``
+## `generic-lens`
 
-### module ``
+### module `Data.Generics.Product`
 
 ```haskell
+getField :: forall f a s. HasField' f s a => s -> a
+
+>>> getField @"age" human
+50
 ```
 
 
