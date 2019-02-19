@@ -45,9 +45,11 @@ import           "text" Data.Text (Text)
 import qualified "optparse-applicative" Options.Applicative as P
 
 --------------------------------------------------
+--------------------------------------------------
 
--- import           "base" _
 
+
+--------------------------------------------------
 --------------------------------------------------
 
 import Prelude_exe
@@ -261,21 +263,27 @@ options = do
         , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
         ])
 
-  printVersion <- P.switch (mconcat
+  printVersion <- empty
+
+     <|> (P.switch (mconcat
+
+        [ P.long    "print-version"
+        , P.help    "Print the version of this program. The format is, for example, « 0.0.0 ». No other text is printed."
+        ]))
+
+     <|> (P.switch (mconcat
 
         [ P.long    "version"
-        , P.help    "Print the version of this program. The format is, for example, « 0.0.0 ». No other text is printed."
-        ])
+        , P.help    "Alias for « --print-version »."
+        ]))
 
   printLicense <- P.switch (mconcat   -- TODO -- subcommand, not option.
 
-        [ P.long    "license"
+        [ P.long    "print-license"
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
         ])
 
   resolveConfiguration <- P.switch (mconcat [])
-
-  
 
   projectpath <- optional (P.strOption (mconcat
 

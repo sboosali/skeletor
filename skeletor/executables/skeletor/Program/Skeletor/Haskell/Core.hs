@@ -22,6 +22,7 @@ import Skeletor.Haskell
 import Program.Skeletor.Haskell.Types
 import Program.Skeletor.Haskell.Options
 import Program.Skeletor.Haskell.Config
+import Program.Skeletor.Haskell.Action
 
 --------------------------------------------------
 
@@ -57,9 +58,12 @@ programWithOptions options@Options{..} = do
 -}
 
 programWithConfig :: Config -> IO ()
-programWithConfig config@Config{..} = do
+programWithConfig config@Config{ actions = Actions actions } = do
 
   print config
+
+  statuses <- traverse runAction actions
+  print statuses
 
 --------------------------------------------------
 --------------------------------------------------

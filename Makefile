@@ -402,7 +402,7 @@ install-skeletor-haskell:
 	@echo '=================================================='
 	@echo
 
-	time $(Cabal) new-install "skeletor:exe:skeletor-haskell"
+	time $(Cabal) new-install --overwrite-policy=always "skeletor:exe:skeletor-haskell"
 
 	@echo
 	@echo '=================================================='

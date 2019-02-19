@@ -12,10 +12,16 @@
 module Program.Skeletor.Haskell.Config.Types where
 
 --------------------------------------------------
+-- Imports (Project) -----------------------------
 --------------------------------------------------
 
 import Skeletor.Core.Hash
+
 import Skeletor.Haskell.Types hiding (Location)
+
+--------------------------------------------------
+
+import Program.Skeletor.Haskell.Core.Types
 
 --------------------------------------------------
 
@@ -23,6 +29,7 @@ import Program.Skeletor.Haskell.Options.Types
 import Program.Skeletor.Haskell.Action.Types
 
 --------------------------------------------------
+-- Imports (Extended) ----------------------------
 --------------------------------------------------
 
 -- import           "cryptonite" Crypto.Hash (SHA256)
@@ -33,6 +40,7 @@ import qualified "case-insensitive" Data.CaseInsensitive as CI
 import           "case-insensitive" Data.CaseInsensitive  ( CI )
 
 --------------------------------------------------
+-- Imports (Standard) ----------------------------
 --------------------------------------------------
 
 import qualified "text" Data.Text as T

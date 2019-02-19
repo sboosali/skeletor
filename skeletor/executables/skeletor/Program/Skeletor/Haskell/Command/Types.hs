@@ -1,3 +1,5 @@
+{-# LANGUAGE DuplicateRecordFields #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -10,6 +12,13 @@ module Program.Skeletor.Haskell.Command.Types where
 --------------------------------------------------
 -- Imports (Project) -----------------------------
 --------------------------------------------------
+
+--import Skeletor.Core.Types
+import Skeletor.Haskell.Types
+
+--------------------------------------------------
+
+import Program.Skeletor.Haskell.Core.Types
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
@@ -41,7 +50,43 @@ import Prelude_exe
 
 data Command
 
-  = Command
+  = CommandCreateProject        CreateProjectOptions
+  | CommandDownloadProject      DownloadProjectOptions
+  | CommandResolveConfiguration
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data CreateProjectOptions = CreateProjectOptions
+
+  { location    :: Location
+  , destination :: FilePath
+  , license     :: License
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data DownloadProjectOptions = DownloadProjectOptions
+
+  { location    :: Location
+  , destination :: FilePath
+  , method      :: FetchBy
+  }
 
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)

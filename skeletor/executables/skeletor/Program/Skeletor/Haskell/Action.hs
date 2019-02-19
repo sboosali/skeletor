@@ -50,9 +50,18 @@ import Prelude_exe
 toActions :: (MonadThrow m) => Options -> m Actions
 toActions Options{..} = do
 
-  let actions = []
+  let actions' = actions
 
-  return actions
+  return actions'
+
+  where
+
+  actions :: Actions
+  actions = mconcat
+    [ (if printVersion then [ActionPrintVersion] else [])
+    , (if printLicense then [ActionPrintLicense] else [])
+    , []
+    ]
 
 --------------------------------------------------
 --------------------------------------------------

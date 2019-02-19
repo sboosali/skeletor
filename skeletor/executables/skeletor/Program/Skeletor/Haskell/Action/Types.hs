@@ -148,36 +148,6 @@ data ProjectDownloaded = ProjectDownloaded
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
---------------------------------------------------
-
-data Location
-
-  = LocationStdin
-  | LocationPath FilePath
-  | LocationURL  URL
-
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
---------------------------------------------------
-
-{-| How to fetch (a.k.a download) a location.
-
-TODO When fetching @URL@s, 'FetchBy' specifies an HttpTransport@.
-
--}
-
-data FetchBy
-
-  = FetchByHaskell
-  | FetchByCurl
-  | FetchByWget
-
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
 {-------------------------------------------------
 
 
