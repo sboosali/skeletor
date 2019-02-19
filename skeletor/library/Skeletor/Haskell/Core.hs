@@ -29,13 +29,16 @@ import Prelude_skeletor
 --------------------------------------------------
 --------------------------------------------------
 
+--------------------------------------------------
+--------------------------------------------------
+
 allKnownProjects :: [KnownProject]
 allKnownProjects = genum
 
 --------------------------------------------------
 
-knownProjectNames :: [String]
-knownProjectNames = printKnownProject <$> allKnownProjects
+builtinProjectNames :: [String]
+builtinProjectNames = printKnownProject <$> allKnownProjects
 
 --------------------------------------------------
 

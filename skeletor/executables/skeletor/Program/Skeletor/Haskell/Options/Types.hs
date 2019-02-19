@@ -40,7 +40,7 @@ data Options = Options
   , configpath   :: Maybe FilePath
   , projectpath  :: Maybe FilePath
   , projectname  :: Maybe String
-  , subdirectory :: WhichPackageDirectory
+  , subdirectory :: Maybe FilePath
   , bindings     :: [Binding]
   , environment  :: Bindings
   }
@@ -71,7 +71,7 @@ defaultOptions = Options{..}
   configpath   = def
   projectpath  = Nothing
   projectname  = Just defaultProjectName
-  subdirectory = def
+  subdirectory = Nothing
   bindings     = def
   environment  = def
 

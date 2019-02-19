@@ -1,6 +1,8 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE OverloadedLists   #-}
-{-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE OverloadedLists       #-}
+{-# LANGUAGE ApplicativeDo         #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -11,7 +13,10 @@
 
 -}
 
-module Program.Skeletor.Haskell.Config where
+module Program.Skeletor.Haskell.Config
+
+  ( toConfig
+  ) where
 
 --------------------------------------------------
 -- Imports (Internal) ----------------------------
@@ -50,7 +55,8 @@ import qualified "optparse-applicative" Options.Applicative as P
 
 --------------------------------------------------
 
--- import           "base" _
+import           "base" Data.Maybe
+import           "base" Data.Semigroup
 
 --------------------------------------------------
 
@@ -64,13 +70,13 @@ import Prelude_exe
 -}
 
 toConfig :: (MonadThrow m) => Options -> m Config
-toConfig options@Options{ location = location', ..} = do
+toConfig options@Options{..} = do
 
-  bindings <- return (environment <> (Bindings bindings))
+  bindings' <- return (environment <> (Bindings bindings))
 
-  
+  let location = mkLocation subdirectory projectpath projectname
 
-  license <- readSpdxLicenseIdentifier license
+  license' <- readSpdxLicenseIdentifier license
 
   actions <- toActions options
 
@@ -80,10 +86,10 @@ toConfig options@Options{ location = location', ..} = do
         }
 
   let project = Project
-        { location = location'
-        , license
-        , subdirectory
-        , bindings = bindings
+        { location
+        , license = license'
+        , isSubdirectory = def
+        , bindings = bindings'
         }
 
   let config = Config
@@ -93,6 +99,27 @@ toConfig options@Options{ location = location', ..} = do
         }
 
   return config
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+mkLocation subdirectory projectpath projectname = fromMaybes LocationStdin
+
+  [ LocationPath <$> (projectpath)
+  , LocationPath <$> (fromProjectName =<< projectname)
+  ]
+
+  where
+
+  fromMaybes :: a -> [Maybe a] -> a
+  fromMaybes x = catMaybes > listToMaybe > fromMaybe x
+
+  fromProjectName :: String -> Maybe FilePath
+  fromProjectName = parseKnownProject >=> returning locateKnownProject
 
 --------------------------------------------------
 --------------------------------------------------

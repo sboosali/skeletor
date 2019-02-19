@@ -13,16 +13,17 @@
 module Program.Skeletor.Haskell.Main
 
   ( main
-  , module Program.Skeletor.Haskell.Options
-  , module Program.Skeletor.Haskell.Core
+  , programWithOptions
+  , programWithConfig
   ) where
 
 --------------------------------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Options
-import Program.Skeletor.Haskell.Core
+import Program.Skeletor.Haskell.Options (getOptions)
+import Program.Skeletor.Haskell.Core    (programWithOptions, programWithConfig)
 
+--------------------------------------------------
 --------------------------------------------------
 
 import Prelude_exe
@@ -30,14 +31,19 @@ import Prelude_exe
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-| the @main@ procedure @skeletor-haskell@ executable.
+
+@≡ 'getOptions' >>= 'programWithOptions'
+@
 
 -}
 
 main :: IO ()
 main = do
+
   options <- getOptions
-  program options
+
+  programWithOptions options
 
 --------------------------------------------------
 --------------------------------------------------

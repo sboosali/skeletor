@@ -156,7 +156,7 @@ mergeOptions extraOptions@Options{ projectname = extraProject } Options{ project
 -}
 
 parser :: P.ParserInfo Options
-parser = P.info options information
+parser = P.info (options <**> P.helper) information
 
 --------------------------------------------------
 
@@ -214,6 +214,11 @@ rBinding = P.eitherReader (A.parseOnly p . T.pack)
 
 --------------------------------------------------
 
+rLicense :: P.ReadM License
+rLicense = P.maybeReader readSpdxLicenseIdentifier
+
+--------------------------------------------------
+
 {- | 'posixBindingSyntax'.
 
 (a « = » (the equals sign) is more natural than a « : » (colon);
@@ -239,6 +244,8 @@ Options, Arguments, and Flags include:
 
 options :: P.Parser Options
 options = do
+
+  let knownProjectNames = builtinProjectNames
 
   verbosity <- (P.flag Concise Verbose) (mconcat
 
@@ -284,25 +291,15 @@ options = do
         [ P.long    "project-name"
         , P.short   'p'
         , P.metavar "PROJECT_NAME"
-        , P.completeWith knownProjectNames
+        , P.completeWith builtinProjectNames
         , P.help    "Which project skeleton, by name. (Press the « TAB » key for shell-completion of known projects)."
         ]))
 
-  subdirectory <- ((P.flag' PackageInRootDirectory
-         (mconcat
-              [ P.long    "no-subdir"
-              --, P.metavar "SUBDIR(✓)"
-              , P.help    "Whether the (singleton-package) project has its package in its root directory (When both « --no-subdir » and « --subdir » are given, this option takes precedence)."
-              ]))
-        <|>
-        (P.flag' PackageInNamesakeSubdirectory
-           (mconcat
-              [ P.long    "subdir"
-              --, P.metavar "SUBDIR(❌)"
-              , P.help    "Whether the (singleton-package) project has a separate subdirectory for its package (the default)."
-              ]))
-        <|> pure def
-      )
+  subdirectory <- optional (P.strOption (mconcat
+        [ P.long    "subdir"
+        , P.action  "file"
+        , P.help    "The subdirectory of the « --location » (when unpacked)."
+        ]))
 
   configpath <- optional (P.strOption (mconcat
 
@@ -334,7 +331,7 @@ options = do
         [ P.long    "license"
         , P.metavar "LICENSE"
         , P.completeWith knownLicenseIds
-        , P.help    "Print the SPDX license identifier of this program, then print out the license text."
+        , P.help    "The PROJECTS's spdx license identifier."
         ]))
 
   return Options{..}

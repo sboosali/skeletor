@@ -1,65 +1,50 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
-
-
+{-| 
 
 -}
 
-module Program.Skeletor.Haskell.Core
-
-  ( programWithOptions
-  , programWithConfig
-  ) where
+module Program.Skeletor.Haskell.Command.Types where
 
 --------------------------------------------------
-
-import Skeletor.Haskell
-
+-- Imports (Project) -----------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Types
-import Program.Skeletor.Haskell.Options
-import Program.Skeletor.Haskell.Config
-
+--------------------------------------------------
+-- Imports (External) ----------------------------
 --------------------------------------------------
 
 -- import qualified "" _ as _
+-- import           "" _ ()
 
 --------------------------------------------------
+-- Imports (Standard Library) --------------------
+--------------------------------------------------
 
--- import           "base" _
+-- import qualified "" _ as _
+-- import           "" _ ()
 
+--------------------------------------------------
+-- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
 
 import Prelude_exe
 
 --------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 {-| 
 
 -}
 
-programWithOptions :: Options -> IO ()
-programWithOptions options@Options{..} = do
+data Command
 
-  config <- toConfig options
+  = Command
 
-  programWithConfig config
-
---------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
-programWithConfig :: Config -> IO ()
-programWithConfig config@Config{..} = do
-
-  print config
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
 --------------------------------------------------

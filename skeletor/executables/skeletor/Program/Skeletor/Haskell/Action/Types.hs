@@ -15,8 +15,9 @@ module Program.Skeletor.Haskell.Action.Types where
 -- Imports (Internal) ----------------------------
 --------------------------------------------------
 
---import Skeletor.Core.Types
+import Program.Skeletor.Haskell.Core.Types
 
+--import Skeletor.Core.Types
 import Skeletor.Haskell.Types
 
 --------------------------------------------------
@@ -31,11 +32,6 @@ import Skeletor.Haskell.Types
 --------------------------------------------------
 
 import Prelude_exe
-
---------------------------------------------------
---------------------------------------------------
-
-type URL = String
 
 --------------------------------------------------
 --------------------------------------------------
@@ -115,6 +111,37 @@ data DownloadProject = DownloadProject
   { location    :: Location
   , destination :: FilePath
   , method      :: FetchBy
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data ProjectCreated = ProjectCreated
+
+  { status :: Status
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data ProjectDownloaded = ProjectDownloaded
+
+  { status :: Status
+  , path   :: FilePath
   }
 
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)

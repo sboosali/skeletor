@@ -52,7 +52,7 @@ import Prelude_exe hiding ( Text )
 
 data Config = Config
 
-  { actions      :: [Action]
+  { actions      :: Actions
   , globals      :: GlobalOptions
   , project      :: Project
   }
@@ -85,10 +85,10 @@ data GlobalOptions = GlobalOptions
 
 data Project = Project
 
-  { location     :: Location
-  , bindings     :: Bindings
-  , license      :: SpdxLicenseIdentifier
-  , subdirectory :: WhichPackageDirectory
+  { location       :: Location
+  , bindings       :: Bindings
+  , license        :: SpdxLicenseIdentifier
+  , isSubdirectory :: WhichPackageDirectory
   }
 
   deriving stock    (Show,Read,Eq,Ord,Generic)
