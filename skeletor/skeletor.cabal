@@ -62,8 +62,27 @@ extra-source-files: README.md
 
 data-dir: data
 
-data-files: licenses/**/*.txt
-            .gitignore
+data-files: .gitignore
+
+            licenses/BSD-2-Clause/LICENSE.txt
+            licenses/BSD-3-Clause/LICENSE.txt
+            licenses/BSD-4-Clause/LICENSE.txt
+
+            licenses/GPL-3.0-or-later/LICENSE.txt
+            licenses/GPL-3.0-or-later/TerminalLicenseNotice.txt
+            licenses/GPL-3.0-or-later/StandardLicenseHeader.txt
+
+            licenses/AGPL-3.0-or-later/LICENSE.txt
+            licenses/AGPL-3.0-or-later/StandardLicenseHeader.txt
+
+            licenses/LGPL-3.0-or-later/LICENSE.txt
+
+            licenses/MIT/LICENSE.txt
+
+            licenses/Apache-2.0/LICENSE.txt
+            licenses/Apache-2.0/StandardLicenseHeader.txt
+
+--          licenses/**/*.txt
 
 --------------------------------------------------
 
@@ -308,7 +327,7 @@ common sboo-main
    -- Compilation -----
    --------------------
  
-             -O2
+ --            -O2
 
    --------------------
    -- Runtime ---------

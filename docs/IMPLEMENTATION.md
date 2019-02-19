@@ -1821,6 +1821,8 @@ encode Empty        = Empty
 
 ### module `Data.Generics.Product`
 
+`getField`:
+
 ```haskell
 getField :: forall f a s. HasField' f s a => s -> a
 
@@ -1828,9 +1830,37 @@ getField :: forall f a s. HasField' f s a => s -> a
 50
 ```
 
+e.g.
 
+```haskell
+>>> :set -XTypeApplications
+>>> :set -XDataKinds
+>>> :set -XDeriveGeneric
+>>> :set -XGADTs
+>>> :set -XFlexibleContexts
 
+>>> import GHC.Generics
+>>> :m +Data.Generics.Internal.VL.Lens
+>>> :m +Data.Function
 
+>>> :{
+data Human a
+  = Human
+    { name    :: String
+    , age     :: Int
+    , address :: String
+    , other   :: a
+    }
+  | HumanNoAddress
+    { name    :: String
+    , age     :: Int
+    , other   :: a
+    }
+  deriving (Generic, Show)
+human :: Human Bool
+human = Human { name = "Tunyasz", age = 50, address = "London", other = False }
+:}
+```
 
 
 

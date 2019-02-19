@@ -109,6 +109,16 @@ CheckNix?=nix-instantiate
 RootDirectory?=$(CURDIR)
 DefaultPackageDirectory?=$(DefaultPackageName)
 
+#------------------------------------------------#
+
+BashCompletionDirectory ?=./etc/bash_completion.d
+
+NixDirectory      ?=./nix
+ScriptDirectory   ?=./scripts
+DocumentDirectory ?=./docs
+
+#------------------------------------------------#
+
 ReleaseDirectory?=./ignore/release
 #                          ^ [Customize]
 
@@ -117,9 +127,6 @@ ReleaseDirectory?=./ignore/release
 # to actually commit it.
 
 BuildDirectory?=./dist-newstyle
-NixDirectory?=./nix
-ScriptDirectory?=./scripts
-DocumentDirectory?=./docs
 
 HaddockDirectory?=$(ReleaseDirectory)/documentation
 TarballDirectory?=$(ReleaseDirectory)/tarballs
@@ -392,21 +399,37 @@ locate-executable:
 
 install-skeletor-haskell:
 
-	@mkdir -p "./bin/bash_completion.d"
+	@echo '=================================================='
+	@echo
 
-	@touch "./bin/$(DefaultExecutableProgram)"
-	@chmod 700 "./bin/$(DefaultExecutableProgram)"
+	time $(Cabal) new-install "skeletor:exe:skeletor-haskell"
 
-	@touch "./bin/bash_completion.d/$(DefaultExecutableProgram)"
-	@chmod 700 "./bin/bash_completion.d/$(DefaultExecutableProgram)"
+	@echo
+	@echo '=================================================='
+	@echo
 
-	$(Cabal) new-build "skeletor:exe:$(DefaultExecutableProgram)"
+	@mkdir -p "$(BashCompletionDirectory)"
 
-	ln -sf `$(Cabal) new-exec which -- $(DefaultExecutableProgram)` "./bin/$(DefaultExecutableProgram)"
+	skeletor-haskell --bash-completion-script skeletor-haskell > "$(BashCompletionDirectory)/skeletor-haskell.bash"
 
-	$(Cabal) new-exec -- $(DefaultExecutableProgram) --bash-completion-script `$(Cabal) new-exec which -- $(DefaultExecutableProgram)` > "./bin/bash_completion.d/$(DefaultExecutableProgram)"
+	@echo
+	@echo '=================================================='
+	@echo
+
+	@echo source `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
+
+	@echo
+	@echo '=================================================='
 
 .PHONY: install-skeletor-haskell
+
+##################################################
+
+uninstall-skeletor-haskell:
+
+	if [ -L "~/.cabal/bin/skeletor-haskell" ]; then rm "~/.cabal/bin/skeletor-haskell"; fi
+
+.PHONY: uninstall-skeletor-haskell
 
 ##################################################
 # Documentation: building/copying/opening
