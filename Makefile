@@ -84,23 +84,25 @@ CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 # Makefile Variables: Programs.
 ##################################################
 
-Cabal?=cabal
+Cabal ?=cabal
 
-Pandoc?=pandoc
+Pandoc ?=pandoc
 
-Markdown?=multimarkdown
+Markdown ?=multimarkdown
  #TODO pandoc
 
-Open?=xdg-open
+Open ?=xdg-open
 
-CheckCabal?=$(Cabal) check
-CheckTarball?=tar -C /tmp -zxvf
-CheckMarkdown?=$(Markdown)
-CheckJson?=jsonlint
-CheckBash?=shellcheck
-CheckNix?=nix-instantiate
+CheckCabal ?=$(Cabal) check
+CheckTarball ?=tar -C /tmp -zxvf
+CheckMarkdown ?=$(Markdown)
+CheckJson ?=jsonlint
+CheckBash ?=shellcheck
+CheckNix ?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
+
+Lld ?=lld
 
 ##################################################
 # Makefile Variables: File/Directory Paths
@@ -397,12 +399,42 @@ locate-executable:
 
 ##################################################
 
-install-skeletor-haskell:
+uninstall-skeletor-haskell:
+
+	if [ -L "~/.cabal/bin/skeletor-haskell" ]; then rm "~/.cabal/bin/skeletor-haskell"; fi
+
+.PHONY: uninstall-skeletor-haskell
+
+##################################################
+# Static-Linking
+##################################################
+
+static-build-skeletor-haskell:
 
 	@echo '=================================================='
 	@echo
 
-	time $(Cabal) new-install --overwrite-policy=always "skeletor:exe:skeletor-haskell"
+	time $(Cabal) new-build -j1 --flags="+static" "skeletor:exe:skeletor-haskell"
+
+	@echo
+	@echo '=================================================='
+	@echo
+
+	@echo 
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: static-build-skeletor-haskell
+
+##################################################
+
+install-skeletor-haskell: static-build-skeletor-haskell
+
+	@echo '=================================================='
+	@echo
+
+	time $(Cabal) new-install -j1 --flags="+static" --overwrite-policy=always "skeletor:exe:skeletor-haskell"
 
 	@echo
 	@echo '=================================================='
@@ -416,20 +448,18 @@ install-skeletor-haskell:
 	@echo '=================================================='
 	@echo
 
+	@echo $(Lld) `which skeletor-haskell`
+
+	@echo
+	@echo '=================================================='
+	@echo
+
 	@echo source `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
 
 	@echo
 	@echo '=================================================='
 
 .PHONY: install-skeletor-haskell
-
-##################################################
-
-uninstall-skeletor-haskell:
-
-	if [ -L "~/.cabal/bin/skeletor-haskell" ]; then rm "~/.cabal/bin/skeletor-haskell"; fi
-
-.PHONY: uninstall-skeletor-haskell
 
 ##################################################
 # Documentation: building/copying/opening

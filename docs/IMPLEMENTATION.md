@@ -1879,3 +1879,92 @@ human = Human { name = "Tunyasz", age = 50, address = "London", other = False }
 ```haskell
 ```
 
+
+
+
+
+
+
+
+
+
+## Installation
+
+### Static-Linking
+
+by default:
+
+```sh
+$ which skeletor-haskell 
+
+/home/sboo/.cabal/bin/skeletor-haskell
+```
+
+```sh
+$ ldd `which skeletor-haskell`
+
+	linux-vdso.so.1                                    =>                                                    (0x00007ffcdc17d000)
+	libm.so.6                                          => /nix/store/*-glibc-2.27/lib/libm.so.6              (0x00007fcb7f8f4000)
+	libz.so.1                                          => /nix/store/*-user-environment/lib/libz.so.1        (0x00007fcb7f6d8000)
+	libncursesw.so.6                                   => /nix/store/*-user-environment/lib/libncursesw.so.6 (0x00007fcb7f469000)
+	libpthread.so.0                                    => /nix/store/*-glibc-2.27/lib/libpthread.so.0        (0x00007fcb7f24a000)
+	librt.so.1                                         => /nix/store/*-glibc-2.27/lib/librt.so.1             (0x00007fcb7f042000)
+	libutil.so.1                                       => /nix/store/*-glibc-2.27/lib/libutil.so.1           (0x00007fcb7ee3f000)
+	libdl.so.2                                         => /nix/store/*-glibc-2.27/lib/libdl.so.2             (0x00007fcb7ec3b000)
+	libgmp.so.10                                       => /nix/store/*-gmp-6.1.2/lib/libgmp.so.10            (0x00007fcb7e9a7000)
+	libc.so.6                                          => /nix/store/*-glibc-2.27/lib/libc.so.6              (0x00007fcb7e5f3000)
+	/nix/store/*-glibc-2.27/lib/ld-linux-x86-64.so.2   => /lib64/ld-linux-x86-64.so.2                        (0x00007fcb7fc89000)
+```
+
+with `ld-options: -static`:
+
+```sh
+$ cabal new-build --flags="+static" "skeletor:exe:skeletor-haskell"
+
+...
+Building executable 'skeletor-haskell' for skeletor-0.0.0..
+Linking /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell ...
+
+ld: cannot find -lm
+ld: cannot find -ltinfo
+ld: cannot find -lpthread
+ld: cannot find -lrt
+ld: cannot find -lutil
+ld: cannot find -ldl
+ld: cannot find -lgmp
+ld: cannot find -lm
+ld: cannot find -lrt
+ld: cannot find -ldl
+ld: cannot find -lc
+
+collect2: error: ld returned 1 exit status
+`cc' failed in phase `Linker'. (Exit code: 1)
+```
+
+
+
+with `nh2 / static-haskell-nix`:
+
+
+```sh
+$ 
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

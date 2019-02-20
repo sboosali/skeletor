@@ -1,7 +1,7 @@
-cabal-version:       2.4
+cabal-version:       2.2
                      -- ^
-                     -- Cabal-2.4 introduces File Globs,
-                     -- e.g. « **/*.txt ».
+                     -- « cabal2nix » doesn't yet support Cabal-2.4
+                     --
                      -- Cabal-2.2 introduced Common Stanzas.
 
 build-type:          Simple
@@ -46,10 +46,10 @@ stability: provisional
 --------------------------------------------------
 
 tested-with:
-            GHC == 8.2.2
+            GHC == 8.6.3
+            GHC == 8.4.4
+
             -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
-            GHC == 8.4.3
---          , GHC == 8.6.1
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------
@@ -115,6 +115,16 @@ flag develop
   default:     False
 
   description: Exposed internals and/or dynamic typechecking (for development).
+
+  manual:      True
+
+--------------------------------------------------
+
+flag static
+
+  default:     False
+
+  description: Build a statically-linked executable (NOTE you must also, via « ../nix/static.nix », provision an environment with « musl » and other statically-linkable C Libraries.)
 
   manual:      True
 
@@ -538,7 +548,7 @@ library
    -- terminal libraries.
    --------------------
 
-             , terminal
+   --        , terminal
 
    --------------------
    -- records libraries.
@@ -625,13 +635,26 @@ test-suite property
 
 executable skeletor-haskell
 
+ ------------------------------
+
   import: sboo-haskell
   import: sboo-main
+
+ ------------------------------
+
+  if flag(static)
+     ld-options: -static
+
+  
+
+ ------------------------------
 
   --- Skeletor.Haskell/Main.hs
   main-is:             Main.hs
 
   hs-source-dirs:      executables/skeletor
+
+ ------------------------------
 
   other-modules: Program.Skeletor.Haskell.Main
                  Program.Skeletor.Haskell.Types
@@ -652,6 +675,8 @@ executable skeletor-haskell
                  Program.Skeletor.Haskell.Config.Types
 
                  Prelude_exe
+
+ ------------------------------
 
   build-depends:
                 skeletor

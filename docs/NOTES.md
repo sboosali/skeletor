@@ -226,10 +226,236 @@ BSD-2-Clause-NetBSD                   BSD-3-Clause-Clear                    BSD-
 ```
 
 
-## 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Statically-Linked Haskell Executables
+
+### Links
+
+* `nh2 / static-haskell-nix`: <https://github.com/nh2/static-haskell-nix/blob/master/README.md>
+
+### Examples
+
+#### 
+
+```haskell
+executable _
+  ...
+  ld-options: -static
+```
+
+#### 
+
+`example-server.cabal`:
+
+```haskell
+name: example-server
+build-type: Simple
+
+...
+
+executable example-server
+  build-depends: base >=4.9 && <5, scotty
+  ...
+  ld-options: -static
+
+```
+
+`example-server.nix`:
+
+
+```haskell
+{ pkgs }:
+
+let
+static = {
+
+  gmp = pkgs.gmp6.override { withStatic = true; };
+
+  zlib = pkgs.zlib.static;
+
+};
+
+tools = {
+
+  ldd = pkgs.ldd;
+
+  grep = pkgs.grep;
+
+};
+in
+
+{ mkDerivation, base, scotty, stdenv }:
+
+      mkDerivation {
+
+        pname = "example-server";
+
+
+        src = pkgs.lib.sourceByRegex ./. [
+          ".*\.cabal$"
+          "^Setup.hs$"
+          "^Main.hs$"
+        ];
+
+        isLibrary = false;
+        isExecutable = true;
+
+
+        enableSharedExecutables = false;
+        enableSharedLibraries = false;
+
+
+        executableHaskellDepends = [ base scotty ];
+
+        configureFlags = [
+          "--ghc-option=-optl=-static"
+          "--extra-lib-dirs=${static.gmp}/lib"
+          "--extra-lib-dirs=${static.zlib}/lib"
+        ] ++ pkgs.lib.optionals (!strip) [
+          "--disable-executable-stripping"
+        ] ;
+
+        ...
+
+
+        test = ''
+        "${tools.ldd}/ldd" $out | "${tools.grep}/grep" "not a dynamic executable"
+        '';
+
+      };
+```
+
+`default.nix`:
+
+```haskell
+{ nixpkgs ? (import <nixpkgs> {}).pkgsMusl, compiler ? "ghc843", strip ? true }:
+
+let
+
+  pkgs = nixpkgs.pkgsMusl;
+
+  example-server = import ./example-server.nix { inherit pkgs; };
+
+  normalHaskellPackages = pkgs.haskell.packages.${compiler};
+
+  haskellPackages = with pkgs.haskell.lib; normalHaskellPackages.override {
+    overrides = self: super: {
+
+      # Dependencies we need to patch
+      hpc-coveralls = appendPatch super.hpc-coveralls (builtins.fetchurl https://github.com/guillaume-nargeot/hpc-coveralls/pull/73/commits/344217f513b7adfb9037f73026f5d928be98d07f.patch);
+
+    };
+  };
+
+  drv = haskellPackages.callPackage example-server {};
+
+in
+  if pkgs.lib.inNixShell then drv.env else drv
+```
+
+`Main.hs`:
+
+```haskell
+--
+
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports #-}
+
+-- 
+
+import qualified "scotty" Web.Scotty as W
+
+--
+
+import "base" Data.Monoid (mconcat)
+
+
+-- 
+
+main = W.scotty 3000 $ do
+
+    W.get "/:word" $ do
+
+        beam <- W.param "word"
+        W.html $ mconcat ["<h1>Scotty, ", beam, " me up!</h1>"]
+
+
+--
+```
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 
+
+
+
+
+
+
+
+
 
 
 ## 

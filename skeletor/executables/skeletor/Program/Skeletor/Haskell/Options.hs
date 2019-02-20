@@ -283,6 +283,12 @@ options = do
         , P.help    "Print the SPDX license identifier of this program, then print out the license text."
         ])
 
+  -- printConfig <- P.switch (mconcat
+  --       [ P.long    "print-license"
+  --       , P.hidden                  -- internal
+  --       , P.help    "[INTERNAL] Print the internal configuration which the command-line options are parsed into."
+  --       ])
+
   resolveConfiguration <- P.switch (mconcat [])
 
   projectpath <- optional (P.strOption (mconcat

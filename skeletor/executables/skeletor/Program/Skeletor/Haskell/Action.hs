@@ -188,6 +188,19 @@ printLicenseWith () = liftIO $ do
 
   license = programLicense
 
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+printConfigWith :: (MonadThrow m, MonadIO m) => Config -> m ()
+printConfigWith config = liftIO $ do
+
+  print config
+
 --------------------------------------------------
 --------------------------------------------------
 
