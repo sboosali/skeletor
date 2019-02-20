@@ -1,3 +1,4 @@
+# -*- buffer-read-only: t; -*-
 { mkDerivation, attoparsec, base, base16-bytestring, bytestring
 , case-insensitive, containers, cryptohash-sha256, deepseq, dhall
 , directory, filemanip, filepath, generic-lens, hashable, hedgehog
@@ -9,7 +10,7 @@
 mkDerivation {
   pname = "skeletor";
   version = "0.0.0";
-  src = ./skeletor;
+  src = ../../skeletor;
   configureFlags = [ "-fstatic" ];
   isLibrary = true;
   isExecutable = true;

@@ -86,6 +86,9 @@ CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
 
 Cabal ?=cabal
 
+Nix      ?=nix
+NixBuild ?=nix-build --show-trace
+
 Pandoc ?=pandoc
 
 Markdown ?=multimarkdown
@@ -407,6 +410,20 @@ uninstall-skeletor-haskell:
 
 ##################################################
 # Static-Linking
+##################################################
+
+static:
+
+	@echo '=================================================='
+	@echo
+
+	@$(NixBuild) "./nix/static/default.nix"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: static
+
 ##################################################
 
 static-build-skeletor-haskell:

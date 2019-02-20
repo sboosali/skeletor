@@ -431,7 +431,42 @@ main = W.scotty 3000 $ do
 
 
 
-## 
+## Nixpkgs
+
+`pkgs` variants (/ alternative):
+
+* `pkgsCross`
+* `pkgsMusl`
+* `pkgsStatic`
+
+### `pkgsCross`
+
+```nix
+
+```
+
+### `pkgsMusl`
+
+```nix
+
+```
+
+### `pkgsStatic`
+
+```nix
+
+```
+
+### 
+
+
+
+
+
+
+
+
+
 
 
 
