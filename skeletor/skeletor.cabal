@@ -643,9 +643,11 @@ executable skeletor-haskell
  ------------------------------
 
   if flag(static)
-     ld-options: -static
 
-  
+     ld-options: -static
+                 -pthread
+
+     cc-options: -static
 
  ------------------------------
 

@@ -1,16 +1,18 @@
 ##################################################
-{ overlays ? []
+{ nixpkgs  ? <nixpkgs>
+, overlays ? []
 , config   ? {}
-
-, nixpkgs  ? <nixpkgs>
+           # ^ (these options (above) affect only « pkgs » (below).)
 
 , pkgs     ? (import nixpkgs { inherit overlays config; }).pkgsMusl
            # ^ « musl » as C Library, not « glibc ».
 
-, compiler ? "ghc844"
-           # ^ GHC 8.4.4
+, compiler ? "ghc863"
+           # ^ the haskell compiler. GHC 8.6.3 (by default).
 
 , strip    ? true
+           # ^ enable "executable stripping".
+
 }:
 
 ##################################################
@@ -20,43 +22,36 @@ inherit (pkgs) lib;
 
 #------------------------------------------------#
 
-haskellPackages =
-
-    if   null == compiler
-    then pkgs.haskellPackages
-    else pkgs.haskell.packages.${compiler};
-
-#------------------------------------------------#
-
-haskellUtilities =
-
-    pkgs.haskell.lib;
-
-#------------------------------------------------#
-
-# haskellPackages = with pkgs.haskell.lib;
-#  pkgs.haskell.packages.${compiler}.override {
-#     overrides = self: super: {
-#       # Dependencies we need to patch
-#       hpc-coveralls = appendPatch super.hpc-coveralls (builtins.fetchurl https://github.com/guillaume-nargeot/hpc-coveralls/pull/73/commits/344217f513b7adfb9037f73026f5d928be98d07f.patch);
-#     };
-# };
-
 in
 ##################################################
 let
 
-the-package    = import ./skeletor.nix {
-  inherit pkgs;
-  inherit strip;
+skeletor-static = import ./skeletor.nix {
+  inherit pkgs compiler strip;
 };
 
-the-derivation = haskellPackages.callPackage the-package {
+#------------------------------------------------#
+
+cabal-project-string = import ./cabal.project.nix {
 };
+
+cabal-project-file = pkgs.writeTextFile
+
+    {
+      name = "cabal-static.project";
+      text = cabal-project-string;
+    };
+
+    # , executable  ? false  # run chmod +x ?
+    # , destination ? ""     # relative path appended to $out eg "/bin/foo"
+    # , checkPhase  ? ""     #  syntax checks, e.g. for scripts
 
 in
 ##################################################
+{
 
-haskellUtilities.shellAware the-derivation
+  inherit skeletor-static;
+  inherit cabal-project-file;
 
+}
 ##################################################

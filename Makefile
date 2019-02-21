@@ -154,7 +154,7 @@ default: all
 
 .PHONY: default
 
-##################################################
+#------------------------------------------------#
 
 all: build-all test-all docs-all check-all tarball-all
 	@echo '=================================================='
@@ -163,7 +163,7 @@ all: build-all test-all docs-all check-all tarball-all
 
 .PHONY: all
 
-##################################################
+#------------------------------------------------#
 
 develop:
 	@echo '=================================================='
@@ -183,49 +183,49 @@ lib:
 
 .PHONY: lib
 
-##################################################
+#------------------------------------------------#
 
 skeletor-haskell:
 	$(Cabal) new-run skeletor-haskell
 
 .PHONY: skeletor-haskell
 
-##################################################
+#------------------------------------------------#
 
 # skeletor-elisp:
 # 	$(Cabal) new-run skeletor-elisp
 
 # .PHONY: skeletor-elisp
 
-# ##################################################
+# #------------------------------------------------#
 
 # skeletor-nix:
 # 	$(Cabal) new-run skeletor-nix
 
 # .PHONY: skeletor-nix
 
-# ##################################################
+# #------------------------------------------------#
 
 # skeletor-python:
 # 	$(Cabal) new-run skeletor-python
 
 # .PHONY: skeletor-python
 
-##################################################
+#------------------------------------------------#
 
 unittest:
 	$(Cabal) new-run "$(Component):test:unit"
 
 .PHONY: unittest
 
-##################################################
+#------------------------------------------------#
 
 doctest:
 	$(Cabal) new-run "$(Component):test:doc"
 
 .PHONY: doctest
 
-##################################################
+#------------------------------------------------#
 
 quickcheck:
 	$(Cabal) new-run "$(Component):test:property"
@@ -241,14 +241,14 @@ quickcheck:
 #TODO#
 # .PHONY: haskell-project
 
-##################################################
+#------------------------------------------------#
 
 haskell-project-default:
 	$(Cabal) new-build ./projects/default/xxx-package-xxx/xxx-package-xxx.cabal
 
 .PHONY: haskell-project-default
 
-##################################################
+#------------------------------------------------#
 
 haskell-project-simple:
 	$(Cabal) new-build ./projects/simple/xxx-package-xxx.cabal
@@ -264,21 +264,21 @@ check-haskell:
 
 .PHONY: check-haskell
 
-##################################################
+#------------------------------------------------#
 
 build-all:
 	$(Cabal) new-build all
 
 .PHONY: build-all
 
-##################################################
+#------------------------------------------------#
 
 test-all:
 	$(Cabal) new-test all
 
 .PHONY: test-all
 
-##################################################
+#------------------------------------------------#
 
 bench-all:
 	$(Cabal) new-bench all
@@ -294,21 +294,21 @@ build-default:
 
 .PHONY: build-default
 
-##################################################
+#------------------------------------------------#
 
 test-default:
 	$(Cabal) new-test $(DefaultTarget)
 
 .PHONY: test-default
 
-##################################################
+#------------------------------------------------#
 
 bench-default:
 	$(Cabal) new-bench $(DefaultTarget)
 
 .PHONY: bench-default
 
-##################################################
+#------------------------------------------------#
 
 repl-default:
 	$(Cabal) new-repl $(DefaultLibraryTarget)
@@ -324,7 +324,7 @@ build-exe:
 
 .PHONY: build-exe
 
-##################################################
+#------------------------------------------------#
 
 repl-exe:
 	$(Cabal) new-repl $(DefaultExecutableTarget)
@@ -347,18 +347,18 @@ build: build-default
 
 .PHONY: build
 
-##################################################
+#------------------------------------------------#
 
 cabal-compile: build-all
 
 .PHONY: cabal-compile
 
-##################################################
+#------------------------------------------------#
 
-stack-compile:
-	stack --nix build
+# stack-compile:
+# 	stack --nix build
 
-.PHONY: stack-compile
+# .PHONY: stack-compile
 
 ##################################################
 # Testing:
@@ -380,14 +380,14 @@ build-executable:
 
 .PHONY: build-executable
 
-##################################################
+#------------------------------------------------#
 
 run:
 	$(Cabal) new-build $(DefaultExecutableTarget)
 
 .PHONY: run
 
-##################################################
+#------------------------------------------------#
 
 locate-executable:
 	@$(Cabal) new-exec which -- $(DefaultExecutableProgram)
@@ -400,7 +400,41 @@ locate-executable:
 #
 #   $(make locate-executable 2>/dev/null)
 
-##################################################
+#------------------------------------------------#
+
+# install-skeletor-haskell: static-build-skeletor-haskell
+
+# 	@echo '=================================================='
+# 	@echo
+
+# 	time $(Cabal) new-install -overwrite-policy=always "skeletor:exe:skeletor-haskell"
+
+# 	@echo
+# 	@echo '=================================================='
+# 	@echo
+
+# 	@mkdir -p "$(BashCompletionDirectory)"
+
+# 	skeletor-haskell --bash-completion-script skeletor-haskell > "$(BashCompletionDirectory)/skeletor-haskell.bash"
+
+# 	@echo
+# 	@echo '=================================================='
+# 	@echo
+
+# 	@echo $(Lld) `which skeletor-haskell`
+
+# 	@echo
+# 	@echo '=================================================='
+# 	@echo
+
+# 	@echo source `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
+
+# 	@echo
+# 	@echo '=================================================='
+
+# .PHONY: install-skeletor-haskell
+
+#------------------------------------------------#
 
 uninstall-skeletor-haskell:
 
@@ -412,46 +446,65 @@ uninstall-skeletor-haskell:
 # Static-Linking
 ##################################################
 
-static:
-
-	@echo '=================================================='
-	@echo
-
-	@$(NixBuild) "./nix/static/default.nix"
-
-	@echo
-	@echo '=================================================='
+static: cabal-static.project static--skeletor-haskell--via-nix
 
 .PHONY: static
 
-##################################################
+#------------------------------------------------#
 
-static-build-skeletor-haskell:
-
-	@echo '=================================================='
-	@echo
-
-	time $(Cabal) new-build -j1 --flags="+static" "skeletor:exe:skeletor-haskell"
-
-	@echo
-	@echo '=================================================='
-	@echo
-
-	@echo 
-
-	@echo
-	@echo '=================================================='
-
-.PHONY: static-build-skeletor-haskell
-
-##################################################
-
-install-skeletor-haskell: static-build-skeletor-haskell
+cabal-static.project:
 
 	@echo '=================================================='
 	@echo
 
-	time $(Cabal) new-install -j1 --flags="+static" --overwrite-policy=always "skeletor:exe:skeletor-haskell"
+	$(NixBuild)  "./nix/static"  -A "cabal-project-file"  -o "./cabal-static.project"
+
+	@echo '=================================================='
+	@echo
+
+	@cat "./cabal-static.project"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: cabal-static.project
+
+#------------------------------------------------#
+
+static--skeletor-haskell--via-nix: cabal-static.project
+
+	@echo '=================================================='
+	@echo
+
+	time  $(NixBuild)  "./nix/static"  -A "skeletor-static"  -o "./result-static"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: static--skeletor-haskell--via-nix
+
+#------------------------------------------------#
+
+static--skeletor-haskell--via-cabal-new: cabal-static.project
+
+	@echo '=================================================='
+	@echo
+
+	time  $(Cabal)  new-build  "--project-file=./cabal-static.project"  "skeletor:exe:skeletor-haskell"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: static--skeletor-haskell--via-cabal-new
+
+#------------------------------------------------#
+
+install-static-skeletor-haskell: cabal-static.project
+
+	@echo '=================================================='
+	@echo
+
+	time  $(Cabal)  new-install  --overwrite-policy=always  "--project-file=./cabal-static.project"  "skeletor:exe:skeletor-haskell"
 
 	@echo
 	@echo '=================================================='
@@ -476,7 +529,7 @@ install-skeletor-haskell: static-build-skeletor-haskell
 	@echo
 	@echo '=================================================='
 
-.PHONY: install-skeletor-haskell
+.PHONY: install-static-skeletor-haskell
 
 ##################################################
 # Documentation: building/copying/opening
@@ -486,20 +539,20 @@ docs: docs-all
 
 .PHONY: docs
 
-##################################################
+#------------------------------------------------#
 
 docs-all: docs-markdown docs-haskell
 
 .PHONY: docs-all
 
-##################################################
+#------------------------------------------------#
 
 markdown:
 	$(Pandoc) README.md -o README.html
 
 .PHONY: markdown
 
-##################################################
+#------------------------------------------------#
 
 
 docs-markdown:
@@ -519,7 +572,7 @@ docs-markdown:
 # ^ NOTE:
 # https://stackoverflow.com/questions/15030563/redirecting-stdout-with-find-exec-and-without-creating-new-shell
 
-##################################################
+#------------------------------------------------#
 
 docs-haskell: build-docs-haskell copy-docs-haskell
 #TODO docs-haskell: build-docs-haskell copy-docs-haskell open-docs-haskell
@@ -529,7 +582,7 @@ docs-haskell: build-docs-haskell copy-docs-haskell
 
 .PHONY: docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 build-docs-haskell: build-default
 	@echo '=================================================='
@@ -539,7 +592,7 @@ build-docs-haskell: build-default
 
 .PHONY: build-docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 copy-docs-haskell: build-docs-haskell
 	rm    -fr $(HaddockDirectory)
@@ -549,7 +602,7 @@ copy-docs-haskell: build-docs-haskell
 
 .PHONY: copy-docs-haskell
 
-##################################################
+#------------------------------------------------#
 
 open-docs-haskell:
 	@echo '=================================================='
@@ -560,6 +613,24 @@ open-docs-haskell:
 .PHONY: open-docs-haskell
 
 ##################################################
+# Nix: parsing, evaluating, building.
+##################################################
+
+nix:
+
+	@echo '=================================================='
+	@echo
+
+	time  $(NixBuild)  "./nix"  -A "static.skeletor-static"  -o "./result"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: nix
+
+#------------------------------------------------#
+
+##################################################
 # Verify different files (by extension) with different tools.
 ##################################################
 
@@ -567,7 +638,7 @@ check: check-all
 
 .PHONY: check
 
-##################################################
+#------------------------------------------------#
 
 check-all: check-files   # check-haskell
 	@echo '=================================================='
@@ -577,7 +648,7 @@ check-all: check-files   # check-haskell
 
 .PHONY: check-all
 
-##################################################
+#------------------------------------------------#
 
 check-files: check-markdown check-json check-cabal check-bash check-nix
 	@echo '=================================================='
@@ -588,7 +659,7 @@ check-files: check-markdown check-json check-cabal check-bash check-nix
 
 .PHONY: check-files
 
-##################################################
+#------------------------------------------------#
 
 check-markdown:
 	@echo '=================================================='
@@ -597,7 +668,7 @@ check-markdown:
 
 .PHONY: check-markdown
 
-##################################################
+#------------------------------------------------#
 
 check-json:
 	@echo '=================================================='
@@ -605,7 +676,7 @@ check-json:
 
 .PHONY: check-json
 
-##################################################
+#------------------------------------------------#
 
 check-cabal:
 	@echo '=================================================='
@@ -613,7 +684,7 @@ check-cabal:
 
 .PHONY: check-cabal
 
-##################################################
+#------------------------------------------------#
 
 check-bash:
 	@echo '=================================================='
@@ -621,7 +692,7 @@ check-bash:
 
 .PHONY: check-bash
 
-##################################################
+#------------------------------------------------#
 
 check-nix:
 	@echo '=================================================='
@@ -629,7 +700,7 @@ check-nix:
 
 .PHONY: check-nix
 
-##################################################
+#------------------------------------------------#
 
 # check-text:
 # 	@echo '=================================================='
@@ -640,7 +711,7 @@ check-nix:
 #	find */$(DocumentDirectory)/ -name "*" -type f -print0 -exec $(CheckText) \{\} \;
         # ^ [TODO] ( '*.txt' | '*.md' | '*.html' | '*.org' )
 
-##################################################
+#------------------------------------------------#
 
 # check-cabal:
 # 	find $(Directory) -name "*.cabal" -print0 -exec $(CheckCabal) \{\} \;
@@ -654,7 +725,7 @@ tarball-all: tarball 		# TODO
 
 .PHONY: tarball-all
 
-##################################################
+#------------------------------------------------#
 
 tarball: build-tarball check-tarball
 	@echo '=================================================='
@@ -663,7 +734,7 @@ tarball: build-tarball check-tarball
 
 .PHONY: tarball
 
-##################################################
+#------------------------------------------------#
 
 check-tarball: copy-tarball
 	@echo '=================================================='
@@ -673,7 +744,7 @@ check-tarball: copy-tarball
 
 .PHONY: check-tarball
 
-##################################################
+#------------------------------------------------#
 
 copy-tarball: build-tarball
 	@echo '=================================================='
@@ -683,7 +754,7 @@ copy-tarball: build-tarball
 
 .PHONY: copy-tarball
 
-##################################################
+#------------------------------------------------#
 
 build-tarball: build-default
 	@echo '=================================================='
@@ -745,7 +816,7 @@ release: release-all
 
 .PHONY: release
 
-##################################################
+#------------------------------------------------#
 
 release-all: docs-haskell tarball
 	find $(ReleaseDirectory) -type f
@@ -755,13 +826,13 @@ release-all: docs-haskell tarball
 
 .PHONY: release-all
 
-##################################################
+#------------------------------------------------#
 
 # install:
 # 	$(Cabal) new-build all --prefix=$(InstallDirectory)
 # .PHONY: install
 
-##################################################
+#------------------------------------------------#
 
 upload: tarball
 	$(Cabal) upload

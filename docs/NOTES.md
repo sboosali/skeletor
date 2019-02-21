@@ -411,6 +411,24 @@ main = W.scotty 3000 $ do
 ### 
 
 
+## Installation
+
+```
+$ git clone https://github.com/nh2/static-haskell-nix && cd static-haskell-nix
+
+$ NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/88ae8f7d.tar.gz time nix-build --no-link ./default.nix
+
+/nix/store/*-example-scotty-app-0.1.0.0
+
+$ /nix/store/*-example-scotty-app-0.1.0.0/bin/example-scotty-app 
+
+Setting phasers to stun... (port 3000) (ctrl-c to quit)
+
+$ ldd /nix/store/*-example-scotty-app-0.1.0.0/bin/example-scotty-app 
+
+	not a dynamic executable
+```
+
 
 
 
@@ -480,19 +498,147 @@ main = W.scotty 3000 $ do
 
 
 
+## `make`
+
+### Usage
+
+```sh
+$ man make
+
+...
+
+       -C dir, --directory=dir
+
+            Change  to directory dir before reading the makefiles or doing anything else.
+            If multiple -C options are specified, each is  interpreted  relative  to  the
+            previous  one:  -C / -C etc is equivalent to -C /etc.  This is typically used
+            with recursive invocations of make.
+
+       -f file, --file=file, --makefile=FILE
+            Use file as a makefile.
+
+       -k, --keep-going
+            Continue as much as possible after an error.  While the target  that  failed,
+            and  those  that  depend  on  it, cannot be remade, the other dependencies of
+            these targets can be processed all the same.
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## nixpkgs & haskell
+
+### `haskell.lib`
+
+```nix
+```
+
+```nix
+overrideCabal = drv: f:
+
+  let
+  
+  go = args:
+  
+    args // {
+
+      mkDerivation = drv:
+
+        (args.mkDerivation drv).override f;
+
+    };
+
+  overrideScope = scope:
+  
+    overrideCabal (drv.overrideScope scope) f;
+
+  in
+
+  (drv.override go) // { inherit overrideScope; };
+```
+
+```nix
+addExtraLibrary = drv: x:
+
+  addExtraLibraries drv [x];
+
+addExtraLibraries = drv: xs:
+
+  let
+  
+  go = drv:
+
+    {
+      extraLibraries = (drv.extraLibraries or []) ++ xs;
+    };
+
+  in
+
+  overrideCabal drv go;
+```
+
+```nix
+haskell.lib.generateOptparseApplicativeCompletion _
+```
+
+```nix
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 
-
-
-
-
-
-
-
-
-
-
-## 
-
-

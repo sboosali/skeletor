@@ -318,7 +318,7 @@ stack-compile:
 .PHONY: stack-compile
 
 ##################################################
-# Testing: 
+# Testing:
 ##################################################
 
 test: test-default

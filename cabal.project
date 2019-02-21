@@ -15,6 +15,28 @@ packages: ./skeletor
 optional-packages: ../spiros/spiros/
 
 --------------------------------------------------
+-- Settings --------------------------------------
+--------------------------------------------------
+
+jobs: 1
+
+--------------------------------------------------
+
+extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+extra-include-dirs: /home/sboo/.nix-profile/include/
+extra-prog-path:    /home/sboo/.nix-profile/bin/
+extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------
+
+package *
+
+  extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+  extra-include-dirs: /home/sboo/.nix-profile/include/
+  extra-prog-path:    /home/sboo/.nix-profile/bin/
+  extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------
 -- LocalFlags (i.e. only for project/vendored packages)
 --------------------------------------------------
 
@@ -43,12 +65,6 @@ package *
 package hsc2hs
   documentation: False
   -- « hsc2hs »'s Haddocks are broken.
-
---------------------------------------------------
--- Meta ------------------------------------------
---------------------------------------------------
-
-jobs: 6
 
 --------------------------------------------------
 -- Repositories ----------------------------------

@@ -1941,7 +1941,17 @@ collect2: error: ld returned 1 exit status
 `cc' failed in phase `Linker'. (Exit code: 1)
 ```
 
+with `./cabal-static.project`:
 
+```sh
+$ cabal  new-build  "--project-file=./cabal-static.project"  "skeletor:exe:skeletor-haskell"
+
+/nix/store/*-binutils-2.30/bin/ld: /nix/store/*-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/crtbeginT.o: relocation R_X86_64_32 against hidden symbol `__TMC_END__' can not be used when making a shared object
+
+/nix/store/*-binutils-2.30/bin/ld: final link failed: Nonrepresentable section on output
+
+...
+```
 
 with `nh2 / static-haskell-nix`:
 
@@ -1951,6 +1961,78 @@ $
 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Nix & nixpkgs
+
+### `writeTextFile`
+
+<https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix>
+
+```nix
+/* Writes a text file to the nix store.
+ * The contents of text is added to the file in the store.
+ *
+ * Examples:
+ * # Writes my-file to /nix/store/<store path>
+ * writeTextFile "my-file"
+ *   ''
+ *   Contents of File
+ *   '';
+ *
+ * # Writes executable my-file to /nix/store/<store path>/bin/my-file
+ * writeTextFile "my-file"
+ *   ''
+ *   Contents of File
+ *   ''
+ *   true
+ *   "/bin/my-file";
+ *   true
+ */
+
+writeTextFile =
+  { name # the name of the derivation
+  , text
+  , executable ? false # run chmod +x ?
+  , destination ? ""   # relative path appended to $out eg "/bin/foo"
+  , checkPhase ? ""    # syntax checks, e.g. for scripts
+  }:
+
+  runCommand name
+    { inherit text executable;
+      passAsFile = [ "text" ];
+      # Pointless to do this on a remote machine.
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+    }
+    ''
+      n=$out${destination}
+      mkdir -p "$(dirname "$n")"
+      if [ -e "$textPath" ]; then
+        mv "$textPath" "$n"
+      else
+        echo -n "$text" > "$n"
+      fi
+      ${checkPhase}
+      (test -n "$executable" && chmod +x "$n") || true
+    '';
+```
+
+### 
 
 
 

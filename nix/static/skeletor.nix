@@ -1,5 +1,7 @@
 ##################################################
 { pkgs
+
+, compiler
 , strip
 }:
 
@@ -10,63 +12,46 @@ inherit (pkgs) lib;
 
 #------------------------------------------------#
 
-skeletor-cabal2nix = import ../cabal2nix/skeletor.nix;
+haskellPackages =
+
+    if   null == compiler
+    then pkgs.haskellPackages
+    else pkgs.haskell.packages.${compiler};
+
+#------------------------------------------------#
+
+haskellUtilities =
+
+    pkgs.haskell.lib;
+
+#------------------------------------------------#
+
+linkStatically = import ./lib/link-statically.nix {
+  inherit pkgs;
+  inherit strip;
+};
 
 in
 ##################################################
 let
 
-static = {
+the-cabal2nix-package = import ../cabal2nix/skeletor.nix;
 
-  gmp = pkgs.gmp6.override { withStatic = true; };
+#------------------------------------------------#
 
-  zlib = pkgs.zlib.static;
+the-cabal2nix-derivation = haskellPackages.callPackage the-cabal2nix-package {
+
+  spiros = haskellUtilities.callCabal2nix "spiros" ~/haskell/spiros/spiros;
 
 };
 
 #------------------------------------------------#
 
-configureFlags-forStaticLinking = [
-
-          "--ghc-option=-optl=-static"
-
-          "--extra-lib-dirs=${static.gmp}/lib"
-          "--extra-lib-dirs=${static.zlib}/lib"
-
-        ] ++ pkgs.lib.optionals (!strip) [
-
-          "--disable-executable-stripping"
-
-        ];
-
-in
-##################################################
-let
-
-override-forStaticLinking = attrs:
-
-  {
-    configureFlags = attrs.configureFlags ++ configureFlags-forStaticLinking;
-
-    isLibrary    = true;
-    isExecutable = true;
-
-    enableSharedExecutables = false;
-    enableSharedLibraries   = false;
-
-  #      isLibrary    = true;
-  #      configureFlags = configureFlags;
-  };
-
-#------------------------------------------------#
-
-skeletor-static = skeletor-cabal2nix.overrideAttrs override-forStaticLinking;
-
-#------------------------------------------------#
+the-static-derivation = linkStatically the-cabal2nix-derivation;
 
 in
 ##################################################
 
-skeletor-static
+haskellUtilities.shellAware the-static-derivation
 
 ##################################################
