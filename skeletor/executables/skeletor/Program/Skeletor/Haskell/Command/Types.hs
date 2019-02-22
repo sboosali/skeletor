@@ -18,6 +18,7 @@ import Skeletor.Haskell.Types
 
 --------------------------------------------------
 
+import Program.Skeletor.Haskell.Options.Types
 import Program.Skeletor.Haskell.Core.Types
 
 --------------------------------------------------
@@ -52,7 +53,7 @@ data Command
 
   = CommandCreateProject        CreateProjectOptions
   | CommandDownloadProject      DownloadProjectOptions
-  | CommandResolveConfiguration
+  | CommandResolveConfiguration 
 
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
@@ -66,7 +67,8 @@ data Command
 
 data CreateProjectOptions = CreateProjectOptions
 
-  { location    :: Location
+  { options     :: GlobalOptions
+  , location    :: Location
   , destination :: FilePath
   , license     :: License
   }
@@ -83,7 +85,8 @@ data CreateProjectOptions = CreateProjectOptions
 
 data DownloadProjectOptions = DownloadProjectOptions
 
-  { location    :: Location
+  { options     :: GlobalOptions
+  , location    :: Location
   , destination :: FilePath
   , method      :: FetchBy
   }

@@ -456,7 +456,15 @@ arguments@
 
 --------------------------------------------------
 
+cabal error:
 
+    ~/haskell/spiros$ hba
+    Resolving dependencies...
+    Map.!: given key is not an element in the map
+    CallStack (from HasCallStack):
+      error, called at libraries/containers/Data/Map/Internal.hs:610:17 in containers-0.5.11.0:Data.Map.Internal
+
+cause: undeclared flag
 
 --------------------------------------------------
 

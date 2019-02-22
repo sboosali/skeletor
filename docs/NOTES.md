@@ -560,8 +560,13 @@ $ man make
 
 ### `haskell.lib`
 
+#### ``
+
 ```nix
+
 ```
+
+#### `overrideCabal`
 
 ```nix
 overrideCabal = drv: f:
@@ -587,6 +592,8 @@ overrideCabal = drv: f:
   (drv.override go) // { inherit overrideScope; };
 ```
 
+#### `add*`
+
 ```nix
 addExtraLibrary = drv: x:
 
@@ -607,9 +614,51 @@ addExtraLibraries = drv: xs:
   overrideCabal drv go;
 ```
 
+#### `haskell.lib.generateOptparseApplicativeCompletion`
+
 ```nix
-haskell.lib.generateOptparseApplicativeCompletion _
+  /*
+    Modify a Haskell package to add shell completion scripts for the
+    given executable produced by it. These completion scripts will be
+    picked up automatically if the resulting derivation is installed,
+    e.g. by `nix-env -i`.
+    Invocation:
+      generateOptparseApplicativeCompletions command pkg
+      command: name of an executable
+          pkg: Haskell package that builds the executables
+  */
+
+  generateOptparseApplicativeCompletion = exeName: pkg: overrideCabal pkg (drv: {
+    postInstall = (drv.postInstall or "") + ''
+      bashCompDir="$out/share/bash-completion/completions"
+      zshCompDir="$out/share/zsh/vendor-completions"
+      fishCompDir="$out/share/fish/vendor_completions.d"
+      mkdir -p "$bashCompDir" "$zshCompDir" "$fishCompDir"
+      "$out/bin/${exeName}" --bash-completion-script "$out/bin/${exeName}" >"$bashCompDir/${exeName}"
+      "$out/bin/${exeName}" --zsh-completion-script "$out/bin/${exeName}" >"$zshCompDir/_${exeName}"
+      "$out/bin/${exeName}" --fish-completion-script "$out/bin/${exeName}" >"$fishCompDir/${exeName}.fish"
+      # Sanity check
+      grep -F ${exeName} <$bashCompDir/${exeName} >/dev/null || {
+        echo 'Could not find ${exeName} in completion script.'
+        exit 1
+      }
+    '';
+  });
 ```
+
+#### ``
+
+```nix
+
+```
+
+#### ``
+
+```nix
+
+```
+
+#### ``
 
 ```nix
 

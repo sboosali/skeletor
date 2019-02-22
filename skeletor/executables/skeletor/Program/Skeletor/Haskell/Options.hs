@@ -30,24 +30,18 @@ import Skeletor.Haskell.Variable.Binding
 
 import qualified "attoparsec" Data.Attoparsec.Text as A
 
+-- NOTE « attoparsec » uses strict « Text ».
+
+--------------------------------------------------
+
+import qualified "optparse-applicative" Options.Applicative as P
+
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
 import qualified "text" Data.Text as T
 import           "text" Data.Text (Text)
-
--- NOTE « attoparsec » uses strict « Text ».
-
---------------------------------------------------
---------------------------------------------------
-
-import qualified "optparse-applicative" Options.Applicative as P
-
---------------------------------------------------
---------------------------------------------------
-
-
 
 --------------------------------------------------
 --------------------------------------------------
