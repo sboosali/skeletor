@@ -660,6 +660,7 @@ executable skeletor-haskell
 
   other-modules: Program.Skeletor.Haskell.Main
                  Program.Skeletor.Haskell.Types
+                 Program.Skeletor.Haskell.CLI
 
                  Program.Skeletor.Haskell.Version
                  Program.Skeletor.Haskell.License

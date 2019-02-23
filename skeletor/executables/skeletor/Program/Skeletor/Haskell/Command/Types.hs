@@ -19,6 +19,7 @@ import Skeletor.Haskell.Types
 --------------------------------------------------
 
 import Program.Skeletor.Haskell.Options.Types
+import Program.Skeletor.Haskell.Config.Types
 import Program.Skeletor.Haskell.Core.Types
 
 --------------------------------------------------
@@ -67,7 +68,7 @@ data Command
 
 data CreateProjectOptions = CreateProjectOptions
 
-  { options     :: GlobalOptions
+  { globals     :: GlobalOptions
   , location    :: Location
   , destination :: FilePath
   , license     :: License
@@ -85,7 +86,7 @@ data CreateProjectOptions = CreateProjectOptions
 
 data DownloadProjectOptions = DownloadProjectOptions
 
-  { options     :: GlobalOptions
+  { globals     :: GlobalOptions
   , location    :: Location
   , destination :: FilePath
   , method      :: FetchBy

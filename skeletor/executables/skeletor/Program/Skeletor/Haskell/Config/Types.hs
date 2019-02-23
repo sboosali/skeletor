@@ -81,7 +81,7 @@ data GlobalOptions = GlobalOptions
   , dryrun       :: Dryness
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Generic)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
