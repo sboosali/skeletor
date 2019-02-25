@@ -1293,6 +1293,57 @@ nameParser = option str ( long "name" <> short 'n' )
 
 ### 
 
+`info`
+ 
+`info :: Parser a -> InfoMod a -> ParserInfo a`
+
+
+### 
+
+`ParseError`:
+
+```haskell
+readerAbort :: ParseError -> ReadM a
+
+-- Abort option reader by exiting with a ParseError.
+
+data ParseError
+
+  = ErrorMsg String
+  | InfoMsg String
+  | ShowHelpText
+  | UnknownError
+  | MissingError IsCmdStart SomeParser
+  | ExpectsArgError String
+  | UnexpectedError String SomeParser
+
+instance Monoid ParseError
+```
+
+### 
+
+`command`:
+
+```haskell
+command :: String -> ParserInfo a -> Mod CommandFields a
+```
+
+> Suggested usage for multiple commands is to add them to a single subparser. e.g.
+
+```haskell
+command :: String -> ParserInfo a -> Mod CommandFields a
+
+sample :: Parser Sample
+sample = subparser
+       ( command "hello"
+         (info hello (progDesc "Print greeting"))
+      <> command "goodbye"
+         (info goodbye (progDesc "Say goodbye"))
+       )
+```
+
+### 
+
 prefs :: PrefsMod -> ParserPrefs
 
 Create a ParserPrefs given a modifier
@@ -1505,6 +1556,7 @@ data URI = URI
   }
 ```
 
+#### `mkURI` 
 
 
 

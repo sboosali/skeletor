@@ -63,12 +63,12 @@ tested-with: GHC   == 8.6.3
 -- Licensing -------------------------------------
 --------------------------------------------------
 
-license:             GPL-3.0-or-later
+license:             Apache-2.0
 license-file:        LICENSE.txt
 copyright:           2019 __Name__
 
 -- license:             GPL-3.0-or-later
--- license:             BSD-4-Clause
+-- license:             Apache-2.0
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------

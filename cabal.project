@@ -18,15 +18,34 @@ optional-packages: ../spiros/spiros/
 -- Settings --------------------------------------
 --------------------------------------------------
 
-jobs: 1
+jobs: 6
+
+--------------------------------------------------
+-- LocalFlags ------------------------------------
+--------------------------------------------------
+
+tests: True
 
 --------------------------------------------------
 
-extra-lib-dirs:     /home/sboo/.nix-profile/lib/
-extra-include-dirs: /home/sboo/.nix-profile/include/
-extra-prog-path:    /home/sboo/.nix-profile/bin/
-extra-prog-path:    /home/sboo/.nix-profile/libexec/
+documentation:            False
+haddock-hyperlink-source: True
 
+--------------------------------------------------
+
+--profiling: True
+
+--optimization: 2
+
+--------------------------------------------------
+
+-- extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+-- extra-include-dirs: /home/sboo/.nix-profile/include/
+-- extra-prog-path:    /home/sboo/.nix-profile/bin/
+-- extra-prog-path:    /home/sboo/.nix-profile/libexec/
+
+--------------------------------------------------
+-- GlobalFlags -----------------------------------
 --------------------------------------------------
 
 package *
@@ -35,24 +54,6 @@ package *
   extra-include-dirs: /home/sboo/.nix-profile/include/
   extra-prog-path:    /home/sboo/.nix-profile/bin/
   extra-prog-path:    /home/sboo/.nix-profile/libexec/
-
---------------------------------------------------
--- LocalFlags (i.e. only for project/vendored packages)
---------------------------------------------------
-
-documentation:            False
-haddock-hyperlink-source: True
-
---------------------------------------------------
-
-tests: True
-
---------------------------------------------------
--- GlobalFlags (i.e. only for installed/dependency packages)
---------------------------------------------------
-
---profiling: True
----optimization: 2
 
 --------------------------------------------------
 
@@ -64,43 +65,53 @@ package *
 
 package hsc2hs
   documentation: False
-  -- « hsc2hs »'s Haddocks are broken.
+  -- hsc2hs's Haddocks are broken.
 
 --------------------------------------------------
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-13.7
-  url: https://www.stackage.org/lts-13.7
+repository stackage-lts-13.9
+
+  url: https://www.stackage.org/lts-13.9
+
+  -- ^ Stackage, GHC-8.6.3 (circa 2019-02-24)
+
+--------------------------------------------------
+
+repository hackage.mobilehaskell
+
+  url: https://hackage.mobilehaskell.org/
+
+  secure:    True
+  key-threshold: 3
+  root-keys: 8184c1f23ce05ab836e5ebac3c3a56eecb486df503cc28110e699e24792582da
+             81ff2b6c5707d9af651fdceded5702b9a6950117a1c39461f4e2c8fc07d2e36a
+             8468c561cd02cc7dfe27c56de0da1a5c1a2b1b264fff21f4784f02b8c5a63edd
+
+  -- ^ Mobile (Andriod and iOS)
 
 --------------------------------------------------
 
 repository hackage.haskell.org
-  url: http://hackage.haskell.org/
+  url: https://hackage.haskell.org/
+
+  -- secure:       True
+  -- key-threshold: 3
+  -- root-keys: 07c59cb65787dedfaef5bd5f987ceb5f7e5ebf88b904bbd4c5cbdeb2ff71b740
+  --            2e8555dde16ebd8df076f1a8ef13b8f14c66bad8eafefd7d9e37d0ed711821fb
+  --            8f79fd2389ab2967354407ec852cbe73f2e8635793ac446d09461ffb99527f6e
+
   -- ^ central Hackage server (the default repository).
-
--- --------------------------------------------------
-
--- repository head.hackage
---    url: http://head.hackage.haskell.org/
---    secure: True
---    root-keys: 07c59cb65787dedfaef5bd5f987ceb5f7e5ebf88b904bbd4c5cbdeb2ff71b740
---               2e8555dde16ebd8df076f1a8ef13b8f14c66bad8eafefd7d9e37d0ed711821fb
---               8f79fd2389ab2967354407ec852cbe73f2e8635793ac446d09461ffb99527f6e
---    key-threshold: 3
-
--- --------------------------------------------------
-
--- repository hackage.mobilehaskell
---   url: http://hackage.mobilehaskell.org/
---   secure: True
---   root-keys: 8184c1f23ce05ab836e5ebac3c3a56eecb486df503cc28110e699e24792582da
---              81ff2b6c5707d9af651fdceded5702b9a6950117a1c39461f4e2c8fc07d2e36a
---              8468c561cd02cc7dfe27c56de0da1a5c1a2b1b264fff21f4784f02b8c5a63edd
---   key-threshold: 3
 
 --------------------------------------------------
 -- Notes -----------------------------------------
 --------------------------------------------------
-
+-- 
+-- 
+-- 
+-- 
+-- 
+-- 
+-- 
 --------------------------------------------------

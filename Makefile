@@ -22,8 +22,10 @@ DefaultProjectFile=./cabal.project
 DefaultCompilerFlavor=ghc
 #                          ^ [Customize]
 
-DefaultCompilerVersion=8.4.3
+DefaultCompilerVersion=8.6.3
 #                          ^ [Customize]
+
+Stackage ?=lts-13.9
 
 ##################################################
 # Makefile Variables: Package
@@ -96,16 +98,25 @@ Markdown ?=multimarkdown
 
 Open ?=xdg-open
 
+
+Cabal2nix ?=cabal2nix
+
+#------------------------------------------------#
+
 CheckCabal ?=$(Cabal) check
 CheckTarball ?=tar -C /tmp -zxvf
 CheckMarkdown ?=$(Markdown)
 CheckJson ?=jsonlint
 CheckBash ?=shellcheck
+
 CheckNix ?=nix-instantiate
+
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
-Lld ?=lld
+CheckStaticExecutables ?=lld
+
+ # ^ TODO on OSX, otool -o
 
 ##################################################
 # Makefile Variables: File/Directory Paths
@@ -270,6 +281,30 @@ build-all:
 	$(Cabal) new-build all
 
 .PHONY: build-all
+
+#------------------------------------------------#
+
+run-skeletor-haskell:
+
+	@echo -e "\n========================================\n"
+
+	@$(Cabal) new-build "exe:skeletor-haskell"
+
+	@echo -e "\n========================================\n"
+
+	@$(Cabal) new-exec -- ldd `which skeletor-haskell`
+
+	@echo -e "\n========================================\n"
+
+	@$(Cabal) new-run -- skeletor-haskell --help
+
+	@echo -e "\n========================================\n"
+
+	@$(Cabal) new-exec -- which skeletor-haskell
+
+	@echo -e "\n========================================\n"
+
+.PHONY: run-skeletor-haskell
 
 #------------------------------------------------#
 
@@ -766,6 +801,24 @@ build-tarball: build-default
 # (Miscellaneous)
 ##################################################
 
+#------------------------------------------------#
+
+list-projects:
+
+	@find -L projects/ -maxdepth 1 -type f
+
+.PHONY: list-projects
+
+#------------------------------------------------#
+
+list-project-default:
+
+	@find -L projects/default -type f
+
+.PHONY: list-project-default
+
+#------------------------------------------------#
+
 clean:
 	rm -rf "./dist/" "./dist-newstyle/" "./dist-newdante/" "./dist-ghcjs/"
 	rm -f *.project.local .ghc*.environment.*
@@ -786,6 +839,58 @@ install: #TODO
 .PHONY: install
 
 # source <(cabal new-exec -- /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell --bash-completion-script `which /home/sboo/haskell/skeletor/dist-newstyle/build/x86_64-linux/ghc-8.6.3/skeletor-0.0.0/x/skeletor-haskell/build/skeletor-haskell/skeletor-haskell`)
+
+#------------------------------------------------#
+
+##################################################
+# Fetching: files, resources
+##################################################
+
+#------------------------------------------------#
+
+fetch-stackage: fetch-stackage--cabal.config
+
+.PHONY: fetch-stackage
+
+#------------------------------------------------#
+
+fetch-stackage--stackage.project:
+
+	@mkdir -p "./cabal"
+
+	@echo '=================================================='
+	@echo
+
+	curl -sL "https://www.stackage.org/$(Stackage)/cabal.config?global=false"  >  "./cabal/stackage-$(Stackage).project"
+
+	@echo '=================================================='
+	@echo
+
+	@cat  "./cabal/stackage-$(Stackage).project"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: fetch-stackage--stackage.project
+
+#------------------------------------------------#
+
+fetch-stackage--cabal.config:
+
+	@echo '=================================================='
+	@echo
+
+	curl -sL "https://www.stackage.org/$(Stackage)/cabal.config?global=true"  >  "./cabal.config"
+
+	@echo '=================================================='
+	@echo
+
+	@cat  "./cabal.config"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: fetch-stackage--cabal.config
 
 #------------------------------------------------#
 

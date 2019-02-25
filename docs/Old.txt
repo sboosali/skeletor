@@ -469,6 +469,372 @@ cause: undeclared flag
 --------------------------------------------------
 
 
+options :: P.Parser Options
+options = do
+
+  let knownProjectNames = builtinProjectNames
+
+  verbosity <- (P.flag Concise Verbose) (mconcat
+
+        [ embolden (P.long    "verbose")
+        , embolden (P.short   'v')
+        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: ① parsing these command-line options; and ② defaulting the values of any optional options)."
+        ])
+
+  dryrun <- (P.flag TrueRun DryRun) (mconcat
+
+        [ embolden (P.long    "dryrun")
+        , embolden (P.short   'i')
+        , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
+        ])
+
+  printVersion <- empty
+
+     <|> (P.switch (mconcat
+
+        [ embolden (P.long    "print-version")
+        , P.help    "Print the version of this program. The format is, for example, « 0.0.0 ». No other text is printed."
+        ]))
+
+     <|> (P.switch (mconcat
+
+        [ embolden (P.long    "version")
+        , P.help    "Alias for « --print-version »."
+        ]))
+
+  printLicense <- P.switch (mconcat   -- TODO -- subcommand, not option.
+
+        [ embolden (P.long    "print-license")
+        , P.help    "Print the SPDX license identifier of this program, then print out the license text."
+        ])
+
+  printConfig <- P.switch (mconcat
+        [ embolden (P.long    "print-config")
+        , P.internal                  -- .hidden
+        , P.help    "[INTERNAL] Print the internal configuration which the command-line options are parsed into."
+        ])
+
+  resolveConfiguration <- P.switch (mconcat [])
+
+  projectpath <- optional (P.strOption (mconcat
+
+        [ embolden (P.long    "project-filepath")
+        , embolden (P.short   'f')
+        , italicize (P.metavar "PROJECT_PATH")
+        , P.action  "directory"
+        , P.help    "Which project skeleton, by path. (When both « --project-filepath » and « --project-name » are given, this option takes precedence. When neither are given, the default value equivalent to « --project-name=default »)."
+        ]))
+
+  projectname <- optional (P.strOption (mconcat
+
+        [ embolden (P.long    "project-name")
+        , embolden (P.short   'p')
+        , italicize (P.metavar "PROJECT_NAME")
+        , P.completeWith builtinProjectNames
+        , P.help    "Which project skeleton, by name. (Press the « TAB » key for shell-completion of known projects)."
+        ]))
+
+  subdirectory <- optional (P.strOption (mconcat
+        [ embolden (P.long    "subdir")
+        , P.action  "file"
+        , P.help    "The subdirectory of the « --location » (when unpacked)."
+        ]))
+
+  configpath <- optional (P.strOption (mconcat
+
+        [ embolden (P.long    "config")
+        , embolden (P.short   'c')
+        , italicize (P.metavar "CONFIG_FILE")
+        , P.action  "file"
+        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an « INI » file (c.f. a UNIX-style « .conf » file). Relative filepaths are interpreted relative: to ① the current directory from which this command was invoked; ② to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
+        ]))
+
+  bindings <- many (P.option rBinding (mconcat
+
+        [ embolden (P.long    "binding")
+        , embolden (P.short   'b')
+        , italicize (P.metavar "VARIABLE_BINDING")
+        , P.help    "A configuration variable binding. e.g. « -b \"name=Sam Boosalis\" » (NOTE the quotes are stripped from the argument by the shell, they group the « name=value » into a single argument, when the « value » has whitespace.)."
+        ]))
+
+  environment <- defaulting [] (P.option rBindings (mconcat
+
+        [ embolden (P.long    "bindings")
+        , embolden (P.short   'e')
+        , italicize (P.metavar "VARIABLE_BINDING...")
+        , P.help    "A set of configuration variable bindings. e.g. « -e 'user=sboosali:name=Sam Boosalis:' ». one « --bindings _ » is equivalent to multiple « --binding _ --binding _ ...»."
+        ]))
+
+  license <- defaulting "BSD-3-Clause" (P.strOption (mconcat
+
+        [ embolden (P.long    "license")
+        , embolden (P.metavar "LICENSE")
+        , P.completeWith knownLicenseIds
+        , P.help    "The PROJECTS's spdx license identifier."
+        ]))
+
+  return Options{..}
+
+--------------------------------------------------
+
+licenseOption :: License
+licenseOption = 
+  license <- defaulting "BSD-3-Clause" (P.strOption (mconcat
+
+        [ (P.long    "license")
+        , (P.metavar "LICENSE")
+        , P.completeWith knownLicenseIds
+        , P.help    "The PROJECTS's spdx license identifier."
+        , P.style P.bold
+        ]))
+
+--------------------------------------------------
+
+  where
+
+  defaulting x p = maybe x id <$> optional p
+
+  embolden  = (<> P.style P.bold)
+  italicize = (<> P.style P.underline)
+
+--------------------------------------------------
+
+pCommand :: P.Parser Command
+pCommand = empty
+
+  <|> (P.hsubparser (CommandCreateProject        <$> pCreateProjectOptions))
+  <|> (P.hsubparser (CommandDownloadProject      <$> pDownloadProjectOptions))
+  <|> (P.hsubparser (CommandResolveConfiguration <$> pResolveConfigurationOptions))
+
+--------------------------------------------------
+
+pCommand :: P.Parser Command
+pCommand = P.hsubparser p
+  where
+
+  p = empty
+
+    <|> (P.command (CommandCreateProject        <$> pCreateProjectOptions))
+    <|> (P.command (CommandDownloadProject      <$> pDownloadProjectOptions))
+    <|> (P.command (CommandResolveConfiguration <$> pResolveConfigurationOptions))
+
+
+--------------------------------------------------
+-- Parsers ---------------------------------------
+--------------------------------------------------
+
+pURI :: P.ReadM URI
+pURI = _
+
+--------------------------------------------------
+
+pProject :: P.ReadM Project
+pProject = _
+
+--------------------------------------------------
+
+pLicense :: P.ReadM License
+pLicense = _
+
+--------------------------------------------------
+
+pLocation :: P.ReadM Location
+pLocation = _
+
+--------------------------------------------------
+
+pFetchBy :: P.ReadM FetchBy
+pFetchBy = _
+
+--------------------------------------------------
+
+rBindings :: P.ReadM Bindings
+rBindings = P.eitherReader (A.parseOnly p . T.pack)
+  where
+
+  p = pBindings bindingSyntax
+
+--------------------------------------------------
+
+rBinding :: P.ReadM Binding
+rBinding = P.eitherReader (A.parseOnly p . T.pack)
+  where
+
+  p = pBinding bindingSyntax
+
+--------------------------------------------------
+
+rLicense :: P.ReadM License
+rLicense = P.maybeReader parseSpdxLicenseIdentifier
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
+
+
+--------------------------------------------------
+
 
 --------------------------------------------------
 

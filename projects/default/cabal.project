@@ -37,12 +37,12 @@ jobs: 6
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-13.7
-  url: http://www.stackage.org/lts-13.7
+repository stackage-lts-13.9
+  url: http://www.stackage.org/lts-13.9
   -- « ghc-8.6.3 »
 
   -- From:
-  -- https://www.stackage.org/lts-13.7/cabal.config?global=true
+  -- https://www.stackage.org/lts-13.9/cabal.config?global=true
 
 --------------------------------------------------
 

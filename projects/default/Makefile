@@ -10,19 +10,22 @@ SHELL=bash
 # Makefile Customizeables:Customize
 ##################################################
 
-DefaultPackageName?=xxx-package-xxx
+DefaultPackageName ?=xxx-package-xxx
 #                          ^ [Customize]
 
-DefaultModule?=Xxx_Module_xxX
+DefaultModule ?=Xxx_Module_xxX
 #                          ^ [Customize]
 
-DefaultProjectFile?=./cabal.project
+DefaultProjectFile ?=./cabal.project
 #                          ^ [Customize]
 
-DefaultCompilerFlavor?=ghc
+DefaultCompilerFlavor ?=ghc
 #                          ^ [Customize]
 
-DefaultCompilerVersion?=8.6.3
+DefaultCompilerVersion ?=8.6.3
+#                          ^ [Customize]
+
+Stackage ?=lts-13.9
 #                          ^ [Customize]
 
 ##################################################
@@ -30,14 +33,14 @@ DefaultCompilerVersion?=8.6.3
 ################################################## Customize:
 # (i.e. Package-Specific / Component-Specific)
 
-DefaultPackageVersion?=0.0.0
+DefaultPackageVersion ?=0.0.0
 #                          ^ [Customize]
 
-DefaultLibraryTarget?="lib:$(DefaultPackageName)"
+DefaultLibraryTarget ?="lib:$(DefaultPackageName)"
 #                          ^ [Customize]
 #                          ^  e.g. "lib:xxx-package-xxx"
 
-DefaultTarget?="all"
+DefaultTarget ?="all"
 #                          ^ [Customize]
 #        e.g.
 #             "all"
@@ -45,31 +48,31 @@ DefaultTarget?="all"
 #             $(DefaultLibraryTarget)
 #
 
-DefaultPackage?=$(DefaultPackageName)-$(DefaultPackageVersion)
+DefaultPackage ?=$(DefaultPackageName)-$(DefaultPackageVersion)
 #                          ^ [Derived]
 
 ##################################################
 # Makefile Variables: Haskell Compiler.
 ################################################## Customize:
 
-CompilerFlavor?=$(DefaultCompilerFlavor)
+CompilerFlavor ?=$(DefaultCompilerFlavor)
 
-CompilerVersion?=$(DefaultCompilerVersion)
+CompilerVersion ?=$(DefaultCompilerVersion)
 
-CompilerProgram?=$(CompilerFlavor)-$(CompilerVersion)
+CompilerProgram ?=$(CompilerFlavor)-$(CompilerVersion)
 #                          ^ [Derived]
 
 ##################################################
 # Makefile Variables: Project / `cabal-new`
 ##################################################
 
-Target?=$(DefaultTarget)
+Target ?=$(DefaultTarget)
 
-ProjectFile?=$(DefaultProjectFile)
+ProjectFile ?=$(DefaultProjectFile)
 
-EnableNix?= # "--enable-nix"
+EnableNix ?= # "--enable-nix"
 
-CabalOptions?=--project-file $(ProjectFile) -w $(CompilerProgram)
+CabalOptions ?=--project-file $(ProjectFile) -w $(CompilerProgram)
 #                          ^ [Derived]
 
 ##################################################
@@ -82,47 +85,55 @@ Ghc ?=ghc
 GhcPkg ?=ghc-pkg
 Ghci ?=ghci
 
-Markdown?=multimarkdown
+Markdown ?=multimarkdown
  #TODO pandoc
 
-Open?=xdg-open
+Open ?=xdg-open
 
-CheckCabal?=$(Cabal) check
-CheckTarball?=tar -C /tmp -zxvf
-CheckMarkdown?=$(Markdown)
-CheckJson?=jsonlint
-CheckBash?=shellcheck
-CheckNix?=nix-instantiate
+Cabal2nix ?=cabal2nix
+
+#------------------------------------------------#
+
+CheckCabal ?=$(Cabal) check
+CheckTarball ?=tar -C /tmp -zxvf
+CheckMarkdown ?=$(Markdown)
+CheckJson ?=jsonlint
+CheckBash ?=shellcheck
+
+CheckNix ?=nix-instantiate
+
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
-Cabal2nix ?=cabal2nix
+CheckStaticExecutables ?=lld
+
+ # ^ TODO on OSX, otool -o
 
 ##################################################
 # Makefile Variables: File/Directory Paths
 ##################################################
 
-RootDirectory?=$(CURDIR)
-DefaultPackageDirectory?=$(DefaultPackageName)
+RootDirectory ?=$(CURDIR)
+DefaultPackageDirectory ?=$(DefaultPackageName)
 
-ReleaseDirectory?=./ignore/release
+ReleaseDirectory ?=./ignore/release
 #                          ^ [Customize]
 
-# ReleaseDirectory?=./release
+# ReleaseDirectory ?=./release
 # ^ change `ReleaseDirectory` to `./release` during a release
 # to actually commit it.
 
-BuildDirectory?=./dist-newstyle
-BuildTarballDirectory?=$(BuildDirectory)/sdist/
+BuildDirectory ?=./dist-newstyle
+BuildTarballDirectory ?=$(BuildDirectory)/sdist/
 
-NixDirectory?=./nix
-ScriptDirectory?=./scripts
-DocumentDirectory?=./docs
+NixDirectory ?=./nix
+ScriptDirectory ?=./scripts
+DocumentDirectory ?=./docs
 
-HaddockDirectory?=$(ReleaseDirectory)/documentation
-TarballDirectory?=$(ReleaseDirectory)/tarballs
-BinaryDirectory?=$(ReleaseDirectory)/bin
-InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
+HaddockDirectory ?=$(ReleaseDirectory)/documentation
+TarballDirectory ?=$(ReleaseDirectory)/tarballs
+BinaryDirectory ?=$(ReleaseDirectory)/bin
+InstallDirectory ?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
 ##################################################
 # Makefile Variables: (Miscellaneous) Strings
@@ -612,6 +623,59 @@ copy-tarball: cabal-sdist
 # 	@echo '=================================================='
 
 # .PHONY: build-tarball
+
+
+##################################################
+# Fetching: files, resources
+##################################################
+
+#------------------------------------------------#
+
+fetch-stackage: fetch-stackage--stackage.project
+
+.PHONY: fetch-stackage
+
+#------------------------------------------------#
+
+fetch-stackage--stackage.project:
+
+	@mkdir -p "./cabal"
+
+	@echo '=================================================='
+	@echo
+
+	curl -sL "https://www.stackage.org/$(Stackage)/cabal.config?global=false"  >  "./cabal/stackage-$(Stackage).project"
+
+	@echo '=================================================='
+	@echo
+
+	@cat  "./cabal/stackage-$(Stackage).project"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: fetch-stackage--stackage.project
+
+#------------------------------------------------#
+
+fetch-stackage--cabal.config:
+
+	@echo '=================================================='
+	@echo
+
+	curl -sL "https://www.stackage.org/$(Stackage)/cabal.config?global=true"  >  "./cabal.config"
+
+	@echo '=================================================='
+	@echo
+
+	@cat  "./cabal.config"
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: fetch-stackage--cabal.config
+
+#------------------------------------------------#
 
 ##################################################
 # Cleaning
