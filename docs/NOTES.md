@@ -1,6 +1,8 @@
 # Notes
 
+
 (N.B. this is an incoherent reference document for the library author).
+
 
 ## Templates
 

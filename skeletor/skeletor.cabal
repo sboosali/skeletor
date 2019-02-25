@@ -60,29 +60,157 @@ extra-source-files: README.md
 
 --------------------------------------------------
 
-data-dir: data
+-- data-dirs: data, projects
 
-data-files: .gitignore
+data-files: data/.gitignore
 
-            licenses/BSD-2-Clause/LICENSE.txt
-            licenses/BSD-3-Clause/LICENSE.txt
-            licenses/BSD-4-Clause/LICENSE.txt
+            -- Licenses:
+            -- licenses/**/*.txt
 
-            licenses/GPL-3.0-or-later/LICENSE.txt
-            licenses/GPL-3.0-or-later/TerminalLicenseNotice.txt
-            licenses/GPL-3.0-or-later/StandardLicenseHeader.txt
+            data/licenses/AGPL-3.0-or-later/*.txt
+            data/licenses/Apache-2.0/*.txt
+            data/licenses/BSD-3-Clause/*.txt
+            data/licenses/GPL-3.0-or-later/*.txt
+            data/licenses/LGPL-3.0-or-later/*.txt
+            data/licenses/MIT/*.txt
 
-            licenses/AGPL-3.0-or-later/LICENSE.txt
-            licenses/AGPL-3.0-or-later/StandardLicenseHeader.txt
+            -- Projects:
 
-            licenses/LGPL-3.0-or-later/LICENSE.txt
+            -- projects/*.md
 
-            licenses/MIT/LICENSE.txt
-
-            licenses/Apache-2.0/LICENSE.txt
-            licenses/Apache-2.0/StandardLicenseHeader.txt
-
---          licenses/**/*.txt
+            -- projects/default/.gitattributes
+            -- projects/default/.gitignore
+            -- projects/default/.projectile
+            -- projects/default/.travis.yml
+            -- projects/default/LICENSE.txt
+            -- projects/default/Makefile
+            -- projects/default/README.md
+            -- projects/default/cabal
+            -- projects/default/cabal-ghcjs.project
+            -- projects/default/cabal-sboo.project
+            -- projects/default/cabal.project
+            -- projects/default/cabal/7-10-3.project
+            -- projects/default/cabal/dependencies-local.project
+            -- projects/default/cabal/dependencies-nixpkgs.project
+            -- projects/default/cabal/hackage-head.project
+            -- projects/default/cabal/hackage-stackage.project
+            -- projects/default/cabal/libraries-shared.project
+            -- projects/default/cabal/libraries-static.project
+            -- projects/default/cabal/lts-12.project
+            -- projects/default/cabal/maximal.project
+            -- projects/default/cabal/nix.project
+            -- projects/default/cabal/profiled.project
+            -- projects/default/documents
+            -- projects/default/documents/CONTRIBUTING.md
+            -- projects/default/documents/IMPLEMENTATION.md
+            -- projects/default/documents/LICENSE-GPL3-StandardLicenseHeader.txt
+            -- projects/default/documents/LICENSE-GPL3-TerminalLicenseNotice.txt
+            -- projects/default/documents/LICENSE-GPL3.txt
+            -- projects/default/documents/NOTES.md
+            -- projects/default/images
+            -- projects/default/images/haskell_128x128.png
+            -- projects/default/nix
+            -- projects/default/nix/README.md
+            -- projects/default/nix/config
+            -- projects/default/nix/config/default.nix
+            -- projects/default/nix/environment.nix
+            -- projects/default/nix/nixpkgs
+            -- projects/default/nix/nixpkgs/default.nix
+            -- projects/default/nix/nixpkgs/nixpkgs.json
+            -- projects/default/nix/nixpkgs/update-nixpkgs.sh
+            -- projects/default/nix/overlays
+            -- projects/default/nix/overlays/default.nix
+            -- projects/default/nix/overlays/ghcs.nix
+            -- projects/default/nix/overlays/overlay.nix
+            -- projects/default/nix/packages.nix
+            -- projects/default/nix/project.nix
+            -- projects/default/nix/shell.nix
+            -- projects/default/scripts
+            -- projects/default/scripts/README.md
+            -- projects/default/scripts/sboo
+            -- projects/default/scripts/sboo/ghcid.sh
+            -- projects/default/stack-nightly.yaml
+            -- projects/default/stack.yaml
+            -- projects/default/xxx-package-xxx
+            -- projects/default/xxx-package-xxx/CHANGELOG.md
+            -- projects/default/xxx-package-xxx/LICENSE.txt
+            -- projects/default/xxx-package-xxx/README.md
+            -- projects/default/xxx-package-xxx/benchmarks
+            -- projects/default/xxx-package-xxx/benchmarks/space
+            -- projects/default/xxx-package-xxx/benchmarks/space/.dir-locals.el
+            -- projects/default/xxx-package-xxx/benchmarks/space/Bench
+            -- projects/default/xxx-package-xxx/benchmarks/space/Bench/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/benchmarks/space/Main.hs
+            -- projects/default/xxx-package-xxx/benchmarks/time
+            -- projects/default/xxx-package-xxx/benchmarks/time/.dir-locals.el
+            -- projects/default/xxx-package-xxx/benchmarks/time/Bench
+            -- projects/default/xxx-package-xxx/benchmarks/time/Bench/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/benchmarks/time/Main.hs
+            -- projects/default/xxx-package-xxx/data
+            -- projects/default/xxx-package-xxx/data/golden
+            -- projects/default/xxx-package-xxx/data/golden/example.txt
+            -- projects/default/xxx-package-xxx/data/golden/example.txt.example
+            -- projects/default/xxx-package-xxx/data/golden/example.txt.golden
+            -- projects/default/xxx-package-xxx/etc
+            -- projects/default/xxx-package-xxx/etc/bash_completion.d
+            -- projects/default/xxx-package-xxx/executables
+            -- projects/default/xxx-package-xxx/executables/example
+            -- projects/default/xxx-package-xxx/executables/example/.dir-locals.el
+            -- projects/default/xxx-package-xxx/executables/example/Example
+            -- projects/default/xxx-package-xxx/executables/example/Example/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/executables/example/Main.hs
+            -- projects/default/xxx-package-xxx/executables/program
+            -- projects/default/xxx-package-xxx/executables/program/.dir-locals.el
+            -- projects/default/xxx-package-xxx/executables/program/Executable
+            -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX
+            -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Core.hs
+            -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Main.hs
+            -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Options.hs
+            -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Types.hs
+            -- projects/default/xxx-package-xxx/executables/program/Main.hs
+            -- projects/default/xxx-package-xxx/executables/program/Prelude_exe.hs
+            -- projects/default/xxx-package-xxx/include
+            -- projects/default/xxx-package-xxx/include/HsSbooMacros.h
+            -- projects/default/xxx-package-xxx/internals
+            -- projects/default/xxx-package-xxx/internals/.dir-locals.el
+            -- projects/default/xxx-package-xxx/internals/Internal
+            -- projects/default/xxx-package-xxx/internals/Internal/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/internals/Paths_xxx_package_xxx.hs
+            -- projects/default/xxx-package-xxx/internals/Prelude_xxx_package_xxx.hs
+            -- projects/default/xxx-package-xxx/library
+            -- projects/default/xxx-package-xxx/library/.dir-locals.el
+            -- projects/default/xxx-package-xxx/library/Xxx_Module_xxX
+            -- projects/default/xxx-package-xxx/library/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/library/Xxx_Module_xxX/Core.hs
+            -- projects/default/xxx-package-xxx/library/Xxx_Module_xxX/Derived.hs
+            -- projects/default/xxx-package-xxx/library/Xxx_Module_xxX/Types.hs
+            -- projects/default/xxx-package-xxx/share
+            -- projects/default/xxx-package-xxx/share/man
+            -- projects/default/xxx-package-xxx/tests
+            -- projects/default/xxx-package-xxx/tests/doc
+            -- projects/default/xxx-package-xxx/tests/doc/.dir-locals.el
+            -- projects/default/xxx-package-xxx/tests/doc/DocTests.hs
+            -- projects/default/xxx-package-xxx/tests/golden
+            -- projects/default/xxx-package-xxx/tests/golden/.dir-locals.el
+            -- projects/default/xxx-package-xxx/tests/golden/GoldenTests.hs
+            -- projects/default/xxx-package-xxx/tests/golden/Test
+            -- projects/default/xxx-package-xxx/tests/golden/Test/Golden
+            -- projects/default/xxx-package-xxx/tests/golden/Test/Golden/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/tests/golden/data
+            -- projects/default/xxx-package-xxx/tests/golden/data/example.golden
+            -- projects/default/xxx-package-xxx/tests/property
+            -- projects/default/xxx-package-xxx/tests/property/.dir-locals.el
+            -- projects/default/xxx-package-xxx/tests/property/PropertyTests.hs
+            -- projects/default/xxx-package-xxx/tests/property/Test
+            -- projects/default/xxx-package-xxx/tests/property/Test/Property
+            -- projects/default/xxx-package-xxx/tests/property/Test/Property/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/tests/unit
+            -- projects/default/xxx-package-xxx/tests/unit/.dir-locals.el
+            -- projects/default/xxx-package-xxx/tests/unit/Test
+            -- projects/default/xxx-package-xxx/tests/unit/Test/Unit
+            -- projects/default/xxx-package-xxx/tests/unit/Test/Unit/Xxx_Module_xxX.hs
+            -- projects/default/xxx-package-xxx/tests/unit/UnitTests.hs
+            -- projects/default/xxx-package-xxx/xxx-package-xxx.cabal
 
 --------------------------------------------------
 
@@ -441,6 +569,9 @@ library
                   Skeletor.Haskell.Find
                   Skeletor.Haskell.Find.Types
 
+                  Skeletor.Haskell.Project
+                  Skeletor.Haskell.Project.Types
+
                   Skeletor.Haskell.Chiaroscuro
                   Skeletor.Haskell.Chiaroscuro.Types
 
@@ -455,6 +586,8 @@ library
                   Skeletor.Haskell.Variable.Values
                   Skeletor.Haskell.Variable.Binding
                   Skeletor.Haskell.Variable.Binding.Types
+
+  --              Skeletor.Haskell.Parsers
 
                   Skeletor.Haskell.Turtle
 
@@ -587,45 +720,43 @@ library
 --------------------------------------------------
 
 test-suite unit
+
   import: sboo-haskell
   import: sboo-main
 
-  type:                exitcode-stdio-1.0
-  main-is:             UnitTests.hs
+  hs-source-dirs: tests/unit
 
-  hs-source-dirs:      tests/unit
-  other-modules:
-                Test.Unit.Skeletor.Haskell
+  type:    exitcode-stdio-1.0
+  main-is: UnitTests.hs
+
+  other-modules: Test.Unit.Skeletor.Haskell
 
   -- build-tool-depends:
   --                    hspec-discover:hspec-discover
 
-  build-depends:
-                skeletor
-              , tasty
-              , tasty-hunit
-              , HUnit
+  build-depends: skeletor
+               , HUnit
+               , tasty
+               , tasty-hunit
 
 --------------------------------------------------
 
 test-suite property
+
   import: sboo-haskell
   import: sboo-main
 
-  type:                exitcode-stdio-1.0
-  main-is:             PropertyTests.hs
+  hs-source-dirs: tests/property
 
-  hs-source-dirs:      tests/property
-  other-modules:
-                Test.Property.Skeletor.Haskell
+  type:    exitcode-stdio-1.0
+  main-is: PropertyTests.hs
 
-  build-depends:
-                skeletor
+  other-modules: Test.Property.Skeletor.Haskell
 
-              , hedgehog
-
-              , tasty
-              , tasty-hedgehog
+  build-depends: skeletor
+               , hedgehog
+               , tasty
+               , tasty-hedgehog
 
 --------------------------------------------------
 -- Executables -----------------------------------
@@ -665,6 +796,7 @@ executable skeletor-haskell
                  Program.Skeletor.Haskell.Version
                  Program.Skeletor.Haskell.License
                  Program.Skeletor.Haskell.Utilities
+                 Program.Skeletor.Haskell.Parsers
 
                  Program.Skeletor.Haskell.Core
                  Program.Skeletor.Haskell.Core.Types
@@ -688,9 +820,14 @@ executable skeletor-haskell
 
               , text
               , case-insensitive
-              , generic-lens
+              , modern-uri
+
               , attoparsec
+              , megaparsec
+
                 -- TODO rm attoparsec, export helpers from library
+
+              , generic-lens
 
 --------------------------------------------------
 --------------------------------------------------

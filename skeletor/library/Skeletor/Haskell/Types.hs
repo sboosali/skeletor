@@ -1,6 +1,6 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-
-{-# LANGUAGE BinaryLiterals #-}
+{-# LANGUAGE TypeApplications      #-}
+{-# LANGUAGE BinaryLiterals        #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -57,42 +57,6 @@ import Prelude_skeletor hiding (Text)
 --------------------------------------------------
 
 type UnknownOr = Either String    -- TODO mv to own pkg.
-
---------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
-type ProjectIdentifier = UnknownOr KnownProject
-
---------------------------------------------------
-
-{-| 
-
--}
-
-data KnownProject
-
-  = DefaultHaskellProject
-  
-  deriving stock    (Enum,Bounded,Ix)
-  deriving anyclass (GEnum)
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
-
--- | @= 'defaultKnownProject'@
-
-instance Default KnownProject where
-  def = defaultKnownProject
-
--- | @= 'DefaultHaskellProject'@
-
-defaultKnownProject :: KnownProject
-defaultKnownProject = DefaultHaskellProject
 
 --------------------------------------------------
 --------------------------------------------------
@@ -246,7 +210,7 @@ data SrcDst = SrcDst
 
 data Src
 
-  = SrcStdin
+  = SrcStdin -- String Prompt
   | SrcFile  FilePath
   | SrcLines [Text]
 

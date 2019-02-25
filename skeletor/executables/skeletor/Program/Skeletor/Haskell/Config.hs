@@ -76,7 +76,7 @@ toConfig options@Options{..} = do
 
   let location = mkLocation subdirectory projectpath projectname
 
-  license' <- readSpdxLicenseIdentifier license
+  license' <- parseSpdxLicenseIdentifier license
 
   actions <- toActions options
 

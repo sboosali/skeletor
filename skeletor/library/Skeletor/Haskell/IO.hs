@@ -151,7 +151,7 @@ import Prelude_skeletor
 
 -}
 
--- readProject :: ProjectIdentifier -> IO FileTree
+-- readProject :: ProjectName -> IO FileTree
 -- readProject = readProjectByIdentifier
 
 --------------------------------------------------
@@ -187,7 +187,7 @@ default_findProjectFilesByPath = findFilesWith defaultFileFilters -- TODO
 
 -}
 
--- readProjectByIdentifier :: ProjectIdentifier -> IO FileTree
+-- readProjectByIdentifier :: ProjectName -> IO FileTree
 -- readProjectByIdentifier = locateProject > readProjectByPath
 
 --------------------------------------------------
