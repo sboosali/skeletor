@@ -199,6 +199,35 @@ printedFetchBy = printFetchBy <$> constructors'
 --------------------------------------------------
 --------------------------------------------------
 
+parseLocation :: SimpleParse Location
+parseLocation string = go string
+  where
+
+  go s
+
+    = (parseConstantLocation s <|> parseVariableLocation s)
+    & (maybe (throwM e) return)
+
+  parseConstantLocation :: String -> Maybe Location
+  parseConstantLocation = \case
+
+    "-" -> Just LocationStdin
+    _   -> Nothing
+
+  parseVariableLocation :: String -> Maybe Location
+  parseVariableLocation s
+
+    | (File.isValid s) = Just (LocationPath s)
+    | otherwise        = LocationURI <$> URI.mkURI (Text.pack s)
+
+  e = ParseError
+
+      { stringBeingParsed = string
+      , thingToParseInto  = "Location"
+      }
+
+--------------------------------------------------
+
 printLocation :: SimplePrint Location
 printLocation = \case
 

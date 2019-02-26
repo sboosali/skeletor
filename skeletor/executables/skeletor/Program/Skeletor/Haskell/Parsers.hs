@@ -21,13 +21,16 @@ module Program.Skeletor.Haskell.Parsers
 
   ( rProject
 
-  --, rLocation
+  , rLocation
   , rFetchBy
   , rURI
 
   , rLicense
   , rOSILicense
   , rFLOSSLicense
+
+  , rBinding
+  , rBindings
 
   ) where
 
@@ -38,15 +41,15 @@ module Program.Skeletor.Haskell.Parsers
 import Program.Skeletor.Haskell.Types
 
 --import Program.Skeletor.Haskell.Options
-import Program.Skeletor.Haskell.Config
-import Program.Skeletor.Haskell.Action
-import Program.Skeletor.Haskell.Command
+-- import Program.Skeletor.Haskell.Config
+-- import Program.Skeletor.Haskell.Action
+-- import Program.Skeletor.Haskell.Command
 
---------------------------------------------------
+-- --------------------------------------------------
 
 import Skeletor.Haskell
-import Skeletor.Haskell.License
-import Skeletor.Haskell.Variable.Binding
+-- import Skeletor.Haskell.License
+-- import Skeletor.Haskell.Variable.Binding
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
@@ -57,7 +60,7 @@ import qualified "attoparsec" Data.Attoparsec.Text as Attoparsec
 --------------------------------------------------
 
 import qualified "megaparsec" Text.Megaparsec       as Megaparsec
-import qualified "megaparsec" Text.Megaparsec.Error as Megaparsec
+--import qualified "megaparsec" Text.Megaparsec.Error as Megaparsec
 
 --------------------------------------------------
 
@@ -67,7 +70,7 @@ import           "modern-uri" Text.URI (URI)
 --------------------------------------------------
 
 import qualified "optparse-applicative" Options.Applicative      as Optparse
-import qualified "optparse-applicative" Options.Applicative.Help as Optparse hiding (fullDesc)
+--import qualified "optparse-applicative" Options.Applicative.Help as Optparse hiding (fullDesc)
 import           "optparse-applicative" Options.Applicative      (ReadM)
 
 --------------------------------------------------
@@ -83,7 +86,7 @@ import           "text" Data.Text (Text)
 
 import           "base" Control.Exception (Exception(..), SomeException(..))
 import           "base" Data.Maybe
-import           "base" Data.Semigroup
+--import           "base" Data.Semigroup
 
 --------------------------------------------------
 
@@ -108,8 +111,8 @@ rProject = fromMonadThrow parseBuiltinProjectName
 --------------------------------------------------
 --------------------------------------------------
 
--- rLocation :: Optparse.ReadM Location
--- rLocation = _
+rLocation :: Optparse.ReadM Location
+rLocation = fromMonadThrow parseLocation
 
 --------------------------------------------------
 
@@ -221,10 +224,10 @@ fromMonadParsec name p = fromMonadThrow go
 
 --------------------------------------------------
 
-failP :: String -> ReadM a
-failP message = Optparse.readerAbort error
-  where
-  error = Optparse.ErrorMsg message
+-- failP :: String -> ReadM a
+-- failP message = Optparse.readerAbort error
+--   where
+--   error = Optparse.ErrorMsg message
 
 {- Notes
 

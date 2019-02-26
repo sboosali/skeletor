@@ -18,15 +18,21 @@
 
 module Program.Skeletor.Haskell.CLI
 
-  ( pCommand
-  , pCreateProjectOptions
-  , pDownloadProjectOptions
-  , pResolveConfigurationOptions
+  ( cli
+  , pCommand
+
+  , piCreateProjectOptions
+  , piDownloadProjectOptions
+  , piResolveConfigurationOptions
 
   , pGlobalOptions
-  , pLicense
+
   , pLocation
   , pProject
+
+  , pLicense
+  , pOSILicense
+  , pFLOSSLicense
 
   ) where
 
@@ -37,29 +43,29 @@ module Program.Skeletor.Haskell.CLI
 import Program.Skeletor.Haskell.Types
 import Program.Skeletor.Haskell.Parsers
 
-import Program.Skeletor.Haskell.Options
-import Program.Skeletor.Haskell.Config
-import Program.Skeletor.Haskell.Action
+--import Program.Skeletor.Haskell.Options
+--import Program.Skeletor.Haskell.Config
+--import Program.Skeletor.Haskell.Action
 import Program.Skeletor.Haskell.Command
 
 --------------------------------------------------
 
 import Skeletor.Haskell
-import Skeletor.Haskell.License
-import Skeletor.Haskell.Variable.Binding
+--import Skeletor.Haskell.License
+--import Skeletor.Haskell.Variable.Binding
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
-import qualified "attoparsec" Data.Attoparsec.Text as A
+--import qualified "attoparsec" Data.Attoparsec.Text as A
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
-import qualified "text" Data.Text as T
-import           "text" Data.Text (Text)
+--import qualified "text" Data.Text as T
+--import           "text" Data.Text (Text)
 
 -- NOTE « attoparsec » uses strict « Text ».
 
@@ -72,7 +78,7 @@ import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fu
 --------------------------------------------------
 
 import           "base" Data.Maybe
-import           "base" Data.Semigroup
+--import           "base" Data.Semigroup
 
 --------------------------------------------------
 
@@ -83,10 +89,10 @@ import Prelude_exe
 --------------------------------------------------
 
 cli :: P.ParserInfo Command
-cli = pi
+cli = piCommand
   where
 
-  pi = info description pCommand
+  piCommand = info description pCommand
 
   description = ""
 
@@ -202,8 +208,8 @@ pGlobalOptions = do
 
         [ P.long    "dryrun"
         , P.short   'i'
+        , embolden
         , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
-        , P.style P.bold
         ])
 
   return GlobalOptions{..}
@@ -215,14 +221,31 @@ pGlobalOptions = do
 -}
 
 pLocation :: P.Parser Location
-pLocation = (P.strOption (mconcat
+pLocation = P.option rLocation (mconcat
 
-        [ P.long    ""
-        , P.metavar ""
+        [ P.long    "location"
+        , P.short   'l'
+        , P.metavar "LOCATION"
         , P.completeWith printedKnownLocations
-        , P.help    ""
         , embolden
-        ]))
+        , P.help    ""
+        ])
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+pProject :: P.Parser KnownProjectName
+pProject = P.option rProject (mconcat
+
+        [ P.long    "project-name"
+        , P.metavar "n"
+        , P.completeWith builtinProjectNames
+        , embolden
+        , P.help    "NAME of, or LOCATION of, a project." -- TODO -- 
+        ])
 
 --------------------------------------------------
 
@@ -231,14 +254,18 @@ pLocation = (P.strOption (mconcat
 -}
 
 pDestination :: P.Parser FilePath
-pDestination = (P.strOption (mconcat
+pDestination = P.option rDestination (mconcat
 
-        [ P.long    ""
-        , P.metavar ""
+        [ P.long    "destination"
+        , P.metavar "-d"
         , P.completeWith knownDestinations
-        , P.help    ""
         , embolden
-        ]))
+        , P.help    "Destination in which to save the proejct being downloaded or being created."
+        ])
+
+  where
+
+    rDestination = P.str
 
 --------------------------------------------------
 
@@ -247,12 +274,12 @@ pDestination = (P.strOption (mconcat
 -}
 
 pFetchBy :: P.Parser FetchBy
-pFetchBy = defaulting defaultFetchBy (P.strOption (mconcat
+pFetchBy = defaulting defaultFetchBy (P.option rFetchBy (mconcat
 
         [ P.long    "fetch-method"
         , P.completeWith printedFetchBy
-        , P.help    "."
         , embolden
+        , P.help    "How to download resources (in particular, projects)."
         ]))
 
 --------------------------------------------------
@@ -262,13 +289,13 @@ pFetchBy = defaulting defaultFetchBy (P.strOption (mconcat
 -}
 
 pLicense :: P.Parser License
-pLicense = defaulting defaultLicense (P.strOption (mconcat
+pLicense = defaulting defaultLicense (P.option rLicense (mconcat
 
         [ P.long    "license"
         , P.metavar "SPDX_LICENSE"
         , P.completeWith knownLicenseIds
-        , P.help    "The project's license (an SPDX license identifier). Examples include: « GPL-3.0-or-later », « GPL-3.0-only », « BSD-3-Clause », « CC-BY-SA-4.0 », « MIT ». Press <tab> (twice) to autocomplete all (~350) licenses."
         , embolden
+        , P.help    "The project's license (an SPDX license identifier). Examples include: « GPL-3.0-or-later », « GPL-3.0-only », « BSD-3-Clause », « CC-BY-SA-4.0 », « MIT ». Press <tab> (twice) to autocomplete all (~350) licenses."
         ]))
 
 --------------------------------------------------
@@ -278,11 +305,12 @@ pLicense = defaulting defaultLicense (P.strOption (mconcat
 -}
 
 pOSILicense :: P.Parser License
-pOSILicense = defaulting defaultLicense (P.strOption (mconcat
+pOSILicense = defaulting defaultLicense (P.option rOSILicense (mconcat
 
         [ P.long    "license-osi"
         , P.metavar "SPDX_LICENSE"
         , P.completeWith knownOSILicenseIds
+        , embolden
         , P.help    "Like « --license _», but only for Open Source Initiative licenses."
         , embolden
         ]))
@@ -294,13 +322,13 @@ pOSILicense = defaulting defaultLicense (P.strOption (mconcat
 -}
 
 pFLOSSLicense :: P.Parser License
-pFLOSSLicense = defaulting defaultFLOSSLicense (P.strOption (mconcat
+pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
 
         [ P.long    "license-libre"  --[OLD] "license-floss"
         , P.metavar "SPDX_LICENSE"
         , P.completeWith knownFLOSSLicenseIds
-        , P.help    "Like « --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
         , embolden
+        , P.help    "Like « --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
         ]))
 
 --------------------------------------------------
