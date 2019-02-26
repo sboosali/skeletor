@@ -125,7 +125,7 @@ pCommand = P.hsubparser ps
 -}
 
 piCreateProjectOptions :: P.ParserInfo CreateProjectOptions
-piCreateProjectOptions = info "Create a project" do
+piCreateProjectOptions = info description do
 
   globals     <- pGlobalOptions
 
@@ -139,7 +139,7 @@ piCreateProjectOptions = info "Create a project" do
 
   where
 
-  description = ""
+  description = "Create a project"
 
 --------------------------------------------------
 
@@ -148,7 +148,7 @@ piCreateProjectOptions = info "Create a project" do
 -}
 
 piDownloadProjectOptions :: P.ParserInfo DownloadProjectOptions
-piDownloadProjectOptions = info "Download a project" do
+piDownloadProjectOptions = info description do
 
   globals     <- pGlobalOptions
 
@@ -162,7 +162,7 @@ piDownloadProjectOptions = info "Download a project" do
 
   where
 
-  description = ""
+  description = "Download a project"
 
 --------------------------------------------------
 
