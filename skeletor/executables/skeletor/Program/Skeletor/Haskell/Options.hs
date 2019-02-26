@@ -50,6 +50,7 @@ import           "text" Data.Text (Text)
 import Prelude_exe
 
 --------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 {-| Calls:
@@ -212,7 +213,7 @@ rBinding = P.eitherReader (A.parseOnly p . T.pack)
 --------------------------------------------------
 
 rLicense :: P.ReadM License
-rLicense = P.maybeReader parseSpdxLicenseIdentifier
+rLicense = P.maybeReader parseLicense
 
 --------------------------------------------------
 

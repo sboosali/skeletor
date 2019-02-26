@@ -76,7 +76,7 @@ toConfig options@Options{..} = do
 
   let location = mkLocation subdirectory projectpath projectname
 
-  license' <- parseSpdxLicenseIdentifier license
+  license' <- parseLicense license
 
   actions <- toActions options
 
@@ -119,7 +119,7 @@ mkLocation subdirectory projectpath projectname = fromMaybes LocationStdin
   fromMaybes x = catMaybes > listToMaybe > fromMaybe x
 
   fromProjectName :: String -> Maybe FilePath
-  fromProjectName = parseKnownProject >=> returning locateKnownProject
+  fromProjectName = parseBuiltinProjectName >=> returning locateKnownProject
 
 --------------------------------------------------
 --------------------------------------------------

@@ -1,5 +1,9 @@
+{-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE OverloadedLists       #-}
+
+--------------------------------------------------
+
 {-# LANGUAGE ApplicativeDo         #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NamedFieldPuns        #-}
@@ -15,11 +19,15 @@
 
 module Program.Skeletor.Haskell.Parsers
 
-  ( pURI
-  , pFetchBy
-  , pLicense
-  , pLocation
-  , pProject
+  ( rProject
+
+  --, rLocation
+  , rFetchBy
+  , rURI
+
+  , rLicense
+  , rOSILicense
+  , rFLOSSLicense
 
   ) where
 
@@ -29,7 +37,7 @@ module Program.Skeletor.Haskell.Parsers
 
 import Program.Skeletor.Haskell.Types
 
-import Program.Skeletor.Haskell.Options
+--import Program.Skeletor.Haskell.Options
 import Program.Skeletor.Haskell.Config
 import Program.Skeletor.Haskell.Action
 import Program.Skeletor.Haskell.Command
@@ -48,12 +56,19 @@ import qualified "attoparsec" Data.Attoparsec.Text as Attoparsec
 
 --------------------------------------------------
 
-import qualified "megaparsec" Text.Megaparsec as Megaparsec
+import qualified "megaparsec" Text.Megaparsec       as Megaparsec
+import qualified "megaparsec" Text.Megaparsec.Error as Megaparsec
 
 --------------------------------------------------
 
 import qualified "modern-uri" Text.URI as URI
 import           "modern-uri" Text.URI (URI)
+
+--------------------------------------------------
+
+import qualified "optparse-applicative" Options.Applicative      as Optparse
+import qualified "optparse-applicative" Options.Applicative.Help as Optparse hiding (fullDesc)
+import           "optparse-applicative" Options.Applicative      (ReadM)
 
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
@@ -65,58 +80,63 @@ import           "text" Data.Text (Text)
 -- NOTE « attoparsec » uses strict « Text ».
 
 --------------------------------------------------
---------------------------------------------------
 
-import qualified "optparse-applicative" Options.Applicative      as Optparse
-import qualified "optparse-applicative" Options.Applicative.Help as Optparse hiding (fullDesc)
-import           "optparse-applicative" Options.Applicative      (ReadM)
-
---------------------------------------------------
-
+import           "base" Control.Exception (Exception(..), SomeException(..))
 import           "base" Data.Maybe
 import           "base" Data.Semigroup
 
 --------------------------------------------------
 
-import Prelude_exe
+import Prelude_exe hiding (Text)
 
 --------------------------------------------------
 -- Types -----------------------------------------
 --------------------------------------------------
 
-
-
 --------------------------------------------------
 -- Parsers ---------------------------------------
 --------------------------------------------------
 
-pURI :: Optparse.ReadM URI
-pURI = _
+rURI :: Optparse.ReadM URI
+rURI = fromMonadParsec (Just "URI") URI.parser
 
 --------------------------------------------------
 
-pProject :: Optparse.ReadM Project
-pProject = _
+rProject :: Optparse.ReadM KnownProjectName
+rProject = fromMonadThrow parseBuiltinProjectName
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- rLocation :: Optparse.ReadM Location
+-- rLocation = _
 
 --------------------------------------------------
 
-pLicense :: Optparse.ReadM License
-pLicense = _
+rFetchBy :: Optparse.ReadM FetchBy
+rFetchBy = fromMonadThrow parseFetchBy
+
+--------------------------------------------------
+--------------------------------------------------
+
+rLicense :: Optparse.ReadM License
+rLicense = fromMonadThrow parseLicense
 
 --------------------------------------------------
 
-pLocation :: Optparse.ReadM Location
-pLocation = _
+rOSILicense :: Optparse.ReadM License
+rOSILicense = fromMonadThrow parseOSILicense
 
 --------------------------------------------------
 
-pFetchBy :: Optparse.ReadM FetchBy
-pFetchBy = _
+rFLOSSLicense :: Optparse.ReadM License
+rFLOSSLicense = fromMonadThrow parseFLOSSLicense
 
+--------------------------------------------------
 --------------------------------------------------
 
 rBindings :: Optparse.ReadM Bindings
-rBindings = Optparse.eitherReader (A.parseOnly p . T.pack)
+rBindings = Optparse.eitherReader (Attoparsec.parseOnly p . T.pack)
   where
 
   p = pBindings bindingSyntax
@@ -124,15 +144,10 @@ rBindings = Optparse.eitherReader (A.parseOnly p . T.pack)
 --------------------------------------------------
 
 rBinding :: Optparse.ReadM Binding
-rBinding = Optparse.eitherReader (A.parseOnly p . T.pack)
+rBinding = Optparse.eitherReader (Attoparsec.parseOnly p . T.pack)
   where
 
   p = pBinding bindingSyntax
-
---------------------------------------------------
-
-rLicense :: Optparse.ReadM License
-rLicense = Optparse.maybeReader parseSpdxLicenseIdentifier
 
 --------------------------------------------------
 -- Utilities -------------------------------------
@@ -153,48 +168,51 @@ eitherReader :: (String -> Either String a) -> ReadM a
 import qualified Data.Attoparsec.Text as A
 import qualified Data.Text as T
 
-attoparsecReader :: A.Parser a -> ReadM a
-attoparsecReader p = eitherReader (A.parseOnly p . T.pack)
+attoparsecReader :: Attoparsec.Parser a -> ReadM a
+attoparsecReader p = eitherReader (Attoparsec.parseOnly p . T.pack)
 
 -}
 
 --------------------------------------------------
 
 fromMonadThrow
-  :: forall a. ()
+  :: forall a.
 
-  => Maybe String
-  -> (forall m. MonadThrow m => Text -> m a)
+    (forall m. MonadThrow m => String -> m a)
 
   -> ReadM a
 
-fromMonadThrow _name parse = toReadM parse
+fromMonadThrow parse = toReadM parse
+  where
 
-  toReadM p = Optparse.eitherReader p
+  toReadM :: (String -> Either SomeException a) -> ReadM a
+  toReadM p = Optparse.eitherReader (p > bimap displayException id)
 
 --------------------------------------------------
 
 fromMonadParsec
-  :: forall a. ()
+  :: forall a.
 
-  => Maybe String
-  -> (forall e m. MonadParsec e Text m => m a)
+    Maybe String
+  -> (forall e m. Megaparsec.MonadParsec e Text m => m a)
 
   -> ReadM a
 
-fromMonadParsec name p = fromMonadThrow name go
+fromMonadParsec name p = fromMonadThrow go
   where
 
-  go :: (MonadThrow m) => Text -> m a
-  go = toMonadThrow (Megaparsec.runParser q name')
+  go :: (MonadThrow m) => String -> m a
+  go s = toMonadThrow (Megaparsec.runParser q name' t)
       where
 
+      t = T.pack s
+
       toMonadThrow e = case e of
-          Left  b -> throwM (ParseException b)
+          Left  b -> throwM (URI.ParseException b)   --TODO-- issue on megaparsec for a ParseException
           Right x -> return x
 
-  q :: Parsec Void Text a
-  q = p  <* eof
+  q :: Megaparsec.Parsec Void Text a
+  q = p  <* Megaparsec.eof
 
   name' :: String
   name' = fromMaybe "" name
@@ -204,7 +222,9 @@ fromMonadParsec name p = fromMonadThrow name go
 --------------------------------------------------
 
 failP :: String -> ReadM a
-failP message = Optparse.ErrorMsg message
+failP message = Optparse.readerAbort error
+  where
+  error = Optparse.ErrorMsg message
 
 {- Notes
 
