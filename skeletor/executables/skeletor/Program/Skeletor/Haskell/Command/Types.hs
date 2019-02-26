@@ -18,7 +18,7 @@ import Skeletor.Haskell.Types
 
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Options.Types
+--import Program.Skeletor.Haskell.Options.Types
 import Program.Skeletor.Haskell.Config.Types
 import Program.Skeletor.Haskell.Core.Types
 
@@ -54,10 +54,11 @@ data Command
 
   = CommandCreateProject        CreateProjectOptions
   | CommandDownloadProject      DownloadProjectOptions
-  | CommandResolveConfiguration 
+  | CommandResolveConfiguration ResolveConfigurationOptions
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -74,8 +75,9 @@ data CreateProjectOptions = CreateProjectOptions
   , license     :: License
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -92,8 +94,18 @@ data DownloadProjectOptions = DownloadProjectOptions
   , method      :: FetchBy
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+type ResolveConfigurationOptions = ()
 
 --------------------------------------------------
 --------------------------------------------------

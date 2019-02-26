@@ -27,8 +27,20 @@ import Program.Skeletor.Haskell.License
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
+--import           "modern-uri" Text.URI (URI)
+import qualified "modern-uri" Text.URI as URI
+
+--------------------------------------------------
+
+--import qualified "filepath" System.FilePath as File
+
 --------------------------------------------------
 -- Imports (Standard Library) --------------------
+--------------------------------------------------
+
+import qualified "text" Data.Text as Text
+--import           "text" Data.Text (Text)
+
 --------------------------------------------------
 
 import qualified "base" Data.Version as Version
@@ -146,10 +158,14 @@ fetchLocation = \case
 
   LocationStdin    -> stdinLocation
   LocationPath fp  -> return fp
-  LocationURL  uri -> fetchURI uri
+  LocationURI  uri -> fetchURI uri
 
   where
-  fetchURI = return             -- TODO
+
+  fetchURI x = return (go x)            -- TODO
+
+     where
+     go = URI.render > Text.unpack
 
   stdinLocation = liftIO $ do
   --IO.putStr "Enter ① a directory filepath or ② a project name: "

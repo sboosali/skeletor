@@ -17,6 +17,8 @@ module Program.Skeletor.Haskell.Action.Types where
 
 import Program.Skeletor.Haskell.Core.Types
 
+--------------------------------------------------
+
 --import Skeletor.Core.Types
 import Skeletor.Haskell.Types
 
@@ -44,15 +46,19 @@ newtype Actions = Actions
 
   [Action]
 
-  deriving stock    (Show,Read,Lift,Generic)
-  deriving newtype  (Eq,Ord,Semigroup,Monoid)
-  deriving newtype  (NFData,Hashable)
+  deriving stock    (Show)
+  deriving stock    (Generic)
+  deriving newtype  (Eq,Ord)
+  deriving newtype  (Semigroup,Monoid)
+  deriving newtype  (NFData)
 
 --------------------------------------------------
 
 -- | 
 instance IsList Actions where
+
   type Item Actions = Action
+
   fromList = coerce
   toList   = coerce
 
@@ -73,8 +79,9 @@ data Action
 
   | ActionResolveConfiguration
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 {-
   | Action
@@ -96,8 +103,9 @@ data CreateProject = CreateProject
   , license     :: License
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -113,8 +121,9 @@ data DownloadProject = DownloadProject
   , method      :: FetchBy
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -128,7 +137,8 @@ data ProjectCreated = ProjectCreated
   { status :: Status
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
@@ -144,7 +154,8 @@ data ProjectDownloaded = ProjectDownloaded
   , path   :: FilePath
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------

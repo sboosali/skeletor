@@ -41,15 +41,11 @@ maintainer:          samboosalis@gmail.com
 -- Portability -----------------------------------
 --------------------------------------------------
 
-stability: provisional
+stability: experimental
 
 --------------------------------------------------
 
-tested-with:
-            GHC == 8.6.3
-            GHC == 8.4.4
-
-            -- ^ ❲ -XDerivingStrategies ❳ requires ❲ GHC >= 8.2 ❳.
+tested-with: GHC == 8.6.3
 
 --------------------------------------------------
 -- (Non-Code) Files ------------------------------
@@ -820,6 +816,8 @@ executable skeletor-haskell
 
               , text
               , case-insensitive
+              , filepath
+              , filemanip
               , modern-uri
 
               , attoparsec

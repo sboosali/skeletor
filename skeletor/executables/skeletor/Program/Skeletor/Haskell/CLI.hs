@@ -1,3 +1,6 @@
+--------------------------------------------------
+
+{-# LANGUAGE BlockArguments        #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE OverloadedLists       #-}
 {-# LANGUAGE ApplicativeDo         #-}
@@ -32,6 +35,7 @@ module Program.Skeletor.Haskell.CLI
 --------------------------------------------------
 
 import Program.Skeletor.Haskell.Types
+import Program.Skeletor.Haskell.Parsers
 
 import Program.Skeletor.Haskell.Options
 import Program.Skeletor.Haskell.Config
@@ -78,6 +82,101 @@ import Prelude_exe
 -- Command-Line Interface ------------------------
 --------------------------------------------------
 
+cli :: P.ParserInfo Command
+cli = pi
+  where
+
+  pi = info description pCommand
+
+  description = ""
+
+--------------------------------------------------
+-- « ParserInfo »s -------------------------------
+--------------------------------------------------
+
+pCommand :: P.Parser Command
+pCommand = P.hsubparser ps
+  where
+
+  ps = mconcat
+
+    [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
+    , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
+    , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
+    ]
+
+-- command :: String -> ParserInfo a -> Mod CommandFields a
+
+-- sample :: Parser Sample
+-- sample = subparser
+--        ( command "hello"
+--          (info hello (progDesc "Print greeting")))
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+piCreateProjectOptions :: P.ParserInfo CreateProjectOptions
+piCreateProjectOptions = info "Create a project" do
+
+  globals     <- pGlobalOptions
+
+  location    <- pLocation
+
+  destination <- pDestination
+
+  license     <- pLicense
+
+  return CreateProjectOptions{..}
+
+  where
+
+  description = ""
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+piDownloadProjectOptions :: P.ParserInfo DownloadProjectOptions
+piDownloadProjectOptions = info "Download a project" do
+
+  globals     <- pGlobalOptions
+
+  location    <- pLocation
+
+  destination <- pDestination
+
+  method      <- pFetchBy
+
+  return DownloadProjectOptions{..}
+
+  where
+
+  description = ""
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+piResolveConfigurationOptions :: P.ParserInfo ()  --TODO-- ResolveConfigurationOptions
+piResolveConfigurationOptions = info description do
+
+  empty
+
+  where
+
+  description = "Print an explicit (\"standalone\") configuration file merging the implicit configurations of: the current values of skeletor's environment variables; the user configuration in skeletor's XDG_CONFIG_DIR; skeletor's builtin projects and locations."
+
+--------------------------------------------------
+-- « Parser »s -----------------------------------
+--------------------------------------------------
+
 {-|
 
 Options, Arguments, and Flags include:
@@ -111,85 +210,16 @@ pGlobalOptions = do
 
 --------------------------------------------------
 
-pCommand :: P.Parser Command
-pCommand = P.hsubparser ps
-  where
-
-  ps = mconcat
-
-    [ (P.command "create" (CommandCreateProject        <$> pCreateProjectOptions))
-    , (P.command "fetch"  (CommandDownloadProject      <$> pDownloadProjectOptions))
-    , (P.command "config" (CommandResolveConfiguration <$> pResolveConfigurationOptions))
-    ]
-
-
-command :: String -> ParserInfo a -> Mod CommandFields a
-
-sample :: Parser Sample
-sample = subparser
-       ( command "hello"
-         (info hello (progDesc "Print greeting")))
-
---------------------------------------------------
-
 {-|
 
 -}
-
-pCreateProjectOptions :: P.Parser CreateProjectOptions
-pCreateProjectOptions = do
-
-  globals     <- pGlobalOptions
-
-  location    <- pLocation
-
-  destination <- pDestination
-
-  license     <- pLicense
-
-  return CreateProjectOptions{..}
-
---------------------------------------------------
-
-{-|
-
--}
-
-pDownloadProjectOptions :: P.Parser DownloadProjectOptions
-pDownloadProjectOptions = do
-
-  globals     <- pGlobalOptions
-
-  location    <- pLocation
-
-  destination <- pDestination
-
-  method      <- pFetchBy
- 
-  return DownloadProjectOptions{..}
-
---------------------------------------------------
-
-{-|
-
--}
-
-pResolveConfigurationOptions :: P.Parser ()  --TODO-- ResolveConfigurationOptions
-pResolveConfigurationOptions = empty
-
---------------------------------------------------
-
-{-|
-
--}
-
 
 pLocation :: P.Parser Location
 pLocation = (P.strOption (mconcat
 
         [ P.long    ""
         , P.metavar ""
-        , P.completeWith knownLocations
+        , P.completeWith printedKnownLocations
         , P.help    ""
         , embolden
         ]))
@@ -216,6 +246,21 @@ pDestination = (P.strOption (mconcat
 
 -}
 
+pFetchBy :: P.Parser FetchBy
+pFetchBy = defaulting defaultFetchBy (P.strOption (mconcat
+
+        [ P.long    "fetch-method"
+        , P.completeWith printedFetchBy
+        , P.help    "."
+        , embolden
+        ]))
+
+--------------------------------------------------
+
+{-|
+
+-}
+
 pLicense :: P.Parser License
 pLicense = defaulting defaultLicense (P.strOption (mconcat
 
@@ -232,7 +277,7 @@ pLicense = defaulting defaultLicense (P.strOption (mconcat
 
 -}
 
-pOSILicense :: License
+pOSILicense :: P.Parser License
 pOSILicense = defaulting defaultLicense (P.strOption (mconcat
 
         [ P.long    "license-osi"
@@ -248,7 +293,7 @@ pOSILicense = defaulting defaultLicense (P.strOption (mconcat
 
 -}
 
-pFLOSSLicense :: License
+pFLOSSLicense :: P.Parser License
 pFLOSSLicense = defaulting defaultFLOSSLicense (P.strOption (mconcat
 
         [ P.long    "license-libre"  --[OLD] "license-floss"
@@ -259,22 +304,26 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.strOption (mconcat
         ]))
 
 --------------------------------------------------
-
-{-| 
-
--}
-
-pFetchBy :: FetchBy
-pFetchBy = _
-
+-- Utilities -------------------------------------
 --------------------------------------------------
 
 {-| 
 
 -}
 
-knownLocations :: [Location]
-knownLocations = []
+info
+  :: forall a. String -> P.Parser a
+  -> P.ParserInfo a
+
+info description parser = P.info (P.helper <*> parser) information
+  where
+
+  information :: P.InfoMod a
+  information = mconcat
+
+      [ P.fullDesc
+      , P.progDesc description
+      ]
 
 --------------------------------------------------
 
@@ -285,8 +334,6 @@ knownLocations = []
 knownDestinations :: [FilePath]
 knownDestinations = []
 
---------------------------------------------------
--- Utilities -------------------------------------
 --------------------------------------------------
 
 defaulting :: (Alternative f) => a -> f a -> f a

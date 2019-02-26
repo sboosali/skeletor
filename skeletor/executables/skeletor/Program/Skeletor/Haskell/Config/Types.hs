@@ -15,7 +15,7 @@ module Program.Skeletor.Haskell.Config.Types where
 -- Imports (Project) -----------------------------
 --------------------------------------------------
 
-import Skeletor.Core.Hash
+--import Skeletor.Core.Hash
 
 import Skeletor.Haskell.Types hiding (Location)
 
@@ -43,7 +43,7 @@ import           "case-insensitive" Data.CaseInsensitive  ( CI )
 -- Imports (Standard) ----------------------------
 --------------------------------------------------
 
-import qualified "text" Data.Text as T
+--import qualified "text" Data.Text as Text
 import           "text" Data.Text  ( Text )
 
 --------------------------------------------------
@@ -65,8 +65,9 @@ data Config = Config
   , project      :: Project
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -81,7 +82,8 @@ data GlobalOptions = GlobalOptions
   , dryrun       :: Dryness
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic,Lift)
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
@@ -99,8 +101,9 @@ data Project = Project
   , isSubdirectory :: WhichPackageDirectory
   }
 
-  deriving stock    (Show,Read,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 --------------------------------------------------
