@@ -128,7 +128,7 @@ command :: String -> ParserInfo a -> Mod CommandFields a
 sample :: Parser Sample
 sample = subparser
        ( command "hello"
-         (info hello (progDesc "Print greeting"))
+         (info hello (progDesc "Print greeting")))
 
 --------------------------------------------------
 
