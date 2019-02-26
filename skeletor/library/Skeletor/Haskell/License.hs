@@ -109,6 +109,7 @@ defaultFLOSSLicense :: License
 defaultFLOSSLicense = GPL_3_0_or_later
 
 --------------------------------------------------
+--------------------------------------------------
 
 -- | @≡ 'constructors'@
 
@@ -142,6 +143,7 @@ allFLOSSLicenses :: [SpdxLicenseIdentifier]
 allFLOSSLicenses = allLicenses & filter licenseIsFlossCompatible
 
 --------------------------------------------------
+--------------------------------------------------
 
 -- | the 'licenseId' of 'allLicenses'.
 
@@ -165,11 +167,39 @@ knownFLOSSLicenseIds = (licenseId <$> allFLOSSLicenses)
 --------------------------------------------------
 --------------------------------------------------
 
--- | Inverts 'licenseId'
+-- | @≡ 'parseLicense'@
 
 parseSpdxLicenseIdentifier :: (MonadThrow m) => String -> m SpdxLicenseIdentifier
-parseSpdxLicenseIdentifier = (mkParserFromPrinterWith "SpdxLicenseIdentifier" licenseId) allLicenses
+parseSpdxLicenseIdentifier = parseLicense
 
+--------------------------------------------------
+
+-- | Inverts 'licenseId'.
+
+parseLicense :: (MonadThrow m) => String -> m License
+parseLicense =
+
+  (mkParserFromPrinterWith "SPDX License" licenseId) allLicenses
+
+--------------------------------------------------
+
+-- | Inverts 'licenseId', but limited to 'allOSILicenses'.
+
+parseOSILicense :: (MonadThrow m) => String -> m License
+parseOSILicense =
+
+  (mkParserFromPrinterWith "OSI-Approved SPDX License" licenseId) allOSILicenses
+
+--------------------------------------------------
+
+-- | Inverts 'licenseId', but limited to 'allFLOSSLicenses'.
+
+parseFLOSSLicense :: (MonadThrow m) => String -> m License
+parseFLOSSLicense =
+
+  (mkParserFromPrinterWith "FLOSS-Conformant SPDX License" licenseId) allFLOSSLicenses
+
+--------------------------------------------------
 --------------------------------------------------
 
 {- | License SPDX identifier, e.g. @"BSD-3-Clause"@.

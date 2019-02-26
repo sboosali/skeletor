@@ -1,5 +1,5 @@
 ##################################################
-# Makefile Settings
+# Makefile Settings ##############################
 ##################################################
 
 SHELL=bash
@@ -7,86 +7,77 @@ SHELL=bash
 .EXPORT_ALL_VARIABLES:
 
 ##################################################
-# Makefile Customizeables:Customize
-##################################################
+# Makefile Variables #############################
+################################################## Haskell
 
-DefaultPackageName=skeletor
-#                          ^ [Customize]
+#------------------------------------------------#
 
-DefaultModule=Skeletor.Haskell
-#                          ^ [Customize]
+PackageName=skeletor
 
-DefaultProjectFile=./cabal.project
-#                          ^ [Customize]
+ProjectFile=./cabal.project
 
-DefaultCompilerFlavor=ghc
-#                          ^ [Customize]
+ModuleName=Skeletor.Haskell
 
-DefaultCompilerVersion=8.6.3
-#                          ^ [Customize]
+Target ?=skeletor
+
+CabalTargets ?=all
+
+#------------------------------------------------#
+
+CompilerFlavor=ghc
+
+CompilerVersion=8.6.3
 
 Stackage ?=lts-13.9
 
 ##################################################
-# Makefile Variables: Package
-################################################## Customize:
+
 # (i.e. Package-Specific / Component-Specific)
 
-DefaultPackageVersion=0.0.0
+PackageVersion=0.0.0
 #                          ^ [Customize]
 
-DefaultLibraryTarget ?=lib:$(DefaultPackageName)
+LibraryTarget ?=lib:$(PackageName)
 #                          ^ [Customize]
 #                          ^  e.g. "lib:skeletor"
 
-DefaultExecutableProgram=skeletor-haskell
+ExecutableProgram=skeletor-haskell
 #                          ^ [Customize]
 
-DefaultExecutableTarget ?=skeletor:exe:$(DefaultExecutableProgram)
+ExecutableTarget ?=skeletor:exe:$(ExecutableProgram)
 #                          ^ [Customize]
 
 Component ?=skeletor
 #                          ^ [Customize]
 
-DefaultTarget ?=all
-#                          ^ [Customize]
-#        e.g.
-#             "all"
-#             $(DefaultTarget)
-#             $(DefaultLibraryTarget)
-#
-
-DefaultPackage=$(DefaultPackageName)-$(DefaultPackageVersion)
-#                          ^ [Derived]
-
-DefaultTemplateName ?=default
-#                          ^ [Customize]
+Target ?=all #TODO
+#                             e.g. "all"
 
 ##################################################
-# Makefile Variables: Haskell Compiler.
-################################################## Customize:
 
-CompilerFlavor=$(DefaultCompilerFlavor)
+Package=$(PackageName)-$(PackageVersion)
 
-CompilerVersion=$(DefaultCompilerVersion)
+#------------------------------------------------#
 
 CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
-#                          ^ [Derived]
 
-##################################################
-# Makefile Variables: Project / `cabal-new`
-##################################################
-
-ProjectFile=$(DefaultProjectFile)
+################################################## Cabal
 
 CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
-#                          ^ [Derived]
 
-##################################################
-# Makefile Variables: Programs.
-##################################################
+#------------------------------------------------#
 
-Cabal ?=cabal
+Cabal		?=cabal
+
+CabalBuild	?=$(Cabal) new-build $(CabalOptions)
+
+CabalTest	?=$(Cabal) new-test $(CabalOptions) --enable-tests
+
+CabalBench	?=$(Cabal) new-bench $(CabalOptions) --enable-benchmarks
+
+CabalHaddock	?=$(Cabal) new-haddock $(CabalOptions) --enable-documentation
+
+################################################## Programs
 
 Nix      ?=nix
 NixBuild ?=nix-build --show-trace
@@ -114,18 +105,18 @@ CheckNix ?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
-CheckStaticExecutables ?=lld
+CheckStaticExecutables ?=lld    #TODO# grep too, return non-zero-exit-code when any dynamic dependencies exist
 
  # ^ TODO on OSX, otool -o
 
-##################################################
-# Makefile Variables: File/Directory Paths
-##################################################
+################################################## Paths
 
-RootDirectory?=$(CURDIR)
-DefaultPackageDirectory?=$(DefaultPackageName)
+RootDirectory ?=$(CURDIR)
+PackageDirectory ?=$(PackageName)
 
 #------------------------------------------------#
+
+BuildDirectory ?=./dist-newstyle
 
 BashCompletionDirectory ?=./etc/bash_completion.d
 
@@ -135,27 +126,35 @@ DocumentDirectory ?=./docs
 
 #------------------------------------------------#
 
-ReleaseDirectory?=./ignore/release
+ReleaseDirectory ?=./ignore/release
 #                          ^ [Customize]
 
 # ReleaseDirectory?=./release
 # ^ change `ReleaseDirectory` to `./release` during a release
 # to actually commit it.
 
-BuildDirectory?=./dist-newstyle
+HaddockDirectory	?=$(ReleaseDirectory)/documentation
+TarballDirectory	?=$(ReleaseDirectory)/tarballs
+BinaryDirectory		?=$(ReleaseDirectory)/bin
+InstallDirectory	?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
-HaddockDirectory?=$(ReleaseDirectory)/documentation
-TarballDirectory?=$(ReleaseDirectory)/tarballs
-BinaryDirectory?=$(ReleaseDirectory)/bin
-InstallDirectory?=$(ReleaseDirectory)/dist-newstyle/ #TODO
-
-##################################################
-# Makefile Variables: (Miscellaneous) Strings
-##################################################
+################################################## Miscellaneous
 
 TagsCommand ?=":etags"
 
 TagsScript ="$(TagsCommand)\n:q\n"
+
+##################################################
+# Makefile Variables #############################
+##################################################
+
+# Project-Specific Variables...
+
+#------------------------------------------------#
+
+TemplateName ?=default
+
+#------------------------------------------------#
 
 ##################################################
 # the `default` and `all` targets
@@ -190,7 +189,7 @@ develop:
 ##################################################
 
 lib:
-	$(Cabal) new-run $(DefaultLibraryTarget)
+	$(Cabal) new-run $(LibraryTarget)
 
 .PHONY: lib
 
@@ -248,7 +247,7 @@ quickcheck:
 ##################################################
 
 # haskell-project:
-# 	find -L "./projects/$(DefaultTemplateName)" -type f -name "*.cabal" -prune -o -wholename '.stack-work' -o -wholename 'dist' -o -wholename 'dist-*' -o -wholename 'result' -o -wholename 'result-*' -exec $(Cabal) new-build '{}' \;
+# 	find -L "./projects/$(TemplateName)" -type f -name "*.cabal" -prune -o -wholename '.stack-work' -o -wholename 'dist' -o -wholename 'dist-*' -o -wholename 'result' -o -wholename 'result-*' -exec $(Cabal) new-build '{}' \;
 #TODO#
 # .PHONY: haskell-project
 
@@ -325,28 +324,28 @@ bench-all:
 ##################################################
 
 build-default:
-	$(Cabal) new-build $(DefaultTarget)
+	$(Cabal) new-build $(Target)
 
 .PHONY: build-default
 
 #------------------------------------------------#
 
 test-default:
-	$(Cabal) new-test $(DefaultTarget)
+	$(Cabal) new-test $(Target)
 
 .PHONY: test-default
 
 #------------------------------------------------#
 
 bench-default:
-	$(Cabal) new-bench $(DefaultTarget)
+	$(Cabal) new-bench $(Target)
 
 .PHONY: bench-default
 
 #------------------------------------------------#
 
 repl-default:
-	$(Cabal) new-repl $(DefaultLibraryTarget)
+	$(Cabal) new-repl $(LibraryTarget)
 
 .PHONY: repl-default
 
@@ -355,14 +354,14 @@ repl-default:
 ##################################################
 
 build-exe:
-	$(Cabal) new-build $(DefaultExecutableTarget)
+	$(Cabal) new-build $(ExecutableTarget)
 
 .PHONY: build-exe
 
 #------------------------------------------------#
 
 repl-exe:
-	$(Cabal) new-repl $(DefaultExecutableTarget)
+	$(Cabal) new-repl $(ExecutableTarget)
 
 .PHONY: repl-exe
 
@@ -373,14 +372,6 @@ repl-exe:
 repl: repl-default
 
 .PHONY: repl
-
-##################################################
-# Building: different targets, compilers, build-tools.
-##################################################
-
-build: build-default
-
-.PHONY: build
 
 #------------------------------------------------#
 
@@ -396,36 +387,25 @@ cabal-compile: build-all
 # .PHONY: stack-compile
 
 ##################################################
-# Testing:
-##################################################
-
-test: test-default
-	@echo '=================================================='
-	@echo '[Test] SUCCESS ==================================='
-	@echo '=================================================='
-
-.PHONY: test
-
-##################################################
 # Executables: building/running/registering them.
 ##################################################
 
 build-executable:
-	$(Cabal) new-build $(DefaultExecutableTarget)
+	$(Cabal) new-build $(ExecutableTarget)
 
 .PHONY: build-executable
 
 #------------------------------------------------#
 
 run:
-	$(Cabal) new-build $(DefaultExecutableTarget)
+	$(Cabal) new-build $(ExecutableTarget)
 
 .PHONY: run
 
 #------------------------------------------------#
 
 locate-executable:
-	@$(Cabal) new-exec which -- $(DefaultExecutableProgram)
+	@$(Cabal) new-exec which -- $(ExecutableProgram)
 
 .PHONY: locate-executable
 
@@ -570,10 +550,6 @@ install-static-skeletor-haskell: cabal-static.project
 # Documentation: building/copying/opening
 ##################################################
 
-docs: docs-all
-
-.PHONY: docs
-
 #------------------------------------------------#
 
 docs-all: docs-markdown docs-haskell
@@ -621,7 +597,7 @@ docs-haskell: build-docs-haskell copy-docs-haskell
 
 build-docs-haskell: build-default
 	@echo '=================================================='
-	$(Cabal) new-haddock $(DefaultLibraryTarget) --enable-documentation
+	$(Cabal) new-haddock $(LibraryTarget) --enable-documentation
 	@echo '=================================================='
 	find $(BuildDirectory) -name "index.html" -print
 
@@ -633,7 +609,7 @@ copy-docs-haskell: build-docs-haskell
 	rm    -fr $(HaddockDirectory)
 	mkdir -p  $(HaddockDirectory)
 	@echo '=================================================='
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/$(DefaultPackage)/doc/html/$(DefaultPackageName)/src/* $(HaddockDirectory)
+	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/$(Package)/doc/html/$(PackageName)/src/* $(HaddockDirectory)
 
 .PHONY: copy-docs-haskell
 
@@ -641,9 +617,9 @@ copy-docs-haskell: build-docs-haskell
 
 open-docs-haskell:
 	@echo '=================================================='
-	find $(HaddockDirectory) -name "$(DefaultModule).html" -print
+	find $(HaddockDirectory) -name "$(ModuleName).html" -print
 	@echo '=================================================='
-	find $(HaddockDirectory) -name "$(DefaultModule).html" -exec $(Open) \{\} \; #TODO open with `&`
+	find $(HaddockDirectory) -name "$(ModuleName).html" -exec $(Open) \{\} \; #TODO open with `&`
 
 .PHONY: open-docs-haskell
 
@@ -699,7 +675,7 @@ check-files: check-markdown check-json check-cabal check-bash check-nix
 check-markdown:
 	@echo '=================================================='
 	find $(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
-	find $(DefaultPackageDirectory)/$(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
+	find $(PackageDirectory)/$(DocumentDirectory)/ -name '*.md'  -print0 | xargs -n 1 -0 $(CheckMarkdown)
 
 .PHONY: check-markdown
 
@@ -715,7 +691,7 @@ check-json:
 
 check-cabal:
 	@echo '=================================================='
-	(cd $(DefaultPackageDirectory) && $(CheckCabal))
+	(cd $(PackageDirectory) && $(CheckCabal))
 
 .PHONY: check-cabal
 
@@ -775,7 +751,7 @@ check-tarball: copy-tarball
 	@echo '=================================================='
 	find $(TarballDirectory) -name "*.tar.gz" -print0 -exec $(CheckTarball) \{\} \;
         # ^ verifies tarball, by unpacking it.
-	find /tmp/$(DefaultPackage) -name "*.tar.gz"
+	find /tmp/$(Package) -name "*.tar.gz"
 
 .PHONY: check-tarball
 
@@ -785,7 +761,7 @@ copy-tarball: build-tarball
 	@echo '=================================================='
 	rm    -fr $(TarballDirectory)
 	mkdir -p  $(TarballDirectory)
-	find $(DefaultPackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;
+	find $(PackageDirectory) -name "*.tar.gz" -print0 -exec mv \{\} $(TarballDirectory) \;
 
 .PHONY: copy-tarball
 
@@ -793,7 +769,7 @@ copy-tarball: build-tarball
 
 build-tarball: build-default
 	@echo '=================================================='
-	(cd  $(DefaultPackageDirectory) && $(Cabal) sdist)
+	(cd  $(PackageDirectory) && $(Cabal) sdist)
 
 .PHONY: build-tarball
 
@@ -894,12 +870,17 @@ fetch-stackage--cabal.config:
 
 #------------------------------------------------#
 
+
 ##################################################
-# Development: developing this package
+# Development ####################################
 ##################################################
 
+# developing this package...
+
+#------------------------------------------------#
+
 tags:
-	$(Cabal) new-repl $(DefaultLibraryTarget) < <(echo -e $(TagsScript))
+	$(Cabal) new-repl $(LibraryTarget) < <(echo -e $(TagsScript))
 #TODO[tags file is empty]	ghci -e $(TagsCommand)
 
         # ^ NOTE:
@@ -913,38 +894,145 @@ tags:
 
 #------------------------------------------------#
 
+# install:
+# 	$(CabalBuild) --prefix=$(InstallDirectory) $(ExecutableTarget)
+# .PHONY: install
+
+#------------------------------------------------#
+
+################################################################################
+
 ##################################################
-# Release:
+# Building #######################################
 ##################################################
 
-release: release-all
+#------------------------------------------------#
+
+build:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(CabalBuild) $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: build
+
+#------------------------------------------------#
+
+ghcjs-build:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(CabalBuild) --project-file="./cabal-ghcjs.project" $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: ghcjs-build
+
+#------------------------------------------------#
+
+
+#------------------------------------------------#
+
+##################################################
+# Testing ########################################
+##################################################
+
+#------------------------------------------------#
+
+test:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(CabalTest) $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: test
+
+#------------------------------------------------#
+
+bench:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(CabalBench) $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: bench
+
+#------------------------------------------------#
+
+
+
+#------------------------------------------------#
+
+##################################################
+# Documentation ##################################
+##################################################
+
+#------------------------------------------------#
+
+docs:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(CabalHaddock) $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+	@echo ""
+
+	find $(BuildDirectory) -name "index.html" -print
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: docs
+
+#------------------------------------------------#
+
+##################################################
+# Release ########################################
+##################################################
+
+#------------------------------------------------#
+
+sdist: build
+
+	$(Cabal) new-sdist $(CabalOptions) $(CabalTargets)
+
+.PHONY: sdist
+
+#------------------------------------------------#
+
+release: docs-haskell tarball
+
+	find $(ReleaseDirectory) -type f
 
 .PHONY: release
 
 #------------------------------------------------#
 
-release-all: docs-haskell tarball
-	find $(ReleaseDirectory) -type f
-	@echo '=================================================='
-	@echo '[Release] SUCCESS ================================'
-	@echo '=================================================='
-
-.PHONY: release-all
-
-#------------------------------------------------#
-
-# install:
-# 	$(Cabal) new-build all --prefix=$(InstallDirectory)
-# .PHONY: install
-
-#------------------------------------------------#
-
 upload: tarball
+
 	$(Cabal) upload
-	@echo '=================================================='
-	@echo '[Upload] SUCCESS ================================='
-	@echo '=================================================='
 
 .PHONY: upload
 
 ##################################################
+
+
+
+################################################################################

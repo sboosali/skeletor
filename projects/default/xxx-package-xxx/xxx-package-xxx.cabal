@@ -134,6 +134,16 @@ flag develop
 
 --------------------------------------------------
 
+flag static
+
+  default:     False
+
+  description: Build a statically-linked executable (NOTE you should also, via « ./nix/static.nix », provision an environment with « musl » and other statically-linkable C Libraries.)
+
+  manual:      True
+
+--------------------------------------------------
+
 -- flag ...
 --   default:     False
 --   description: Enable ...

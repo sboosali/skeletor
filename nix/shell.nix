@@ -13,7 +13,7 @@ inherit (pkgs) stdenv;
 
 #------------------------------------------------#
 
-theEnvironment = import ./nix/static/libraries.nix { inherit pkgs; };
+theEnvironment = import ./static/libraries.nix { inherit pkgs; };
 
 #------------------------------------------------#
 
