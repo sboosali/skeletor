@@ -35,6 +35,30 @@ newtype Alt f a
 -- Monoid under <|>.
 ```
 
+### `Data.List`
+
+```haskell
+isSubsequenceOf :: Eq a => [a] -> [a] -> Bool
+```
+
+> The `isSubsequenceOf` function takes two lists and returns True if all the elements of the first list occur, in order, in the second. The elements do not have to occur consecutively.
+
+Laws:
+
+`isSubsequenceOf x y` ≡ `elem x (subsequences y)`
+
+Examples:
+
+```haskell
+>>> isSubsequenceOf "GHC" "The Glorious Haskell Compiler"
+True
+
+>>> isSubsequenceOf ['a','d'..'z'] ['a'..'z']
+True
+
+>>> isSubsequenceOf [1..10] [10,9..0]
+False
+```
 
 ### `System.IO`
 
@@ -81,11 +105,43 @@ You need this when using catches.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## `containers`
 
 ```haskell
 foldMapWithKey :: Monoid m => (k -> a -> m) -> Map k a -> m 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -120,16 +176,212 @@ Like decompress but with the ability to specify various decompression parameters
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## `filepath`
+
+
+### API
+
+#### ``
+
+```haskell
+```
+
+> 
+
+```haskell
+```
+
+
+#### `normalise`
+
+```haskell
+normalise :: FilePath -> FilePath
+```
+
+normalization:
+
+* `//`, outside of the drive, can be made blank
+* `/` becomes `pathSeparator`
+* `./ becomes `""`
+
+```haskell
+>>> normalise "."                        ==  "."                       --
+
+>>> normalise "/file/\\test////"         ==  "/file/\\test/"           -- Posix
+>>> normalise "/file/./test"             ==  "/file/test"              -- Posix
+>>> normalise "/test/file/../bob/fred/"  ==  "/test/file/../bob/fred/" -- Posix
+>>> normalise "../bob/fred/"             ==  "../bob/fred/"            -- Posix
+>>> normalise "./bob/fred/"              ==  "bob/fred/"               -- Posix
+
+>>> normalise "./"                       ==  "./"                      -- Posix
+>>> normalise "./."                      ==  "./"                      -- Posix
+>>> normalise "/./"                      ==  "/"                       -- Posix
+>>> normalise "/"                        ==  "/"                       -- Posix
+>>> normalise "bob/fred/."               ==  "bob/fred/"               -- Posix
+>>> normalise "//home"                   ==  "/home"                   -- Posix
+
+>>> normalise "c:\\file/bob\\"           ==  "C:\\file\\bob\\"         -- Windows
+>>> normalise "c:\\"                     ==  "C:\\"                    -- Windows
+>>> normalise "C:.\\"                    ==  "C:"                      -- Windows
+>>> normalise "\\\\server\\test"         ==  "\\\\server\\test"        -- Windows
+>>> normalise "//server/test"            ==  "\\\\server\\test"        -- Windows
+>>> normalise "c:/file"                  ==  "C:\\file"                -- Windows
+>>> normalise "/file"                    ==  "\\file"                  -- Windows
+>>> normalise "\\"                       ==  "\\"                      -- Windows
+>>> normalise "/./"                      ==  "\\"                      -- Windows
+```
+
+#### `isAbsolute`
+
+```haskell
+isAbsolute :: FilePath -> Bool
+
+isAbsolute = not . isRelative
+```
+
+#### `isRelative`
+
+```haskell
+isRelative :: FilePath -> Bool
+```
+
+> Is a path relative, or is it fixed to the root?
+
+```haskell
+>>> isRelative "test/path"        ==  True   -- Posix
+>>> isRelative "/test"            ==  False  -- Posix
+>>> isRelative "/"                ==  False  -- Posix
+
+>>> isRelative "path\\test"       ==  True   -- Windows
+>>> isRelative "c:\\test"         ==  False  -- Windows
+>>> isRelative "c:test"           ==  True   -- Windows
+>>> isRelative "c:\\"             ==  False  -- Windows
+>>> isRelative "c:/"              ==  False  -- Windows
+>>> isRelative "c:"               ==  True   -- Windows
+>>> isRelative "\\\\foo"          ==  False  -- Windows
+>>> isRelative "\\\\?\\foo"       ==  False  -- Windows
+>>> isRelative "\\\\?\\UNC\\foo"  ==  False  -- Windows
+>>> isRelative "/foo"             ==  True   -- Windows
+>>> isRelative "\\foo"            ==  True   -- Windows
+```
+
+#### `isValid`
+
+```haskell
+isValid :: FilePath -> Bool
+```
+
+> Is a FilePath valid, i.e. could you create a file like it? This function checks for invalid names, and invalid characters, but does not check if length limits are exceeded, as these are typically filesystem dependent.
+
+```haskell
+>>> isValid ""                   ==  False         --
+>>> isValid "\0"                 ==  False         --
+
+>>> isValid "/random_ path:*"    ==  True          -- Posix
+>>> isValid x                    ==  not (null x)  -- Posix
+
+>>> isValid "c:\\test"           ==  True          -- Windows
+>>> isValid "c:\\test:of_test"   ==  False         -- Windows
+>>> isValid "test*"              ==  False         -- Windows
+>>> isValid "c:\\test\\nul"      ==  False         -- Windows
+>>> isValid "c:\\test\\prn.txt"  ==  False         -- Windows
+>>> isValid "c:\\nul\\file"      ==  False         -- Windows
+>>> isValid "\\\\"               ==  False         -- Windows
+>>> isValid "\\\\\\foo"          ==  False         -- Windows
+>>> isValid "\\\\?\\D:file"      ==  False         -- Windows
+>>> isValid "foo\tbar"           ==  False         -- Windows
+>>> isValid "nul .txt"           ==  False         -- Windows
+>>> isValid " nul.txt"           ==  True          -- Windows
+```
+
+#### `takeExtensions`
 
 ```haskell
 takeExtensions :: FilePath -> String
-
-Get all extensions.
-
->>> takeExtensions "/directory/path.ext" == ".ext"
->>> takeExtensions "file.tar.gz" == ".tar.gz"
 ```
+
+> Get all extensions.
+
+```haskell
+>>> takeExtensions "/directory/path.ext"  ==  ".ext"
+>>> takeExtensions "file.tar.gz"          ==  ".tar.gz"
+```
+
+#### `isExtensionOf`
+
+```haskell
+isExtensionOf :: String -> FilePath -> Bool
+```
+
+> Does the given filename have the specified extension?
+
+```haskell
+>>> "png"           `isExtensionOf` "/directory/file.png"      ==  True
+>>> ".png"          `isExtensionOf` "/directory/file.png"      ==  True
+
+>>> ".tar.gz"       `isExtensionOf` "bar/foo.tar.gz"           ==  True
+>>> "ar.gz"         `isExtensionOf` "bar/foo.tar.gz"           ==  False
+
+>>> "png"           `isExtensionOf` "/directory/file.png.jpg"  ==  False
+>>> "csv/table.csv" `isExtensionOf` "/data/csv/table.csv"      ==  False
+```
+
+#### `hasExtension`
+
+```haskell
+hasExtension :: FilePath -> Bool
+```
+
+> Does the given filename have an extension?
+
+```haskell
+>>> hasExtension "/directory/path.ext"  ==  True
+>>> hasExtension "/directory/path"      ==  False
+>>> null (takeExtension x)              ==  not (hasExtension x)
+```
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1114,11 +1366,30 @@ see `ansi-terminal`.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## `optparse-applicative`
 
-<https://github.com/pcapriotti/optparse-applicative/blob/master/README.md>
+### Links
 
-<http://hackage.haskell.org/package/optparse-applicative-0.14.2.0/docs/Options-Applicative.html>
+* <https://github.com/pcapriotti/optparse-applicative/blob/master/README.md>
+
+* <http://hackage.haskell.org/package/optparse-applicative-0.14.2.0/docs/Options-Applicative.html>
+
+* <https://medium.com/@danidiaz/subcommands-with-optparse-applicative-1234549b21c6>
 
 ### Code
 
@@ -1405,6 +1676,8 @@ Run a compgen completion action.
 Common actions include file and directory. See http://www.gnu.org/software/bash/manual/html_node/Programmable-Completion-Builtins.html#Programmable-Completion-Builtins for a complete list.
 
 ### 
+
+> Notice that the ArgumentFields type doesn’t have a HasName instance, as it wouldn’t make sense for positional arguments. You can’t use long or short with it. It does have a HasMetavar instance, so you can still use metavar. Conversely, FlagFields doesn’t have a HasMetavar instance.
 
 ### 
 

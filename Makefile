@@ -12,11 +12,11 @@ SHELL=bash
 
 #------------------------------------------------#
 
-PackageName=skeletor
+PackageName ?=skeletor
 
-ProjectFile=./cabal.project
+ProjectFile ?=./cabal.project
 
-ModuleName=Skeletor.Haskell
+ModuleName ?=Skeletor.Haskell
 
 Target ?=skeletor
 
@@ -24,9 +24,9 @@ CabalTargets ?=all
 
 #------------------------------------------------#
 
-CompilerFlavor=ghc
+CompilerFlavor ?=ghc
 
-CompilerVersion=8.6.3
+CompilerVersion ?=8.6.3
 
 Stackage ?=lts-13.9
 
@@ -34,7 +34,7 @@ Stackage ?=lts-13.9
 
 # (i.e. Package-Specific / Component-Specific)
 
-PackageVersion=0.0.0
+PackageVersion ?=0.0.0
 #                          ^ [Customize]
 
 LibraryTarget ?=lib:$(PackageName)
@@ -922,17 +922,32 @@ build:
 
 #------------------------------------------------#
 
-ghcjs-build:
+build-ghcjs:
 
 	@echo "=================================================="
 	@echo ""
 
-	$(CabalBuild) --project-file="./cabal-ghcjs.project" $(CabalTargets)
+#	$(Cabal) new-build --project-file="./cabal-ghcjs.project" $(CabalTargets)
+	$(Cabal) new-build -w ghcjs $(CabalTargets)
 
 	@echo ""
 	@echo "=================================================="
 
-.PHONY: ghcjs-build
+.PHONY: build-ghcjs
+
+#------------------------------------------------#
+
+build-ghc-8.4:
+
+	@echo "=================================================="
+	@echo ""
+
+	$(Cabal) new-build $(CabalTargets)
+
+	@echo ""
+	@echo "=================================================="
+
+.PHONY: build-ghc-8.4
 
 #------------------------------------------------#
 

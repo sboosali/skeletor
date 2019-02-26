@@ -687,10 +687,9 @@ test-suite unit
 
   hs-source-dirs: tests/unit
 
-  other-modules:  Test.Unit.Xxx_Module_xxX
+  ----------------------------
 
-  -- build-tool-depends:
-  --                    hspec-discover:hspec-discover
+  other-modules:  Test.Unit.Xxx_Module_xxX
 
   ----------------------------
 
@@ -701,6 +700,10 @@ test-suite unit
 
             -- , HUnit
             -- NOTE « tasty-hunit » re-implements a minimal interface of HUnit.
+
+  ----------------------------
+
+--build-tool-depends: hspec-discover:hspec-discover
 
   ----------------------------
 
