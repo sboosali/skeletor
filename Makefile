@@ -294,9 +294,17 @@ run-skeletor-haskell:
 	@$(Cabal) new-exec -- ldd `which skeletor-haskell`
 
 	@echo -e "\n========================================\n"
+	@echo ""
 
-	@$(Cabal) new-run -- skeletor-haskell --help
+	$(Cabal) new-run exe:skeletor-haskell -- create --help || true
 
+	@echo ""
+	@echo -e "\n========================================\n"
+	@echo ""
+
+	$(Cabal) new-run exe:skeletor-haskell --        --help || true
+
+	@echo ""
 	@echo -e "\n========================================\n"
 
 	@$(Cabal) new-exec -- which skeletor-haskell
@@ -461,9 +469,8 @@ uninstall-skeletor-haskell:
 # Static-Linking
 ##################################################
 
-static: cabal-static.project static--skeletor-haskell--via-nix
-
-.PHONY: static
+# static: cabal-static.project static--skeletor-haskell--via-nix
+# .PHONY: static
 
 #------------------------------------------------#
 
@@ -1024,15 +1031,25 @@ docs:
 
 #------------------------------------------------#
 
-sdist: build
+sdist:
 
+	$(Cabal) new-build $(CabalOptions) $(CabalTargets)
 	$(Cabal) new-sdist $(CabalOptions) $(CabalTargets)
 
 .PHONY: sdist
 
 #------------------------------------------------#
 
-release: docs-haskell tarball
+static:
+
+	$(Cabal) new-build $(CabalOptions) --enable-executable-static $(CabalTargets)
+	$(Cabal) new-sdist $(CabalOptions) $(CabalTargets)
+
+.PHONY: static
+
+#------------------------------------------------#
+
+release:
 
 	find $(ReleaseDirectory) -type f
 
@@ -1040,14 +1057,14 @@ release: docs-haskell tarball
 
 #------------------------------------------------#
 
-upload: tarball
+upload: sdist
 
 	$(Cabal) upload
 
 .PHONY: upload
 
+#------------------------------------------------#
+
 ##################################################
-
-
 
 ################################################################################

@@ -19,17 +19,16 @@
 module Program.Skeletor.Haskell.CLI
 
   ( cli
-  , pCommand
 
+  , piCommand
   , piCreateProjectOptions
   , piDownloadProjectOptions
   , piResolveConfigurationOptions
 
+  , pCommand
   , pGlobalOptions
-
   , pLocation
   , pProject
-
   , pLicense
   , pOSILicense
   , pFLOSSLicense
@@ -88,35 +87,36 @@ import Prelude_exe
 -- Command-Line Interface ------------------------
 --------------------------------------------------
 
-cli :: P.ParserInfo Command
-cli = piCommand
-  where
+cli :: IO Command
+cli = P.customExecParser preferences piCommand
 
-  piCommand = info description pCommand
+--------------------------------------------------
 
-  description = ""
+{-|
+
+-}
+
+preferences :: P.ParserPrefs
+preferences = P.prefs (mconcat
+
+  [ P.disambiguate
+  , P.showHelpOnError
+  , P.showHelpOnEmpty
+  ])
 
 --------------------------------------------------
 -- « ParserInfo »s -------------------------------
 --------------------------------------------------
 
-pCommand :: P.Parser Command
-pCommand = P.hsubparser ps
+{-|
+
+-}
+
+piCommand :: P.ParserInfo Command
+piCommand = info description pCommand
+
   where
-
-  ps = mconcat
-
-    [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
-    , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
-    , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
-    ]
-
--- command :: String -> ParserInfo a -> Mod CommandFields a
-
--- sample :: Parser Sample
--- sample = subparser
---        ( command "hello"
---          (info hello (progDesc "Print greeting")))
+  description = ""
 
 --------------------------------------------------
 
@@ -181,6 +181,19 @@ piResolveConfigurationOptions = info description do
 
 --------------------------------------------------
 -- « Parser »s -----------------------------------
+--------------------------------------------------
+
+pCommand :: P.Parser Command
+pCommand = P.hsubparser ps
+  where
+
+  ps = mconcat
+
+    [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
+    , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
+    , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
+    ]
+
 --------------------------------------------------
 
 {-|

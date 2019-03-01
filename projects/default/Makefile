@@ -37,8 +37,8 @@ DefaultPackageVersion ?=0.0.0
 #                          ^ [Customize]
 
 DefaultLibraryTarget ?="lib:$(DefaultPackageName)"
-#                          ^ [Customize]
-#                          ^  e.g. "lib:xxx-package-xxx"
+
+DefaultExecutableTarget ?="exe:example-$(DefaultPackageName)"
 
 DefaultTarget ?="all"
 #                          ^ [Customize]
@@ -327,17 +327,6 @@ stack-compile:
 	stack --nix build
 
 .PHONY: stack-compile
-
-##################################################
-# Testing:
-##################################################
-
-test: test-default
-	@echo '=================================================='
-	@echo '[Test] SUCCESS ==================================='
-	@echo '=================================================='
-
-.PHONY: test
 
 ##################################################
 # Executables: building/running/registering them.
@@ -681,9 +670,13 @@ fetch-stackage--cabal.config:
 # Cleaning
 ##################################################
 
-clean: cabal-clean
-	rm -rf "./dist/" "./dist-newstyle/" ./dist-* ".stack-work"
+clean:
+
+	$(Cabal) new-clean
+
+	rm -rf "./dist" "./dist-newstyle" ./dist-* ".stack-work"
 	rm -rf ./*/dist/ ./*/dist-*/
+
 	rm -f *.project.local .ghc*.environment.*
 	rm -rf TAGS ./*/TAGS
 
@@ -767,7 +760,7 @@ build:
 
 build-ghcjs:
 
-	cabal new-build --project-file="./cabal-ghcjs.project" all
+	$(Cabal) new-build --project-file="./cabal-ghcjs.project" all
 
 .PHONY: build-ghcjs
 
@@ -848,12 +841,23 @@ docs:
 
 sdist:
 
-	cabal new-build all
-	cabal new-sdist all
+	$(Cabal) new-build $(CabalTargets)
+	$(Cabal) new-sdist $(CabalTargets)
 
 #	(cd ./spiros  &&  cabal sdist)
 
 .PHONY: sdist
+
+#------------------------------------------------#
+
+static:
+
+	$(Cabal) new-build --enable-executable-static $(CabalTargets)
+	$(Cabal) new-sdist $(CabalTargets)
+
+.PHONY: static
+
+#------------------------------------------------#
 
 ##################################################
 
