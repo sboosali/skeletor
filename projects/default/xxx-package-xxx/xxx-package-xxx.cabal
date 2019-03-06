@@ -611,13 +611,13 @@ library
 -- optparse-applicative
 
   --------------------
-  -- Parsing ---------
+  -- Filesystem ------
   --------------------
 
-             , parsers
-             , trifecta
-             , charset
+             , filepath
+             , directory
 
+  --------------------
   --------------------
   -- Records ---------
   --------------------
@@ -626,6 +626,13 @@ library
              , generic-lens
              , vinyl
                                         
+  -- Parsing ---------
+  --------------------
+
+             , parsers
+             , trifecta
+             , charset
+
   --------------------
   -- (etc) -----------
   --------------------
@@ -782,6 +789,10 @@ executable xxx-program-xxx
                  Executable.Xxx_Module_xxX.Types
                  Executable.Xxx_Module_xxX.Core
                  Executable.Xxx_Module_xxX.Options
+                 Executable.Xxx_Module_xxX.Paths
+
+                 -- Executable.Xxx_Module_xxX.IO
+                 -- Executable.Xxx_Module_xxX.CLI
 
                  Prelude_exe
 
