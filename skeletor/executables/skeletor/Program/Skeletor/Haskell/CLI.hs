@@ -18,7 +18,8 @@
 
 module Program.Skeletor.Haskell.CLI
 
-  ( cli
+  ( getCommand
+  , preferences
 
   , piCommand
   , piCreateProjectOptions
@@ -87,8 +88,8 @@ import Prelude_exe
 -- Command-Line Interface ------------------------
 --------------------------------------------------
 
-cli :: IO Command
-cli = P.customExecParser preferences piCommand
+getCommand :: IO Command
+getCommand = P.customExecParser preferences piCommand
 
 --------------------------------------------------
 

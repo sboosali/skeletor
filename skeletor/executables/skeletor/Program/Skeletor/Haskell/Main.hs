@@ -20,8 +20,8 @@ module Program.Skeletor.Haskell.Main
 --------------------------------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Options (getOptions)
-import Program.Skeletor.Haskell.Core    (programWithOptions, programWithConfig)
+import Program.Skeletor.Haskell.CLI (getCommand)
+import Program.Skeletor.Haskell.IO  (runCommand)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -31,9 +31,9 @@ import Prelude_exe
 --------------------------------------------------
 --------------------------------------------------
 
-{-| the @main@ procedure @skeletor-haskell@ executable.
+{-| the @main@ procedure of the @skeletor-haskell@ executable.
 
-@≡ 'getOptions' >>= 'programWithOptions'
+@≡ 'getCommand' >>= 'runCommand'
 @
 
 -}
@@ -41,9 +41,15 @@ import Prelude_exe
 main :: IO ()
 main = do
 
-  options <- getOptions
+  command <- getCommand
 
-  programWithOptions options
+  runCommand command
+
+--------------------------------------------------
+
+-- cli :: IO ()
+-- cli = do
+--   nothing
 
 --------------------------------------------------
 --------------------------------------------------

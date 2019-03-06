@@ -2,7 +2,7 @@ import qualified Program.Skeletor.Haskell.CLI as CLI
 import           Prelude
 main :: IO ()
 main = do
-  command <- CLI.cli
+  command <- CLI.getCommand
   print command
 
 -- import qualified Program.Skeletor.Haskell.Main as Program
