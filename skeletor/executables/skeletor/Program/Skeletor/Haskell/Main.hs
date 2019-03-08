@@ -3,16 +3,18 @@
 
 {-|
 
-'Skeletor.Haskell.Main' glues the other modules together:
+'Skeletor.Haskell.Main' glues:
 
-* 'Program.Skeletor.Haskell.Options': the command-line options (parsing, defaulting, etc).
-* 'Program.Skeletor.Haskell.Core': the @main@ program (the logic, filesystem interaction, etc).
+* 'Program.Skeletor.Haskell.CLI': the command-line options (parsing, defaulting, etc). See 'getCommand'.
+* 'Program.Skeletor.Haskell.IO': the program effects (the logic, filesystem interaction, etc). See 'runCommand'.
 
 -}
 
 module Program.Skeletor.Haskell.Main
 
   ( main
+  , runCommand
+  , getCommand
   ) where
 
 --------------------------------------------------

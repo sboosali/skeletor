@@ -17,8 +17,7 @@ module Program.Skeletor.Haskell.Action where
 
 import Program.Skeletor.Haskell.Types
 
-import Program.Skeletor.Haskell.Version
-import Program.Skeletor.Haskell.License
+import Program.Skeletor.Haskell.Constants
 
 -- import Skeletor.Core.Types
 -- import Skeletor.Haskell.Types
@@ -202,8 +201,7 @@ printLicenseWith () = liftIO $ do
 
   where
 
-  license = programLicense
-
+  license = programLicenseIdentifier
 
 --------------------------------------------------
 --------------------------------------------------

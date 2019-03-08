@@ -19,6 +19,7 @@
 module Program.Skeletor.Haskell.CLI
 
   ( getCommand
+  , parseCommand
   , preferences
 
   , piCommand
@@ -43,8 +44,9 @@ module Program.Skeletor.Haskell.CLI
 --------------------------------------------------
 
 import Program.Skeletor.Haskell.Types
-import Program.Skeletor.Haskell.Parsers
+import Program.Skeletor.Haskell.Constants
 
+import Program.Skeletor.Haskell.Parsers
 --import Program.Skeletor.Haskell.Options
 --import Program.Skeletor.Haskell.Config
 --import Program.Skeletor.Haskell.Action
@@ -79,8 +81,9 @@ import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fu
 
 --------------------------------------------------
 
-import           "base" Data.Maybe
 --import           "base" Data.Semigroup
+import           "base" Data.Maybe
+import           "base" System.Exit
 
 --------------------------------------------------
 
@@ -92,6 +95,27 @@ import Prelude_exe
 
 getCommand :: IO Command
 getCommand = P.customExecParser preferences piCommand
+
+--------------------------------------------------
+
+parseCommand :: (MonadThrow m) => [String] -> m Command
+parseCommand
+
+  = P.execParserPure preferences piCommand
+  > fromParserResult
+  > either throwM return
+
+  where
+
+  fromParserResult :: P.ParserResult a -> Either CommandFailure a
+  fromParserResult = \case
+
+    P.Success a           -> Right a
+    P.Failure e           -> Left (toCommandFailure (P.renderFailure e programName))
+    P.CompletionInvoked _ -> Left def
+
+  toCommandFailure :: (String, ExitCode) -> CommandFailure
+  toCommandFailure (stderr, exitcode) = CommandFailure{..}
 
 --------------------------------------------------
 

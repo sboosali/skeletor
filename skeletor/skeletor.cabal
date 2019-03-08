@@ -786,16 +786,15 @@ executable skeletor-haskell
  ------------------------------
 
   other-modules: Program.Skeletor.Haskell.Main
+
+                 Program.Skeletor.Haskell.Types
+                 Program.Skeletor.Haskell.Constants
+
                  Program.Skeletor.Haskell.CLI
                  Program.Skeletor.Haskell.IO
 
-                 Program.Skeletor.Haskell.Types
-
-                 Program.Skeletor.Haskell.Version
-                 Program.Skeletor.Haskell.License
                  Program.Skeletor.Haskell.Utilities
                  Program.Skeletor.Haskell.Parsers
-
                  Program.Skeletor.Haskell.Core
                  Program.Skeletor.Haskell.Core.Types
                  Program.Skeletor.Haskell.Command

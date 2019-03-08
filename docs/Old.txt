@@ -980,6 +980,24 @@ rLicense = P.maybeReader parseSpdxLicenseIdentifier
 --------------------------------------------------
 
 
+parseCommand :: (MonadThrow m) => [String] -> m Command
+parseCommand
+
+  = P.execParserPure preferences piCommand
+  > fromParserResult
+  > either throwM return
+
+  where
+
+  fromParserResult :: P.ParserResult P.ParserHelp -> Either CommandFailure a
+  fromParserResult = \case
+
+    P.Success a           -> Right a
+    P.Failure e           -> Left (toCommandFailure (P.renderFailure programName e))
+    P.CompletionInvoked _ -> Left def
+
+  toCommandFailure :: (String, ExitCode) -> CommandFailure
+  toCommandFailure (stderr, exitcode) = CommandFailure{..}
 
 --------------------------------------------------
 
