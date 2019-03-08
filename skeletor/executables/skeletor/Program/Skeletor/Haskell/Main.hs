@@ -13,8 +13,6 @@
 module Program.Skeletor.Haskell.Main
 
   ( main
-  , programWithOptions
-  , programWithConfig
   ) where
 
 --------------------------------------------------

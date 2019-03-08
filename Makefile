@@ -81,6 +81,9 @@ CabalHaddock	?=$(Cabal) new-haddock $(CabalOptions) --enable-documentation
 
 Nix      ?=nix
 NixBuild ?=nix-build --show-trace
+NixShell ?=nix-shell --show-trace
+
+#------------------------------------------------#
 
 Pandoc ?=pandoc
 

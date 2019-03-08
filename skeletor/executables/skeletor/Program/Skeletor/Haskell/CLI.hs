@@ -36,6 +36,8 @@ module Program.Skeletor.Haskell.CLI
 
   ) where
 
+--TODO-- =rules
+
 --------------------------------------------------
 -- Imports (Internal) ----------------------------
 --------------------------------------------------
@@ -349,7 +351,8 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
 -- Utilities -------------------------------------
 --------------------------------------------------
 
-{-| 
+{-|
+
 
 -}
 

@@ -427,7 +427,7 @@ data SpdxLicenseIdentifier
 
 -- | A user-defined license reference (for a license not on the SPDX License List);
 
-data LicenseReference  = LicenseReference
+data LicenseReference = LicenseReference
 
   { document   :: !(Maybe String)
   , identifier :: !String

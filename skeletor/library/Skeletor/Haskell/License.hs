@@ -116,6 +116,8 @@ defaultFLOSSLicense = GPL_3_0_or_later
 allLicenses :: [SpdxLicenseIdentifier]
 allLicenses = constructors (Proxy @SpdxLicenseIdentifier)
 
+{-# INLINEABLE allLicenses #-}
+
 --------------------------------------------------
 
 {- | all licenses approved by the Open Source Initiative.
@@ -128,6 +130,8 @@ See <https://opensource.org/about>.
 
 allOSILicenses :: [SpdxLicenseIdentifier]
 allOSILicenses = allLicenses & filter licenseIsOsiApproved
+
+{-# INLINEABLE allOSILicenses #-}
 
 --------------------------------------------------
 
@@ -142,6 +146,8 @@ See <https://www.gnu.org/licenses/license-list.html>. (TODO)
 allFLOSSLicenses :: [SpdxLicenseIdentifier]
 allFLOSSLicenses = allLicenses & filter licenseIsFlossCompatible
 
+{-# INLINABLE allFLOSSLicenses #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -150,12 +156,16 @@ allFLOSSLicenses = allLicenses & filter licenseIsFlossCompatible
 knownLicenseIds :: [String]
 knownLicenseIds = (licenseId <$> allLicenses)
 
+{-# INLINEABLE knownLicenseIds #-}
+
 --------------------------------------------------
 
 -- | the 'licenseId' of 'allOSILicenses'.
 
 knownOSILicenseIds :: [String]
 knownOSILicenseIds = (licenseId <$> allOSILicenses)
+
+{-# INLINEABLE knownOSILicenseIds #-}
 
 --------------------------------------------------
 
@@ -164,6 +174,8 @@ knownOSILicenseIds = (licenseId <$> allOSILicenses)
 knownFLOSSLicenseIds :: [String]
 knownFLOSSLicenseIds = (licenseId <$> allFLOSSLicenses)
 
+{-# INLINEABLE knownFLOSSLicenseIds #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -171,6 +183,8 @@ knownFLOSSLicenseIds = (licenseId <$> allFLOSSLicenses)
 
 parseSpdxLicenseIdentifier :: (MonadThrow m) => String -> m SpdxLicenseIdentifier
 parseSpdxLicenseIdentifier = parseLicense
+
+{-# INLINEABLE parseSpdxLicenseIdentifier #-}
 
 --------------------------------------------------
 
@@ -181,6 +195,8 @@ parseLicense =
 
   (mkParserFromPrinterWith "SPDX License" licenseId) allLicenses
 
+{-# INLINEABLE parseLicense #-}
+
 --------------------------------------------------
 
 -- | Inverts 'licenseId', but limited to 'allOSILicenses'.
@@ -190,6 +206,8 @@ parseOSILicense =
 
   (mkParserFromPrinterWith "OSI-Approved SPDX License" licenseId) allOSILicenses
 
+{-# INLINEABLE parseOSILicense #-}
+
 --------------------------------------------------
 
 -- | Inverts 'licenseId', but limited to 'allFLOSSLicenses'.
@@ -198,6 +216,8 @@ parseFLOSSLicense :: (MonadThrow m) => String -> m License
 parseFLOSSLicense =
 
   (mkParserFromPrinterWith "FLOSS-Conformant SPDX License" licenseId) allFLOSSLicenses
+
+{-# INLINEABLE parseFLOSSLicense #-}
 
 --------------------------------------------------
 --------------------------------------------------

@@ -43,6 +43,8 @@ import Prelude_skeletor
 fetchProject :: String -> IO FilePath      -- TODO Managed or Cont
 fetchProject = _
 
+{-# INLINABLE fetchProject #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -52,6 +54,8 @@ fetchProject = _
 
 resolveProject :: String -> Maybe Location
 resolveProject = _
+
+{-# INLINEABLE resolveProject #-}
 
 --------------------------------------------------
 --------------------------------------------------

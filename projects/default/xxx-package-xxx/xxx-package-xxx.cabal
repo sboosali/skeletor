@@ -74,9 +74,12 @@ copyright:           2019 __Name__
 -- (Non-Code) Files ------------------------------
 --------------------------------------------------
 
-extra-source-files: README.md
-                    LICENSE.txt
+extra-source-files: LICENSE
+
+                    README.md
                     CHANGELOG.md
+
+                   -- CONTRIBUTING.md
 
   --TODO: how to include project files (parent directory) in package?
   --
@@ -85,6 +88,15 @@ extra-source-files: README.md
   --                 ../nix/**/*.nix
   --                 ../nix/**/*.json
   --                 ../.gitignore
+
+  --TODO: ./share/**/
+
+  -- share/man/*.man
+  -- share/info/
+  -- share/bash-completion/
+  -- share/doc/
+  -- share/elisp/*.el
+  -- share//
 
 --------------------------------------------------
 

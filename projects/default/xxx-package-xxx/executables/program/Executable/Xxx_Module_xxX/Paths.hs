@@ -2,16 +2,50 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{-|
+
+
+
 
 -}
 
 module MyApplication.Paths
 
-  ( directoryMyApplication
+  ( -- * Application Metadata
 
-  , nameOfMyApplication
-  , versionOfMyApplication
+    subdirectory_MyApplication
+  , name_MyApplication
+  , version_MyApplication
+
+  -- * Application-Specific Directories
+
+  {- |
+
+The @getMyApplication{Config,Data,Cache}Directory@ operations
+return this application's (platform-specific, user-writeable) directory
+for @{configuration files, data files, caching}@.
+
+The @getMyApplication{Config,Data,Cache}Directory@ operations may throw these exceptions (all 'System.IO.IOError's):
+
+* @System.IO.HardwareFault@
+A physical I\/O error has occurred.
+@[EIO]@
+
+* 'System.IO.isDoesNotExistError'
+There is no path referring to the working directory.
+@[EPERM, ENOENT, ESTALE...]@
+
+* 'System.IO.isPermissionError'
+The process has insufficient privileges to perform the operation.
+@[EACCES]@
+
+* 'System.IO.isFullError'
+Insufficient resources are available to perform the operation.
+
+* @UnsupportedOperation@
+The operating system has no notion of current working directory.
+
+  -}
 
   , getMyApplicationDataDirectory
   , getMyApplicationConfigDirectory
@@ -22,6 +56,8 @@ module MyApplication.Paths
 --------------------------------------------------
 -- Imports ---------------------------------------
 --------------------------------------------------
+
+import qualified "filepath"  System.FilePath  as File
 
 import qualified "directory" System.Directory as Directory
 
@@ -41,44 +77,44 @@ import           "base" Prelude
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-nameOfMyApplication :: ApplicationName
-nameOfMyApplication = Prelude.words "my application"
+name_MyApplication :: ApplicationName
+name_MyApplication = "My Application"
 
 --------------------------------------------------
 
-versionOfMyApplication :: Version
-versionOfMyApplication = "0.0.0"
+version_MyApplication :: Version
+version_MyApplication = "0.0.0"
 
 --------------------------------------------------
 --------------------------------------------------
 
-directoryMyApplication :: IO FilePath
-directoryMyApplication = do
+subdirectory_MyApplication :: IO FilePath
+subdirectory_MyApplication = do
 
   platform <- getRuntimeApplicationPlatform
 
-  let directory = renderApplicationDirectoryFor platform
+  let directory = subdirectoryOfMyApplicationFor platform
 
   return directory
 
 --------------------------------------------------
 --------------------------------------------------
 
--- | 
+-- | Return this application's (platform-specific, user-writeable) configuration directory.
 
 getMyApplicationDataDirectory :: FilePath -> IO FilePath
 getMyApplicationDataDirectory = getMyApplicationDirectoryFor Directory.XdgData
 
 --------------------------------------------------
 
--- | 
+-- | Return this application's (platform-specific, user-writeable) data directory.
 
 getMyApplicationConfigDirectory :: FilePath -> IO FilePath
 getMyApplicationConfigDirectory = getMyApplicationDirectoryFor Directory.XdgConfig
 
 --------------------------------------------------
 
--- | 
+-- | Return this application's (platform-specific, user-writeable) cache.
 
 getMyApplicationCacheDirectory :: FilePath -> IO FilePath
 getMyApplicationCacheDirectory = getMyApplicationDirectoryFor Directory.XdgCache
@@ -90,61 +126,57 @@ getMyApplicationCacheDirectory = getMyApplicationDirectoryFor Directory.XdgCache
 -- | 
 
 getMyApplicationDirectoryFor :: Directory.XdgDirectory -> FilePath -> IO FilePath
-getMyApplicationDirectoryFor = \case
+getMyApplicationDirectoryFor xdg path = do
 
-  Directory.XdgData   -> dataFile
+  subdirectory <- subdirectory_MyApplication
 
-  Directory.XdgConfig -> configFile
+  let relativePath = subdirectory File.</> path
 
-  Directory.XdgCache  -> cacheFile
+  xdgPath <- Directory.getXdgDirectory xdg relativePath
 
-  where
+  absolutePath <- Directory.makeAbsolute xdgPath
 
-  dataFile file = do
+  return absolutePath
 
-    return file
-
-  configFile file = do
-
-    return file
-
-  cacheFile file = do
-
-    return file
+--createDirectoryIfMissing
 
 --------------------------------------------------
 --------------------------------------------------
 
-type ApplicationName = [String]
+type ApplicationName = String
 
 --------------------------------------------------
 
-{- | Return a platform-specific and application-specific directory for user-writeable data\/configs\/caches.
+{- | Return this application's (platform-specific, user-writeable) subdirectory (a.k.a. namespace), given:
 
-For example, given an application named @Foo App@ by company @MegaCorp@ with web address @MegaCorp.co.uk@:
+* the application name        — @"Foo App"@
+* the application institution — @"Mondragon"@
+* the application website     — @"Mondragon.com"@
 
-* @"fooapp/"@                 on Linux   — i.e. lower-cased, no spaces
-* @"MegaCrop\Foo App\"@       on Windows — i.e. two folders, @MegaCrop@ and @Foo App\@.
-* @"uk.co.MegaCorp.Foo-App/"@ on MacOS   — i.e. invalid characters are replaced with @-@.
+For example, given an application named @Foo App@ by company @Mondragon@ with web address @Mondragon.co.uk@:
+
+* @"fooapp/"@                on Linux   — i.e. lower-cased, no spaces
+* @"MegaCrop\Foo App\"@      on Windows — i.e. two folders, @Mondragon.com@ and @Foo App\@.
+* @"com.Mondragon.Foo-App/"@ on MacOS   — i.e. invalid characters are replaced with @-@.
 
 See <https://stackoverflow.com/questions/43853548/xdg-basedir-directories-for-windows>.
 
 -}
 
-renderApplicationDirectoryFor :: Platform -> ApplicationName -> FilePath
-renderApplicationDirectoryFor = \case
+subdirectoryOfMyApplicationFor :: Platform -> FilePath
+subdirectoryOfMyApplicationFor = \case
 
-  PosixPlatform     -> renderPosixApplicationDirectory
-  WindowsPlatform   -> renderWindowsApplicationDirectory
-  MacintoshPlatform -> renderMacintoshApplicationDirectory
+  PosixPlatform     -> thePosixApplicationDirectory
+  WindowsPlatform   -> theWindowsApplicationDirectory
+  MacintoshPlatform -> theMacintoshApplicationDirectory
 
   where
 
-  renderPosixApplicationDirectory     name = name
+  thePosixApplicationDirectory     = "myapplication/"
 
-  renderWindowsApplicationDirectory   name = name
+  theWindowsApplicationDirectory   = "sboosali/My Application/"
 
-  renderMacintoshApplicationDirectory name = name
+  theMacintoshApplicationDirectory = "io.sboosali.My-Application/"
 
 --------------------------------------------------
 --------------------------------------------------

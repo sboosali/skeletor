@@ -81,9 +81,20 @@ CabalOptions ?=--project-file $(ProjectFile) -w $(CompilerProgram)
 
 Cabal ?=cabal
 
-Ghc ?=ghc
+
+#------------------------------------------------#
+
+Ghc    ?=ghc
 GhcPkg ?=ghc-pkg
-Ghci ?=ghci
+Ghci   ?=ghci
+
+#------------------------------------------------#
+
+Nix      ?=nix
+NixBuild ?=nix-build --show-trace
+NixShell ?=nix-shell --show-trace
+
+#------------------------------------------------#
 
 Markdown ?=multimarkdown
  #TODO pandoc
@@ -105,7 +116,7 @@ CheckNix ?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
-CheckStaticExecutables ?=lld
+CheckStaticExecutables ?=ldd
 
  # ^ TODO on OSX, otool -o
 
