@@ -785,7 +785,7 @@ test-suite golden
 -- Executables -----------------------------------
 --------------------------------------------------
 
--- see « Xxx_Module_xxX.Core ».
+-- See « Program.Xxx_Module_xxX.Main ».
 
 executable xxx-program-xxx
 
@@ -795,16 +795,18 @@ executable xxx-program-xxx
 
   hs-source-dirs: executables/program
 
-  main-is:        Main.hs
+  main-is:       Executable.Xxx_Module_xxX.Main
 
-  other-modules: Executable.Xxx_Module_xxX.Main
-                 Executable.Xxx_Module_xxX.Types
-                 Executable.Xxx_Module_xxX.Core
-                 Executable.Xxx_Module_xxX.Options
-                 Executable.Xxx_Module_xxX.Paths
+  other-modules: Executable.Xxx_Module_xxX.Types
+                 Executable.Xxx_Module_xxX.Constants
 
                  -- Executable.Xxx_Module_xxX.IO
                  -- Executable.Xxx_Module_xxX.CLI
+                 -- Executable.Xxx_Module_xxX.Prelude
+
+                 Executable.Xxx_Module_xxX.Core
+                 Executable.Xxx_Module_xxX.Options
+                 Executable.Xxx_Module_xxX.Paths
 
                  Prelude_exe
 
