@@ -7,12 +7,12 @@
 
 -}
 
-module Executable.Xxx_Module_xxX.Options where
+module Program.Xxx_Module_xxX.Options where
 
 --------------------------------------------------
 --------------------------------------------------
 
-import Executable.Xxx_Module_xxX.Types
+import Program.Xxx_Module_xxX.Types
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
@@ -22,7 +22,7 @@ import Executable.Xxx_Module_xxX.Types
 
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

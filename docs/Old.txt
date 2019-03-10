@@ -1001,15 +1001,101 @@ parseCommand
 
 --------------------------------------------------
 
-
-
---------------------------------------------------
-
-
+type Assoc k v = [(k, v)]
 
 --------------------------------------------------
 
+--------------------------------------------------
 
+{-|
+
+-}
+
+newtype Actions = Actions
+
+  [Action]
+
+  deriving stock    (Show)
+  deriving stock    (Generic)
+  deriving newtype  (Eq,Ord)
+  deriving newtype  (Semigroup,Monoid)
+  deriving newtype  (NFData)
+
+--------------------------------------------------
+
+-- | 
+instance IsList Actions where
+
+  type Item Actions = Action
+
+  fromList = coerce
+  toList   = coerce
+
+--------------------------------------------------
+
+--------------------------------------------------
+-- CLI Types -------------------------------------
+--------------------------------------------------
+
+
+{-| 
+
+-}
+
+toActions :: (MonadThrow m) => Options -> m Actions
+toActions Options{..} = do
+
+  let actions' = actions
+
+  return actions'
+
+  where
+
+  actions :: Actions
+  actions = mconcat
+    [ (if printVersion then [ActionPrintVersion] else [])
+    , (if printLicense then [ActionPrintLicense] else [])
+    , []
+    ]
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+runAction :: (MonadThrow m, MonadIO m) => Action -> m Status
+runAction = \case
+
+  ActionPrintVersion               -> do
+
+    printVersionWith ()
+    return Success
+
+  ActionPrintLicense               -> do
+
+    printLicenseWith ()
+    return Success
+
+  ActionCreateProject        input -> do
+
+    result <- (createProjectWith input)
+    return (toStatus result)
+
+  ActionDownloadProject      input -> do
+
+    result <- (downloadProjectWith input)
+    return (toStatus result)
+
+  ActionResolveConfiguration       -> do
+
+    nothing
+    return Success
+
+--------------------------------------------------
+
+runCommand :: Command -> IO ()
+runCommand = print
 
 --------------------------------------------------
 

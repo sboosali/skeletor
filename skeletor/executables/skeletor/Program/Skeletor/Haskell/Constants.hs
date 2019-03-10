@@ -22,7 +22,7 @@ module Program.Skeletor.Haskell.Constants
 -- Imports ---------------------------------------
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 

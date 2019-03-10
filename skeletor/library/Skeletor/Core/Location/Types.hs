@@ -128,7 +128,15 @@ data LocationFile
 --------------------------------------------------
 --------------------------------------------------
 
-{-| A 'LocationDirectory'.
+{-| A 'LocationDirectory' is a  Location to a Directory.
+
+== Notes
+
+in Nixpkgs, by default, @unpackPhase@ can decompress these compressed/archived file-types:
+
+* gzip — @.tar.gz@, @.tgz@, @.tar.Z@.
+* bzip2 — @.tar.bz2@, @.tbz2@, @.tbz@.
+* xz — @.tar.xz@, @.tar.lzma@, @.txz@.
 
 -}
 

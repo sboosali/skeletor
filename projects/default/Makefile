@@ -81,7 +81,6 @@ CabalOptions ?=--project-file $(ProjectFile) -w $(CompilerProgram)
 
 Cabal ?=cabal
 
-
 #------------------------------------------------#
 
 Ghc    ?=ghc

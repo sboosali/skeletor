@@ -17,6 +17,15 @@ optional-packages: submodules/*
 documentation:            True
 haddock-hyperlink-source: True
 
+-- haddock-all: True
+-- haddock-internal: true
+
+-- NOTE « haddock-all: True » implies « haddock-executables » and « haddock-tests » and « haddock-benchmarks »
+
+-- haddock-benchmarks: True
+-- haddock-executables: True
+-- haddock-tests: True
+
 --------------------------------------------------
 -- GlobalFlags (i.e. only for installed/dependency packages)
 --------------------------------------------------

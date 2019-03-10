@@ -13,17 +13,17 @@ the @main@ program (the logic, data loading, filesystem interaction, etc).
 
 -}
 
-module Executable.Xxx_Module_xxX.Main
+module Program.Xxx_Module_xxX.Main
 
   ( main
-  , module Executable.Xxx_Module_xxX.Options
-  , module Executable.Xxx_Module_xxX.Core
+  , module Program.Xxx_Module_xxX.Options
+  , module Program.Xxx_Module_xxX.Core
   ) where
 
 --------------------------------------------------
 
-import Executable.Xxx_Module_xxX.Options
-import Executable.Xxx_Module_xxX.Core
+import Program.Xxx_Module_xxX.Options
+import Program.Xxx_Module_xxX.Core
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
@@ -33,7 +33,7 @@ import Executable.Xxx_Module_xxX.Core
 
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

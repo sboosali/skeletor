@@ -46,7 +46,7 @@ e.g.
 .\/default\/xxx-package-xxx\/executables\/program
 .\/default\/xxx-package-xxx\/executables\/program\/.dir-locals.el
 .\/default\/xxx-package-xxx\/executables\/program\/Main.hs
-.\/default\/xxx-package-xxx\/executables\/program\/Prelude_exe.hs
+.\/default\/xxx-package-xxx\/executables\/program\/Program.Skeletor.Haskell.Prelude.hs
 .\/default\/xxx-package-xxx\/executables\/program\/Xxx_Module_xxX
 .\/default\/xxx-package-xxx\/executables\/program\/Xxx_Module_xxX\/Main.hs
 .\/default\/xxx-package-xxx\/executables\/program\/Xxx_Module_xxX\/Options.hs

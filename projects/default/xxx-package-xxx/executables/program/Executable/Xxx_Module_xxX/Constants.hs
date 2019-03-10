@@ -9,7 +9,7 @@
 
 -}
 
-module Executable.Xxx_Module_xxX.Constants
+module Program.Xxx_Module_xxX.Constants
 
   ( programName
   , programVersion
@@ -22,7 +22,7 @@ module Executable.Xxx_Module_xxX.Constants
 -- Imports ---------------------------------------
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 

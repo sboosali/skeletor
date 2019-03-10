@@ -164,7 +164,7 @@ data-files: data/.gitignore
             -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Options.hs
             -- projects/default/xxx-package-xxx/executables/program/Executable/Xxx_Module_xxX/Types.hs
             -- projects/default/xxx-package-xxx/executables/program/Main.hs
-            -- projects/default/xxx-package-xxx/executables/program/Prelude_exe.hs
+            -- projects/default/xxx-package-xxx/executables/program/Program.Skeletor.Haskell.Prelude.hs
             -- projects/default/xxx-package-xxx/include
             -- projects/default/xxx-package-xxx/include/HsSbooMacros.h
             -- projects/default/xxx-package-xxx/internals
@@ -778,7 +778,6 @@ executable skeletor-haskell
 
  ------------------------------
 
-  --- Skeletor.Haskell/Main.hs
   main-is:             Main.hs
 
   hs-source-dirs:      executables/skeletor
@@ -786,27 +785,20 @@ executable skeletor-haskell
  ------------------------------
 
   other-modules: Program.Skeletor.Haskell.Main
+                 Program.Skeletor.Haskell.CLI
+                 Program.Skeletor.Haskell.IO
 
                  Program.Skeletor.Haskell.Types
                  Program.Skeletor.Haskell.Constants
 
-                 Program.Skeletor.Haskell.CLI
-                 Program.Skeletor.Haskell.IO
-
                  Program.Skeletor.Haskell.Utilities
-                 Program.Skeletor.Haskell.Parsers
-                 Program.Skeletor.Haskell.Core
-                 Program.Skeletor.Haskell.Core.Types
-                 Program.Skeletor.Haskell.Command
-                 Program.Skeletor.Haskell.Command.Types
-                 Program.Skeletor.Haskell.Options
-                 Program.Skeletor.Haskell.Options.Types
-                 Program.Skeletor.Haskell.Action
-                 Program.Skeletor.Haskell.Action.Types
-                 Program.Skeletor.Haskell.Config
-                 Program.Skeletor.Haskell.Config.Types
+                 Program.Skeletor.Haskell.Prelude
 
-                 Prelude_exe
+                 Program.Skeletor.Haskell.Parsers
+
+                 Program.Skeletor.Haskell.Options
+                 Program.Skeletor.Haskell.Action
+                 Program.Skeletor.Haskell.Config
 
  ------------------------------
 

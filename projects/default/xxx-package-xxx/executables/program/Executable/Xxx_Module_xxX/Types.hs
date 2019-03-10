@@ -8,7 +8,7 @@
 
 -}
 
-module Executable.Xxx_Module_xxX.Types where
+module Program.Xxx_Module_xxX.Types where
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
@@ -18,7 +18,7 @@ module Executable.Xxx_Module_xxX.Types where
 
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

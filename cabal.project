@@ -1,6 +1,6 @@
-----------------------------------------
--- Projects ----------------------------
-----------------------------------------
+--------------------------------------------------
+-- Projects --------------------------------------
+--------------------------------------------------
 
 packages: ./skeletor
 
@@ -10,9 +10,21 @@ packages: ./skeletor
          ./projects/default/xxx-package-xxx/
 --         ./projects/simple/xxx-package-xxx/
 
+--------------------------------------------------
+-- Vendored --------------------------------------
+--------------------------------------------------
+
+optional-packages: submodules/*
+                   ../spiros/spiros/
+
 ----------------------------------------
 
-optional-packages: ../spiros/spiros/
+-- source-repository-package
+--   type:     git
+--   location: git://github.com/raaz-crypto/raaz.git
+-- --location: git://github.com/piyush-kurur/raaz.git
+--   tag:      release-0.2.2
+--   subdir:   .
 
 --------------------------------------------------
 -- Settings --------------------------------------

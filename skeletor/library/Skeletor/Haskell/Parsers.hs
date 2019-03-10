@@ -64,7 +64,7 @@ import           "base" Data.Semigroup
 
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Types -----------------------------------------

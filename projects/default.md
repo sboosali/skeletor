@@ -1,5 +1,39 @@
 # the `default` project
 
+
+## Project Files
+
+### `Makefile`
+
+the `Makefile` has these targets (among many, Haskell-specific and Nix-specific, others):
+
+* `make`         — builds.
+* `make build`   — builds.
+* `make check`   — tests.
+* `make install` — installs..
+* `make dist`    — creates a tarball.
+
+these are standard targets. in nixpkgs (`stdenv.mkDerivation`), by default:
+
+* `buildPhase`   — invokes `make`.
+* `checkPhase`   — invokes `make check`.
+* `installPhase` — invokes `make install`.
+* `distPhase`    — invokes `make dist`.
+
+### `extra-source-files`
+
+the package (i.e. `xxx-package-xxx`) directory has these subdirectories:
+
+* `share/man/`  — has the Manpages for the program (i.e. `xxx-program-xxx`).
+* `share/info/` — TODO.
+* `share/doc/`  — TODO.
+
+these are directories. in nixpkgs (`stdenv.mkDerivation`), by default:
+
+* `fixupPhase` — moves `man/` and `doc/` and `info/` to `share/`.
+
+
+
 ## TODO my configuration
 
 ```ini

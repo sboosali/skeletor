@@ -90,7 +90,7 @@ import           "base" Data.Maybe
 
 --------------------------------------------------
 
-import Prelude_exe hiding (Text)
+import Program.Skeletor.Haskell.Prelude hiding (Text)
 
 --------------------------------------------------
 -- Types -----------------------------------------

@@ -150,7 +150,27 @@ flag static
 
   default:     False
 
+  description: Both « -fexecutable-static » and « -flibrary-static ».
+
+  manual:      True
+
+--------------------------------------------------
+
+flag executable-static
+
+  default:     False
+
   description: Build a statically-linked executable (NOTE you should also, via « ./nix/static.nix », provision an environment with « musl » and other statically-linkable C Libraries.)
+
+  manual:      True
+
+--------------------------------------------------
+
+flag library-static
+
+  default:     False
+
+  description: Build statically-linked haskell libraries.
 
   manual:      True
 
@@ -237,6 +257,11 @@ common Haskell2020Library
 
   -- raise a warning into an error
   -- -Werror=missing-fields
+
+ -----------------------------
+
+ if flag(static) || flag(library-static)
+    ghc-options: -staticlib
 
  -----------------------------
 
@@ -507,6 +532,12 @@ common Haskell2020Program
              -Wno-missing-signatures
              -fno-warn-type-defaults
 
+ -----------------------------
+
+ if flag(static) || flag(executable-static)
+    ghc-options: -static -optl=-static
+
+ -----------------------------
 
 --------------------------------------------------
 
@@ -795,20 +826,20 @@ executable xxx-program-xxx
 
   hs-source-dirs: executables/program
 
-  main-is:       Executable.Xxx_Module_xxX.Main
+  main-is:       Program.Xxx_Module_xxX.Main
 
-  other-modules: Executable.Xxx_Module_xxX.Types
-                 Executable.Xxx_Module_xxX.Constants
+  other-modules: Program.Xxx_Module_xxX.Types
+                 Program.Xxx_Module_xxX.Constants
 
-                 -- Executable.Xxx_Module_xxX.IO
-                 -- Executable.Xxx_Module_xxX.CLI
-                 -- Executable.Xxx_Module_xxX.Prelude
+                 -- Program.Xxx_Module_xxX.IO
+                 -- Program.Xxx_Module_xxX.CLI
+                 -- Program.Xxx_Module_xxX.Prelude
 
-                 Executable.Xxx_Module_xxX.Core
-                 Executable.Xxx_Module_xxX.Options
-                 Executable.Xxx_Module_xxX.Paths
+                 Program.Xxx_Module_xxX.Core
+                 Program.Xxx_Module_xxX.Options
+                 Program.Xxx_Module_xxX.Paths
 
-                 Prelude_exe
+                 Program.Skeletor.Haskell.Prelude
 
   ----------------------------
 

@@ -8,7 +8,7 @@
 
 -}
 
-module Executable.Xxx_Module_xxX.Core
+module Program.Xxx_Module_xxX.Core
   
   ( mainWith
   ) where
@@ -16,8 +16,8 @@ module Executable.Xxx_Module_xxX.Core
 --------------------------------------------------
 --------------------------------------------------
 
-import Executable.Xxx_Module_xxX.Types   (Config(..))
-import Executable.Xxx_Module_xxX.Options (getConfig)
+import Program.Xxx_Module_xxX.Types   (Config(..))
+import Program.Xxx_Module_xxX.Options (getConfig)
 
 --------------------------------------------------
 -- Imports: Internal -----------------------------
@@ -27,7 +27,7 @@ import Executable.Xxx_Module_xxX.Options (getConfig)
 
 --------------------------------------------------
 
-import Prelude_exe
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

@@ -6,7 +6,7 @@ a component-specific custom prelude.
 
 -}
 
-module Prelude_exe
+module Program.Skeletor.Haskell.Prelude
     ( module X
     ) where
 
