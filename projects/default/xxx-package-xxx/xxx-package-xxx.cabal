@@ -64,7 +64,7 @@ tested-with: GHC   == 8.6.3
 --------------------------------------------------
 
 license:             Apache-2.0
-license-file:        LICENSE.txt
+license-file:        LICENSE
 copyright:           2019 __Name__
 
 -- license:             GPL-3.0-or-later
@@ -661,7 +661,6 @@ library
              , directory
 
   --------------------
-  --------------------
   -- Records ---------
   --------------------
 
@@ -669,6 +668,7 @@ library
              , generic-lens
              , vinyl
                                         
+  --------------------
   -- Parsing ---------
   --------------------
 
@@ -839,7 +839,7 @@ executable xxx-program-xxx
                  Program.Xxx_Module_xxX.Options
                  Program.Xxx_Module_xxX.Paths
 
-                 Program.Skeletor.Haskell.Prelude
+                 Program.Xxx_Module_xxX.Prelude
 
   ----------------------------
 

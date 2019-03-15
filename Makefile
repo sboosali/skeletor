@@ -92,8 +92,11 @@ Markdown ?=multimarkdown
 
 Open ?=xdg-open
 
-
 Cabal2nix ?=cabal2nix
+
+MakeETags ?=hasktags --etags  --tags-absolute --follow-symlinks
+MakeCTags ?=hasktags --ctags  --tags-absolute --follow-symlinks
+#MakeGTags ?=hasktags --gtags  --tags-absolute --follow-symlinks
 
 #------------------------------------------------#
 
@@ -143,9 +146,10 @@ InstallDirectory	?=$(ReleaseDirectory)/dist-newstyle/ #TODO
 
 ################################################## Miscellaneous
 
-TagsCommand ?=":etags"
+ETagsFile      ?=TAGS
+CTagsFile      ?=tags
 
-TagsScript ="$(TagsCommand)\n:q\n"
+TagsDirectory ?=$(PackageDirectory)
 
 ##################################################
 # Makefile Variables #############################
@@ -889,18 +893,47 @@ fetch-stackage--cabal.config:
 
 #------------------------------------------------#
 
-tags:
-	$(Cabal) new-repl $(LibraryTarget) < <(echo -e $(TagsScript))
-#TODO[tags file is empty]	ghci -e $(TagsCommand)
-
-        # ^ NOTE:
-        # * the « <(...) » is a Process Substitution, while
-        # * the « ... < ... » is a Redirection.
-
-        # ^ NOTE:
-        # « ghci -e » (« -e » means "evaluate") is for non-interactive usage.
+tags: etags ctags
 
 .PHONY: tags
+
+#------------------------------------------------#
+
+etags:
+
+	@echo '=================================================='
+	@echo
+
+	$(MakeETags)  "$(TagsDirectory)"  --output "$(ETagsFile)"
+
+	@echo '=================================================='
+	@echo
+
+	@cat $(ETagsFile)
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: etags
+
+#------------------------------------------------#
+
+ctags:
+
+	@echo '=================================================='
+	@echo
+
+	$(MakeCTags)  "$(TagsDirectory)"  --output "$(CTagsFile)"
+
+	@echo '=================================================='
+	@echo
+
+	@cat $(CTagsFile)
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: ctags
 
 #------------------------------------------------#
 

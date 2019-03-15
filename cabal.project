@@ -83,11 +83,11 @@ package hsc2hs
 -- Repositories ----------------------------------
 --------------------------------------------------
 
-repository stackage-lts-13.9
+repository stackage-lts-13.12
 
-  url: https://www.stackage.org/lts-13.9
+  url: https://www.stackage.org/lts-13.12
 
-  -- ^ Stackage, GHC-8.6.3 (circa 2019-02-24)
+  -- ^ Stackage, GHC-8.6.4 (circa 2019-03-12)
 
 --------------------------------------------------
 

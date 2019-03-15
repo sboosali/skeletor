@@ -1099,6 +1099,11 @@ runCommand = print
 
 --------------------------------------------------
 
+etags:
+	$(Cabal) new-exec -- ghci -e ":etags $(TagsFile)"
+	cat $(TagsFile)
+
+.PHONY: etags
 
 --------------------------------------------------
 

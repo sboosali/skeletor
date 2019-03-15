@@ -354,8 +354,11 @@ build-example:
 #------------------------------------------------#
 
 tags:
+
+	hasktags --etags  --follow-symlinks library/  --output TAGS  --tags-absolute
+
 #	$(Cabal) new-repl $(Target) < <(echo -e $(TagsScript))
-	$(Ghci) -e ":$(Tags)"
+#	$(Ghci) -e ":$(Tags)"
 
         # ^ NOTE:
         # * the « <(...) » is a Process Substitution, while

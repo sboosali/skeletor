@@ -40,8 +40,9 @@ result
 ,*
 .*.swp
 .*.swo
-TAGS
 .projectile
+TAGS
+tags
 
 # OS X
 .DS_Store
