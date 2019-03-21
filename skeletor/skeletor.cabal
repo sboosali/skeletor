@@ -796,10 +796,6 @@ executable skeletor-haskell
 
                  Program.Skeletor.Haskell.Parsers
 
-                 Program.Skeletor.Haskell.Options
-                 Program.Skeletor.Haskell.Action
-                 Program.Skeletor.Haskell.Config
-
  ------------------------------
 
   build-depends:

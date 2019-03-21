@@ -1,4 +1,4 @@
-import qualified Program.Skeletor.Haskell.Main as Main
+import qualified Program.Skeletor.Haskell.Main as Program
 import           Prelude
 main :: IO ()
-main = Main.main
+main = Program.main

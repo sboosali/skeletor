@@ -38,18 +38,12 @@ module Program.Skeletor.Haskell.Parsers
 -- Imports (Internal) ----------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Types
+import Program.Skeletor.Haskell.Types hiding (URI)
+import Program.Skeletor.Haskell.Utilities
 
---import Program.Skeletor.Haskell.Options
--- import Program.Skeletor.Haskell.Config
--- import Program.Skeletor.Haskell.Action
--- import Program.Skeletor.Haskell.Command
-
--- --------------------------------------------------
+--------------------------------------------------
 
 import Skeletor.Haskell
--- import Skeletor.Haskell.License
--- import Skeletor.Haskell.Variable.Binding
 
 --------------------------------------------------
 -- Imports (External) ----------------------------

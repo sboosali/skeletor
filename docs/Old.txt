@@ -1107,7 +1107,9 @@ etags:
 
 --------------------------------------------------
 
-
+((haskell-mode
+  . ((dante-target    . "skeletor:exe:skeletor-haskell")
+     (compile-comm
 
 --------------------------------------------------
 

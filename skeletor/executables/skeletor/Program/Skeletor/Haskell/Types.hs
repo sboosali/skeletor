@@ -5,8 +5,6 @@
 
 {-|
 
-
-
 -}
 
 module Program.Skeletor.Haskell.Types
@@ -27,7 +25,7 @@ import Skeletor.Haskell.Project
 -- Imports ---------------------------------------
 --------------------------------------------------
 
-import Prelude_skeletor
+import Program.Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 
@@ -56,7 +54,7 @@ import           "base" System.Exit
 -- Types -----------------------------------------
 --------------------------------------------------
 
-type URL = String
+type URL = String               -- TODO
 
 --------------------------------------------------
 --------------------------------------------------

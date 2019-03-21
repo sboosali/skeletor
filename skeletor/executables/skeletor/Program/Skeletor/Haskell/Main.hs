@@ -43,7 +43,9 @@ main = do
 
   command <- getCommand
 
-  runCommand command
+  status <- runCommand command
+
+  nothing
 
 --------------------------------------------------
 

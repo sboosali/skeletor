@@ -145,11 +145,7 @@ mergeOptions extraOptions@Options{ projectname = extraProject } Options{ project
 
 --------------------------------------------------
 
-{-| Uses:
-
-* 'P.fullDesc'
-* 'options'
-* 'P.info'
+{-| 
 
 -}
 
@@ -158,11 +154,7 @@ parser = P.info (options <**> P.helper) information
 
 --------------------------------------------------
 
-{-| Uses:
-
-* 'P.fullDesc'
-* 'options'
-* 'P.info'
+{-|
 
 -}
 
@@ -171,8 +163,8 @@ information = mconcat
 
   [ P.fullDesc
   , P.failureCode 2 -- exit code — when a parse error occurs.
-  , P.headerDoc $ Just  "----------------------------------------"
-  , P.footerDoc $ Just  "----------------------------------------"
+  , P.headerDoc $ Just "----------------------------------------"
+  , P.footerDoc $ Just "----------------------------------------"
   ]
 
 --------------------------------------------------

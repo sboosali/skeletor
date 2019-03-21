@@ -727,7 +727,7 @@ test-suite doc
 
 --------------------------------------------------
 
-test-suite unit
+test-suite dunit
 
   import: Haskell2020Program
 

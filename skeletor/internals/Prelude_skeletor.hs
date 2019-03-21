@@ -12,6 +12,6 @@ module Prelude_skeletor
 
 --------------------------------------------------
 
-import "spiros" Prelude.Spiros as X
+import "spiros" Prelude.Spiros as X hiding (Text)
 
 --------------------------------------------------

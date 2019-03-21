@@ -14,20 +14,23 @@ module Program.Skeletor.Haskell.IO where
 
 import Program.Skeletor.Haskell.Prelude
 import Program.Skeletor.Haskell.Types
+import Program.Skeletor.Haskell.Utilities
+import Program.Skeletor.Haskell.Constants
 
 --------------------------------------------------
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
+import qualified "modern-uri" Text.URI as URI
 
 --------------------------------------------------
 -- Imports (StdLib) ------------------------------
 --------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
+import qualified "text" Data.Text as Text
+
+import qualified "base" System.IO    as IO
+import qualified "base" Data.Version as Version
 
 --------------------------------------------------
 -- Definitions -----------------------------------
@@ -40,27 +43,27 @@ import Program.Skeletor.Haskell.Types
 runCommand :: (MonadThrow m, MonadIO m) => Command -> m Status
 runCommand = \case
 
-  CommandPrintVersion               -> do
+  CommandPrintVersion -> do
 
     printVersionWith ()
     return Success
 
-  CommandPrintLicense               -> do
+  CommandPrintLicense -> do
 
     printLicenseWith ()
     return Success
 
-  CommandCreateProject        input -> do
+  CommandCreateProject CreateProjectOptions{..} -> do
 
-    result <- (createProjectWith input)
+    result <- (createProjectWith CreateProject{..})
     return (toStatus result)
 
-  CommandDownloadProject      input -> do
+  CommandDownloadProject DownloadProjectOptions{..} -> do
 
-    result <- (downloadProjectWith input)
+    result <- (downloadProjectWith DownloadProject{..})
     return (toStatus result)
 
-  CommandResolveConfiguration       -> do
+  CommandResolveConfiguration () -> do
 
     nothing
     return Success
@@ -158,18 +161,6 @@ printLicenseWith () = liftIO $ do
   where
 
   license = programLicenseIdentifier
-
---------------------------------------------------
---------------------------------------------------
-
-{-| 
-
--}
-
-printConfigWith :: (MonadThrow m, MonadIO m) => Config -> m ()
-printConfigWith config = liftIO $ do
-
-  print config
 
 --------------------------------------------------
 -- Utilities -------------------------------------

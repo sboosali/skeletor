@@ -44,6 +44,7 @@ module Program.Skeletor.Haskell.CLI
 --------------------------------------------------
 
 import Program.Skeletor.Haskell.Types
+import Program.Skeletor.Haskell.Utilities
 import Program.Skeletor.Haskell.Constants
 import Program.Skeletor.Haskell.Parsers
 
@@ -99,18 +100,6 @@ parseCommand
   = P.execParserPure preferences piCommand
   > fromParserResult
   > either throwM return
-
-  where
-
-  fromParserResult :: P.ParserResult a -> Either CommandFailure a
-  fromParserResult = \case
-
-    P.Success a           -> Right a
-    P.Failure e           -> Left (toCommandFailure (P.renderFailure e programName))
-    P.CompletionInvoked _ -> Left def
-
-  toCommandFailure :: (String, ExitCode) -> CommandFailure
-  toCommandFailure (stderr, exitcode) = CommandFailure{..}
 
 --------------------------------------------------
 
@@ -235,8 +224,8 @@ pGlobalOptions = do
 
         [ P.long    "verbose"
         , P.short   'v'
+        , embolden
         , P.help    "Enable verbose messages. (Includes network progress from downloading any resources. Includes printing the config that's derived from the invokation of this command: ①, parsing these command-line options; and ②, defaulting the values of any optional options.)"
-        , P.style P.bold
         ])
 
   dryrun <- (P.flag TrueRun DryRun) (mconcat
@@ -521,6 +510,20 @@ info description parser = P.info (P.helper <*> parser) information
       [ P.fullDesc
       , P.progDesc description
       ]
+
+--------------------------------------------------
+
+fromParserResult :: P.ParserResult a -> Either CommandFailure a
+fromParserResult = \case
+
+    P.Success a           -> Right a
+    P.Failure e           -> Left (toCommandFailure (P.renderFailure e programName))
+    P.CompletionInvoked _ -> Left def
+
+--------------------------------------------------
+
+toCommandFailure :: (String, ExitCode) -> CommandFailure
+toCommandFailure (stderr, exitcode) = CommandFailure{..}
 
 --------------------------------------------------
 
