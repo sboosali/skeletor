@@ -22,7 +22,7 @@ import Program.Skeletor.Haskell.Prelude
 --------------------------------------------------
 
 import qualified "generic-lens" Data.Generics.Product as G
-import qualified "generic-lens" Data.Generics.Sum     as G
+--import qualified "generic-lens" Data.Generics.Sum     as G
 
 --------------------------------------------------
 
@@ -41,7 +41,8 @@ import qualified "text" Data.Text as Text
 
 --------------------------------------------------
 
-import qualified "base" Data.List as List
+import qualified "base" Data.List         as List
+import qualified "base" Control.Exception as E
 
 --------------------------------------------------
 -- Definitions -----------------------------------
@@ -230,6 +231,14 @@ defaultTarballFileExtensions =
   , "tar.bz"
 
   ]
+
+--------------------------------------------------
+
+throwFailure :: (MonadThrow m) => Status -> m ()
+throwFailure = \case
+
+  Success -> return ()
+  Failure -> throwM (E.toException Failure)
 
 --------------------------------------------------
 -- Notes -----------------------------------------

@@ -52,7 +52,7 @@ stability: provisional
 
 --------------------------------------------------
 
-tested-with: GHC   == 8.6.3
+tested-with: GHC   == 8.6.4
            , GHC   == 8.4.4
            , GHC   == 8.2.2
            , GHC   == 8.0.2
@@ -123,14 +123,14 @@ bug-reports: https://github.com/__GithubUser__/__Repository__/issues
 source-repository head
   type:     git
   location: git://github.com/__GithubUser__/__Repository__.git
-  subdir:   xxx-package-directory-xxx
+  subdir:   xxx-package-subdir-xxx
 
 --------------------------------------------------
 
 -- source-repository this
 --   type:     git
 --   location: https://github.com/__GithubUser__/__Repository__/tree/v0.1.0
---   subdir:   xxx-package-directory-xxx
+--   subdir:   xxx-package-subdir-xxx
 
 --------------------------------------------------
 -- Flags -----------------------------------------
@@ -727,7 +727,7 @@ test-suite doc
 
 --------------------------------------------------
 
-test-suite dunit
+test-suite unit
 
   import: Haskell2020Program
 

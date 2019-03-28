@@ -20,8 +20,9 @@ module Program.Skeletor.Haskell.Main
 --------------------------------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.CLI (getCommand)
-import Program.Skeletor.Haskell.IO  (runCommand)
+import Program.Skeletor.Haskell.CLI       (getCommand)
+import Program.Skeletor.Haskell.IO        (runCommand)
+import Program.Skeletor.Haskell.Utilities (throwFailure)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -45,7 +46,7 @@ main = do
 
   status <- runCommand command
 
-  nothing
+  throwFailure status
 
 --------------------------------------------------
 

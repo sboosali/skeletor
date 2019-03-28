@@ -472,6 +472,22 @@ uninstall-skeletor-haskell:
 
 .PHONY: uninstall-skeletor-haskell
 
+#------------------------------------------------#
+# Nix -------------------------------------------#
+#------------------------------------------------#
+
+default.nix: skeletor/*.cabal
+
+	$(Cabal2nix) $^ > $@
+
+#------------------------------------------------#
+
+shell.nix: skeletor/*.cabal
+
+	$(Cabal2nix) --shell $^ > $@
+
+#TODO# cabal2nix file://$(readlink -f skeletor.cabal)
+
 ##################################################
 # Static-Linking
 ##################################################
@@ -547,7 +563,7 @@ install-static-skeletor-haskell: cabal-static.project
 	@echo '=================================================='
 	@echo
 
-	@echo $(Lld) `which skeletor-haskell`
+	@echo `which skeletor-haskell`
 
 	@echo
 	@echo '=================================================='
@@ -557,8 +573,29 @@ install-static-skeletor-haskell: cabal-static.project
 
 	@echo
 	@echo '=================================================='
+	@echo
+
+#	@echo ! ldd `which skeletor-haskell`
+#	@echo ldd `which skeletor-haskell` | grep -F "not a dynamic executable"
+
+	! ldd `which skeletor-haskell`
+
+	@echo
+	@echo '=================================================='
 
 .PHONY: install-static-skeletor-haskell
+
+# NOTE « ldd »:
+#
+#      fails (i.e. the exit code is non-zero) on statically-linked executables.
+
+# NOTE « ! ... »:
+#
+#      negates the exit code.
+
+# NOTE in « ldd `which skeletor-haskell` | grep -F "not a dynamic executable"  »:
+#
+#      the exit code is 0 if-and-only-if skeletor-haskell is a statically-linked executable.
 
 ##################################################
 # Documentation: building/copying/opening

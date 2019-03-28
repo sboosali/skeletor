@@ -47,8 +47,20 @@ skeletor-static = import ./skeletor.nix {
 
 #------------------------------------------------#
 
+checkStatic = ''
+#!/bin/bash
+
+ldd $out/bin/skeletor-haskell | grep -F "not a dynamic executable"
+'';
+
+in
+##################################################
+let
+
 cabal-project-string = import ./cabal.project.nix {
 };
+
+#------------------------------------------------#
 
 cabal-project-file = pkgs.writeTextFile
 
@@ -70,3 +82,12 @@ in
 
 }
 ##################################################
+/*
+
+$ ldd `which ghc`
+	not a dynamic executable
+
+ldd  | grep -F "not a dynamic executable"
+
+
+*/

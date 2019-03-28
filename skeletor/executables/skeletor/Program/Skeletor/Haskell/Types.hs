@@ -82,9 +82,9 @@ data GlobalOptions = GlobalOptions
 
 data Command
 
-  = CommandCreateProject        CreateProjectOptions
-  | CommandDownloadProject      DownloadProjectOptions
-  | CommandResolveConfiguration ResolveConfigurationOptions
+  = CommandCreateProject        CreateProjectArguments CreateProjectOptions
+  | CommandDownloadProject                             DownloadProjectOptions
+  | CommandResolveConfiguration                        ResolveConfigurationOptions
 
   | CommandPrintVersion
   | CommandPrintLicense
@@ -152,11 +152,26 @@ defaultOptions = Options{..}
 
 -}
 
+data CreateProjectArguments = CreateProjectArguments
+
+  { location    :: Location
+  , destination :: FilePath
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
 data CreateProjectOptions = CreateProjectOptions
 
   { globals     :: GlobalOptions
-  , location    :: Location
-  , destination :: FilePath
   , license     :: License
   }
 
@@ -353,6 +368,8 @@ data Status
   deriving anyclass (GEnum)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
+
+instance Exception Status where
 
 --------------------------------------------------
 --------------------------------------------------
