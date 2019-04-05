@@ -1525,11 +1525,9 @@ sample = subparser
 
 This will logically separate the usage text for the two subparsers (these would normally appear together if the commandGroup modifier was not used). The hidden modifier suppresses the metavariable for the second subparser being show in the brief usage line, which is desirable in some cases.
 
+### `flag`
 
-### 
-
-flag
-
+```
   :: a	
   default value
   
@@ -1541,10 +1539,34 @@ flag
   
   -> Parser a	 
   Builder for a flag parser.
-  
-A flag that switches from a "default value" to an "active value" when encountered. For a simple boolean value, use switch instead.
+```
 
-Note: Because this parser will never fail, it can not be used with combinators such as some or many, as these combinators continue until a failure occurs. See flag'.
+>A flag that switches from a "default value" to an "active value" when encountered. For a simple boolean value, use `switch` instead.
+
+>Note: Because this parser will never fail, it can not be used with combinators such as some or many, as these combinators continue until a failure occurs. See `flag'`.
+
+### `flag'`
+
+```
+  :: a	
+  active value
+
+  -> Mod FlagFields a	
+  option modifier
+
+  -> Parser a	 
+  Builder for a flag parser without a default value.
+```
+
+>Same as flag, but with no default value. In particular, this flag will never parse successfully by itself.
+
+e.g. a parser that counts the number of `-t` arguments on the command -ine:
+
+    length <$> (many (flag' () (short 't')))
+
+e.g. a parser that requires the user to enter either `--on` or `--off` on the command-line:
+
+    (flag' True (long "on")) <|> (flag' False (long "off"))
 
 ### 
 

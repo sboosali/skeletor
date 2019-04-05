@@ -2,7 +2,6 @@
 
 {-# LANGUAGE BlockArguments        #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE OverloadedLists       #-}
 {-# LANGUAGE ApplicativeDo         #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NamedFieldPuns        #-}
@@ -93,9 +92,7 @@ import Program.Skeletor.Haskell.Prelude
 getCommand :: IO Command
 getCommand = do
 
-  (options, mCommand) <- getResult
-
-  return mCommand
+  P.customExecParser preferences piCommand
 
 --------------------------------------------------
 
@@ -104,34 +101,7 @@ parseCommand
 
   = P.execParserPure preferences piCommand
   > fromParserResult
-  > ( either throwM return >=> _)
-
---------------------------------------------------
-
-getResult :: IO Result
-getResult = P.customExecParser preferences piCommand
-
---------------------------------------------------
-
-parseResult :: (MonadThrow m) => [String] -> m Result
-parseResult
-
-  = P.execParserPure preferences piCommand
-  > fromParserResult
-  > either throwM return
-
-
---------------------------------------------------
-
-exitWithHelpTextForCommand :: IO a
-exitWithHelpTextForCommand = do
-
-  printHelpTextForCommand
-
---------------------------------------------------
-
-printHelpTextForCommand :: IO a
-printHelpTextForCommand = printParserHelpText preferences piCommand
+  > ( either throwM return )
 
 --------------------------------------------------
 
@@ -146,6 +116,11 @@ preferences = P.prefs (mconcat
   , P.showHelpOnError
   , P.showHelpOnEmpty
   ])
+
+--------------------------------------------------
+
+printHelpTextForCommand :: IO Command
+printHelpTextForCommand = printParserHelpText preferences piCommand
 
 --------------------------------------------------
 -- « ParserInfo »s -------------------------------
@@ -213,10 +188,12 @@ piDownloadProjectOptions = info description do
 
 -}
 
-piResolveConfigurationOptions :: P.ParserInfo ()  --TODO-- ResolveConfigurationOptions
+piResolveConfigurationOptions :: P.ParserInfo ResolveConfigurationOptions
 piResolveConfigurationOptions = info description do
 
-  empty
+  globals     <- pGlobalOptions
+
+  return ResolveConfigurationOptions{..}
 
   where
 
@@ -228,32 +205,20 @@ piResolveConfigurationOptions = info description do
 
 {-| The (top-level) program invocation; @main@ parses this.
 
-If no subcommand can be parsed, real ('pSubCommand')
+If no subcommand can be parsed, real ('pCommand')
 or fake ('pPseudoSubCommand'), the parser fails; and
 @main@ throws an exception, exiting with exit code @2@.
 
 -}
 
-pResult :: P.Parser Result
+pResult :: P.Parser Command
 pResult = do
 
-  options <- pO
+  globals <- pGlobalOptions
 
-  mCommand <- pC
+  command <- pCommand
 
-  mCommand & maybe pE (go options)
-
-  where
-
-  pO :: P.Parser GlobalOptions
-  pO = pGlobalOptions
-
-  pC :: P.Parser (Maybe Command)
-  pC = asum
-
-    [ Just <$> pPseudoSubCommand
-    ,          pSubCommand
-    ]
+  return (fromResult (globals, command))
 
 --------------------------------------------------
 
@@ -261,9 +226,11 @@ pResult = do
 
 -}
 
-pSubCommand :: P.Parser Command
-pSubCommand = P.hsubparser ps
+pCommand :: P.Parser Command
+pCommand = pFakeSubCommand <|> pRealSubCommand
   where
+
+  pRealSubCommand = P.hsubparser ps
 
   ps = mconcat
 
@@ -286,26 +253,28 @@ Syntactically, they're (double-dash) options.
 
 -}
 
-pPseudoSubCommand :: P.Parser (Maybe Command)
-pPseudoSubCommand = do
+pFakeSubCommand :: P.Parser Command
+pFakeSubCommand = asum
 
-  mVersion <- (P.flag Nothing (Just CommandPrintVersion)) (mconcat
+  [ pVersionCommand
+  , pLicenseCommand
+  ]
+
+  where
+
+  pVersionCommand = (P.flag' CommandPrintVersion) (mconcat
 
         [ P.long    "version"
         , P.style  P.bold
         , P.help "Print the version of this program. Format is: dot-separated numberics."
         ])
 
-  mLicense <- (P.flag Nothing (Just CommandPrintLicense)) (mconcat
+  pLicenseCommand = (P.flag' CommandPrintLicense) (mconcat
 
         [ P.long    "license"
         , P.style  P.bold
         , P.help "Print the license of this program. Format is: an SPDX License Identifier."
         ])
-
-  let mCommand = [ mVersion, mLicense ] & (catMaybes > listToMaybe)
-
-  return mCommand
 
 --------------------------------------------------
 
@@ -598,7 +567,7 @@ options = do
         , P.style P.bold
         ]))
 
-  environment <- defaulting [] (P.option rBindings (mconcat
+  environment <- defaulting (Bindings []) (P.option rBindings (mconcat
 
         [ (P.long    "bindings")
         , (P.short   'e')
@@ -618,16 +587,12 @@ options = do
 
   return Options{..}
 
-  where
-
-  defaulting x p = maybe x id <$> optional p
-
 --------------------------------------------------
 -- Utilities -------------------------------------
 --------------------------------------------------
 
--- toCommand :: Result -> Command
--- toCommand (options, Just command) =
+fromResult :: Result -> Command
+fromResult (globals, command) = globals `addOptionsToCommand` command
 
 --------------------------------------------------
 
@@ -682,15 +647,6 @@ fromParserResult = \case
 
 toCommandFailure :: (String, ExitCode) -> CommandFailure
 toCommandFailure (stderr, exitcode) = CommandFailure{..}
-
---------------------------------------------------
-
-printParserHelpText :: P.ParserPrefs -> P.ParserInfo a -> IO a
-printParserHelpText preferences information = handle failure
-  where
-
-  handle  = (P.handleParseResult . P.Failure)
-  failure = (P.parserFailure preferences information P.ShowHelpText mempty)
 
 --------------------------------------------------
 

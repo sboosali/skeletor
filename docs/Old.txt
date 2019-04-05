@@ -1936,10 +1936,82 @@ haddock-hyperlink-source: True
 --------------------------------------------------
 
 
+{-| The (top-level) program invocation; @main@ parses this.
+
+If no subcommand can be parsed, real ('pSubCommand')
+or fake ('pPseudoSubCommand'), the parser fails; and
+@main@ throws an exception, exiting with exit code @2@.
+
+-}
+
+pResult :: P.Parser Result
+pResult = do
+
+  options <- pO
+
+  mCommand <- pC
+
+  mCommand & maybe pE (go options)
+
+  where
+
+  pO :: P.Parser GlobalOptions
+  pO = pGlobalOptions
+
+  pC :: P.Parser (Maybe Command)
+  pC = asum
+
+    [ Just <$> pPseudoSubCommand
+    ,          pSubCommand
+    ]
+
+
+--------------------------------------------------
+
+getResult :: IO Result
+getResult = P.customExecParser preferences piCommand
+
+--------------------------------------------------
+
+parseResult :: (MonadThrow m) => [String] -> m Result
+parseResult
+
+  = P.execParserPure preferences piCommand
+  > fromParserResult
+  > either throwM return
+
 
 --------------------------------------------------
 
 
+exitWithHelpTextForCommand :: IO a
+exitWithHelpTextForCommand = do
+
+  printHelpTextForCommand
+
+--------------------------------------------------
+
+
+pPseudoSubCommand :: P.Parser Command
+pPseudoSubCommand = do
+
+  mVersion <- (P.flag Nothing (Just CommandPrintVersion)) (mconcat
+
+        [ P.long    "version"
+        , P.style  P.bold
+        , P.help "Print the version of this program. Format is: dot-separated numberics."
+        ])
+
+  mLicense <- (P.flag Nothing (Just CommandPrintLicense)) (mconcat
+
+        [ P.long    "license"
+        , P.style  P.bold
+        , P.help "Print the license of this program. Format is: an SPDX License Identifier."
+        ])
+
+  let mCommand = [ mVersion, mLicense ] & (catMaybes > listToMaybe)
+
+  return mCommand
 
 --------------------------------------------------
 

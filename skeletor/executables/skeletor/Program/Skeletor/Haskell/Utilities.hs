@@ -21,8 +21,11 @@ import Program.Skeletor.Haskell.Prelude
 -- Imports (External) ----------------------------
 --------------------------------------------------
 
+import qualified "optparse-applicative" Options.Applicative      as P
+
+--------------------------------------------------
+
 import qualified "generic-lens" Data.Generics.Product as G
---import qualified "generic-lens" Data.Generics.Sum     as G
 
 --------------------------------------------------
 
@@ -92,12 +95,12 @@ knownLocations = mconcat
 
 --------------------------------------------------
 
+printParserHelpText :: P.ParserPrefs -> P.ParserInfo a -> IO a
+printParserHelpText preferences information = handle failure
+  where
 
-
---------------------------------------------------
---------------------------------------------------
-
-
+  handle  = (P.handleParseResult . P.Failure)
+  failure = (P.parserFailure preferences information P.ShowHelpText mempty)
 
 --------------------------------------------------
 -- Parsers / Printers ----------------------------

@@ -67,7 +67,7 @@ type URL = String               -- TODO
 
 -}
 
-type Result = (GlobalOptions, Maybe Command)
+type Result = (GlobalOptions, Command)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -286,7 +286,7 @@ data ProjectDownloaded = ProjectDownloaded
 
 data ResolveConfigurationOptions = ResolveConfigurationOptions
 
-  {
+  { globals     :: GlobalOptions
   }
 
   deriving stock    (Show,Eq,Ord)
