@@ -61,6 +61,12 @@ import Skeletor.Haskell
 --import qualified "attoparsec" Data.Attoparsec.Text as A
 
 --------------------------------------------------
+--------------------------------------------------
+
+import qualified "optparse-applicative" Options.Applicative      as P
+import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fullDesc)
+
+--------------------------------------------------
 -- Imports (Standard Library) --------------------
 --------------------------------------------------
 
@@ -70,11 +76,6 @@ import Skeletor.Haskell
 -- NOTE « attoparsec » uses strict « Text ».
 
 --------------------------------------------------
---------------------------------------------------
-
-import qualified "optparse-applicative" Options.Applicative      as P
-import qualified "optparse-applicative" Options.Applicative.Help as P hiding (fullDesc)
-
 --------------------------------------------------
 
 --import           "base" Data.Semigroup
@@ -90,7 +91,11 @@ import Program.Skeletor.Haskell.Prelude
 --------------------------------------------------
 
 getCommand :: IO Command
-getCommand = P.customExecParser preferences piCommand
+getCommand = do
+
+  (options, mCommand) <- getResult
+
+  return mCommand
 
 --------------------------------------------------
 
@@ -99,7 +104,34 @@ parseCommand
 
   = P.execParserPure preferences piCommand
   > fromParserResult
+  > ( either throwM return >=> _)
+
+--------------------------------------------------
+
+getResult :: IO Result
+getResult = P.customExecParser preferences piCommand
+
+--------------------------------------------------
+
+parseResult :: (MonadThrow m) => [String] -> m Result
+parseResult
+
+  = P.execParserPure preferences piCommand
+  > fromParserResult
   > either throwM return
+
+
+--------------------------------------------------
+
+exitWithHelpTextForCommand :: IO a
+exitWithHelpTextForCommand = do
+
+  printHelpTextForCommand
+
+--------------------------------------------------
+
+printHelpTextForCommand :: IO a
+printHelpTextForCommand = printParserHelpText preferences piCommand
 
 --------------------------------------------------
 
@@ -194,8 +226,43 @@ piResolveConfigurationOptions = info description do
 -- « Parser »s -----------------------------------
 --------------------------------------------------
 
-pCommand :: P.Parser Command
-pCommand = P.hsubparser ps
+{-| The (top-level) program invocation; @main@ parses this.
+
+If no subcommand can be parsed, real ('pSubCommand')
+or fake ('pPseudoSubCommand'), the parser fails; and
+@main@ throws an exception, exiting with exit code @2@.
+
+-}
+
+pResult :: P.Parser Result
+pResult = do
+
+  options <- pO
+
+  mCommand <- pC
+
+  mCommand & maybe pE (go options)
+
+  where
+
+  pO :: P.Parser GlobalOptions
+  pO = pGlobalOptions
+
+  pC :: P.Parser (Maybe Command)
+  pC = asum
+
+    [ Just <$> pPseudoSubCommand
+    ,          pSubCommand
+    ]
+
+--------------------------------------------------
+
+{-| The program's (primary) subcommands.
+
+-}
+
+pSubCommand :: P.Parser Command
+pSubCommand = P.hsubparser ps
   where
 
   ps = mconcat
@@ -204,6 +271,41 @@ pCommand = P.hsubparser ps
     , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
     , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
     ]
+
+--------------------------------------------------
+
+{-| Options that “standalone”.
+
+For idiomatically printing information about:
+
+* the version
+* the license
+
+Semantically, they behaves like subcommands.
+Syntactically, they're (double-dash) options.
+
+-}
+
+pPseudoSubCommand :: P.Parser (Maybe Command)
+pPseudoSubCommand = do
+
+  mVersion <- (P.flag Nothing (Just CommandPrintVersion)) (mconcat
+
+        [ P.long    "version"
+        , P.style  P.bold
+        , P.help "Print the version of this program. Format is: dot-separated numberics."
+        ])
+
+  mLicense <- (P.flag Nothing (Just CommandPrintLicense)) (mconcat
+
+        [ P.long    "license"
+        , P.style  P.bold
+        , P.help "Print the license of this program. Format is: an SPDX License Identifier."
+        ])
+
+  let mCommand = [ mVersion, mLicense ] & (catMaybes > listToMaybe)
+
+  return mCommand
 
 --------------------------------------------------
 
@@ -250,7 +352,10 @@ pLocation = P.option rLocation (mconcat
         [ P.long    "location"
         , P.short   'l'
         , P.metavar "LOCATION"
+
         , P.completeWith printedKnownLocations
+        , P.action       "directory"
+
         , embolden
         , P.help    ""
         ])
@@ -266,10 +371,28 @@ pProject = P.option rProject (mconcat
 
         [ P.long    "project-name"
         , P.metavar "n"
+
         , P.completeWith builtinProjectNames
+        , P.action       "directory"
+-- TODO , P.completer (P.mkCompleter ... defaultTarballFileExtensions)
+
         , embolden
         , P.help    "NAME of, or LOCATION of, a project." -- TODO -- 
         ])
+
+-- TODO make sure symlinks to directories work.
+
+-- P.completer (P.mkCompleter (completeFilesWithExtension tarballExtensions))
+
+-- tar
+-- zip
+-- json
+
+-- completeFilesWithExtension :: [String] -> (String -> IO [String])
+-- completeFilesWithExtension extensions prefix = do
+
+-- Directory.
+-- File.
 
 --------------------------------------------------
 
@@ -282,7 +405,10 @@ pDestination = P.option rDestination (mconcat
 
         [ P.long    "destination"
         , P.metavar "-d"
+
         , P.completeWith knownDestinations
+        , P.action       "directory"
+
         , embolden
         , P.help    "Destination in which to save the proejct being downloaded or being created."
         ])
@@ -301,7 +427,9 @@ pFetchBy :: P.Parser FetchBy
 pFetchBy = defaulting defaultFetchBy (P.option rFetchBy (mconcat
 
         [ P.long    "fetch-method"
+
         , P.completeWith printedFetchBy
+
         , embolden
         , P.help    "How to download resources (in particular, projects)."
         ]))
@@ -317,7 +445,9 @@ pLicense = defaulting defaultLicense (P.option rLicense (mconcat
 
         [ P.long    "license"
         , P.metavar "SPDX_LICENSE"
+
         , P.completeWith knownLicenseIds
+
         , embolden
         , P.help    "The project's license (an SPDX license identifier). Examples include: « GPL-3.0-or-later », « GPL-3.0-only », « BSD-3-Clause », « CC-BY-SA-4.0 », « MIT ». Press <tab> (twice) to autocomplete all (~350) licenses."
         ]))
@@ -333,7 +463,9 @@ pOSILicense = defaulting defaultLicense (P.option rOSILicense (mconcat
 
         [ P.long    "license-osi"
         , P.metavar "SPDX_LICENSE"
+
         , P.completeWith knownOSILicenseIds
+
         , embolden
         , P.help    "Like « --license _», but only for Open Source Initiative licenses."
         , embolden
@@ -350,7 +482,9 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
 
         [ P.long    "license-libre"  --[OLD] "license-floss"
         , P.metavar "SPDX_LICENSE"
+
         , P.completeWith knownFLOSSLicenseIds
+
         , embolden
         , P.help    "Like « --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
         ]))
@@ -492,6 +626,30 @@ options = do
 -- Utilities -------------------------------------
 --------------------------------------------------
 
+-- toCommand :: Result -> Command
+-- toCommand (options, Just command) =
+
+--------------------------------------------------
+
+addOptionsToCommand :: GlobalOptions -> Command -> Command
+addOptionsToCommand globalOptions = \case
+
+  CommandCreateProject localOptions ->
+
+    CommandCreateProject (globalOptions `addGlobalOptionsTo` localOptions)
+
+  CommandDownloadProject localOptions ->
+
+    CommandDownloadProject (globalOptions `addGlobalOptionsTo` localOptions)
+
+  CommandResolveConfiguration localOptions ->
+
+    CommandResolveConfiguration (globalOptions `addGlobalOptionsTo` localOptions)
+
+  command -> command
+
+--------------------------------------------------
+
 {-|
 
 
@@ -524,6 +682,15 @@ fromParserResult = \case
 
 toCommandFailure :: (String, ExitCode) -> CommandFailure
 toCommandFailure (stderr, exitcode) = CommandFailure{..}
+
+--------------------------------------------------
+
+printParserHelpText :: P.ParserPrefs -> P.ParserInfo a -> IO a
+printParserHelpText preferences information = handle failure
+  where
+
+  handle  = (P.handleParseResult . P.Failure)
+  failure = (P.parserFailure preferences information P.ShowHelpText mempty)
 
 --------------------------------------------------
 

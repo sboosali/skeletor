@@ -597,11 +597,9 @@ library
 
  -----------------------------
 
- if flag(develop)
-    exposed-modules: Paths_xxx_package_xxx
- else
-  --other-modules: Paths_xxx_package_xxx
-    exposed-modules: Paths_xxx_package_xxx
+ exposed-modules: Paths_xxx_package_xxx
+
+ if !flag(develop)
     autogen-modules: Paths_xxx_package_xxx
 
  -----------------------------
@@ -616,11 +614,11 @@ library
   -- My Libraries ----
   --------------------
 
-               spiros
-   ---          , enumerate
+               spiros       ^>= 0.4
+   --        , enumerate
 
   --------------------
-  -- Standard-Library
+  -- Standard Library
   --------------------
 
              , text             
@@ -630,7 +628,7 @@ library
              , containers
 
   --------------------
-  -- "Extended" StdLib
+  -- "Extended" Library
   --------------------
 
              , deepseq
@@ -677,7 +675,7 @@ library
              , charset
 
   --------------------
-  -- (etc) -----------
+  -- (Miscellaneous) -
   --------------------
 
              -- , pkg
@@ -826,25 +824,32 @@ executable xxx-program-xxx
 
   hs-source-dirs: executables/program
 
-  main-is:       Program.Xxx_Module_xxX.Main
+  main-is: Main.hs
+--main-is: Program.Xxx_Module_xxX.Main
 
-  other-modules: Program.Xxx_Module_xxX.Types
+  other-modules: Program.Xxx_Module_xxX.IO
+                 Program.Xxx_Module_xxX.CLI
+
+                 Program.Xxx_Module_xxX.Types
                  Program.Xxx_Module_xxX.Constants
-
-                 -- Program.Xxx_Module_xxX.IO
-                 -- Program.Xxx_Module_xxX.CLI
-                 -- Program.Xxx_Module_xxX.Prelude
-
-                 Program.Xxx_Module_xxX.Core
-                 Program.Xxx_Module_xxX.Options
                  Program.Xxx_Module_xxX.Paths
 
                  Program.Xxx_Module_xxX.Prelude
 
+                 Program.Xxx_Module_xxX.Core
+                 Program.Xxx_Module_xxX.Options
+                 Program.Xxx_Module_xxX.Paths
+                 Program.Xxx_Module_xxX.Main
+
   ----------------------------
 
   build-depends: xxx-package-xxx
-               , optparse-applicative
+               , spiros               >= 0.3.3
+
+               , optparse-applicative ^>= 0.14
+
+               , filepath
+               , directory
 
 --TODO--
 -- 

@@ -1,3 +1,7 @@
+{-# LANGUAGE DataKinds       #-}
+{-# LANGUAGE ConstraintKinds #-}
+
+{-# LANGUAGE TypeApplications      #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
 --------------------------------------------------
@@ -19,7 +23,7 @@ module Program.Skeletor.Haskell.Types
 
 import Skeletor.Haskell
 import Skeletor.Haskell.Types
-import Skeletor.Haskell.Project
+--import Skeletor.Haskell.Project
 
 --------------------------------------------------
 -- Imports ---------------------------------------
@@ -39,7 +43,7 @@ import           "case-insensitive" Data.CaseInsensitive  ( CI )
 --------------------------------------------------
 
 import qualified "generic-lens" Data.Generics.Product as G
-import qualified "generic-lens" Data.Generics.Sum     as G
+--import qualified "generic-lens" Data.Generics.Sum     as G
 
 --------------------------------------------------
 
@@ -55,6 +59,27 @@ import           "base" System.Exit
 --------------------------------------------------
 
 type URL = String               -- TODO
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| Options and subcommand.
+
+-}
+
+type Result = (GlobalOptions, Maybe Command)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| @ConstraintKind@ for a @{ 'globals' :: 'GlobalOptions' } field.
+
+-}
+
+type HasField_GlobalOptions s =
+  ( G.HasField' "globals" s GlobalOptions
+  , Generic s
+  )
 
 --------------------------------------------------
 --------------------------------------------------
@@ -82,9 +107,9 @@ data GlobalOptions = GlobalOptions
 
 data Command
 
-  = CommandCreateProject        CreateProjectArguments CreateProjectOptions
-  | CommandDownloadProject                             DownloadProjectOptions
-  | CommandResolveConfiguration                        ResolveConfigurationOptions
+  = CommandCreateProject        CreateProjectOptions
+  | CommandDownloadProject      DownloadProjectOptions
+  | CommandResolveConfiguration ResolveConfigurationOptions
 
   | CommandPrintVersion
   | CommandPrintLicense
@@ -152,26 +177,11 @@ defaultOptions = Options{..}
 
 -}
 
-data CreateProjectArguments = CreateProjectArguments
-
-  { location    :: Location
-  , destination :: FilePath
-  }
-
-  deriving stock    (Show,Eq,Ord)
-  deriving stock    (Generic)
-  deriving anyclass (NFData)
-
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
 data CreateProjectOptions = CreateProjectOptions
 
   { globals     :: GlobalOptions
+  , location    :: Location
+  , destination :: FilePath
   , license     :: License
   }
 
@@ -270,11 +280,34 @@ data ProjectDownloaded = ProjectDownloaded
 --------------------------------------------------
 --------------------------------------------------
 
-{-|
+{-| 
 
 -}
 
-type ResolveConfigurationOptions = ()
+data ResolveConfigurationOptions = ResolveConfigurationOptions
+
+  {
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+data ConfigurationResolved = ConfigurationResolved
+
+  { status :: Status
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -504,4 +537,40 @@ defaultCommandFailure = CommandFailure{..}
   stderr   = ""
 
 --------------------------------------------------
+-- Accessors -------------------------------------
+--------------------------------------------------
+
+addGlobalOptionsTo :: (HasField_GlobalOptions s) => GlobalOptions -> s -> s
+addGlobalOptionsTo globals1 options = setGlobalOptions globals options
+  where
+
+  globals = globals1 `mergeGlobalOptions` globals2
+
+  globals2 = getGlobalOptions options
+
+--------------------------------------------------
+
+getGlobalOptions :: (HasField_GlobalOptions s) => s -> GlobalOptions
+getGlobalOptions = G.getField @"globals"
+
+--------------------------------------------------
+
+setGlobalOptions :: (HasField_GlobalOptions s) => GlobalOptions -> s -> s
+setGlobalOptions = G.setField @"globals"
+
+-------------------------------------------------- 
+
+mergeGlobalOptions :: GlobalOptions -> GlobalOptions -> GlobalOptions
+mergeGlobalOptions GlobalOptions{ verbosity = verbosity1, dryrun = dryrun1 } GlobalOptions{ verbosity = verbosity2, dryrun = dryrun2 }
+
+  = GlobalOptions{ verbosity, dryrun }
+
+  where
+
+  verbosity = min verbosity1 verbosity2 -- prefer « Concise »
+
+  dryrun    = min dryrun1 dryrun2       -- prefer « DryRun »
+
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------
