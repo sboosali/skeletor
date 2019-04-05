@@ -9,43 +9,13 @@
 
 -}
 
-module MyApplication.Paths
+module Program.Xxx_Module_xxX.Paths
 
   ( -- * Application Metadata
 
-    subdirectory_MyApplication
-  , name_MyApplication
-  , version_MyApplication
-
-  -- * Application-Specific Directories
-
-  {- |
-
-The @getMyApplication{Config,Data,Cache}Directory@ operations
-return this application's (platform-specific, user-writeable) directory
-for @{configuration files, data files, caching}@.
-
-The @getMyApplication{Config,Data,Cache}Directory@ operations may throw these exceptions (all 'System.IO.IOError's):
-
-* @System.IO.HardwareFault@
-A physical I\/O error has occurred.
-@[EIO]@
-
-* 'System.IO.isDoesNotExistError'
-There is no path referring to the working directory.
-@[EPERM, ENOENT, ESTALE...]@
-
-* 'System.IO.isPermissionError'
-The process has insufficient privileges to perform the operation.
-@[EACCES]@
-
-* 'System.IO.isFullError'
-Insufficient resources are available to perform the operation.
-
-* @UnsupportedOperation@
-The operating system has no notion of current working directory.
-
-  -}
+    subdirectory_Xxx_Program_xxX
+  , name_Xxx_Program_xxX
+  , version_Xxx_Program_xxX
 
   , getMyApplicationDataDirectory
   , getMyApplicationConfigDirectory
@@ -57,7 +27,17 @@ The operating system has no notion of current working directory.
 -- Imports ---------------------------------------
 --------------------------------------------------
 
+import Program.Xxx_Module_xxX.Prelude
+
+--------------------------------------------------
+
+import "spiros" Prelude.Spiros.Application
+
+--------------------------------------------------
+
 import qualified "filepath"  System.FilePath  as File
+
+--------------------------------------------------
 
 import qualified "directory" System.Directory as Directory
 
@@ -69,27 +49,30 @@ import           "base" Data.Version (Version)
 import qualified "base" System.Info  as IO
 
 --------------------------------------------------
-
-import qualified "base" Prelude
-import           "base" Prelude
-
---------------------------------------------------
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-name_MyApplication :: ApplicationName
-name_MyApplication = "My Application"
+application :: ApplicationInformation
+application = ApplicationInformation{..}
+  where
+
+  name                  = "xxx_program_xxx_name"
+  version               = "xxx_program_xxx_version"
+  license               = "xxx_program_xxx_license"
+  vendor                = ""
+
+  executable            = "xxx_program_xxx_executableName"
+  interface             = ApplicationCLI
+  platforms             = [ DesktopLinux, DesktopWindows, DesktopMacintosh ]
+
+  posixSubDirectory     = "" -- "myapplication/"
+  windowsSubDirectory   = "" -- "sboosali/My Application/"
+  macintoshSubDirectory = "" -- "io.sboosali.My-Application/"
 
 --------------------------------------------------
 
-version_MyApplication :: Version
-version_MyApplication = "0.0.0"
-
---------------------------------------------------
---------------------------------------------------
-
-subdirectory_MyApplication :: IO FilePath
-subdirectory_MyApplication = do
+subdirectory_Xxx_Program_xxX :: IO FilePath
+subdirectory_Xxx_Program_xxX = do
 
   platform <- getRuntimeApplicationPlatform
 
@@ -128,7 +111,7 @@ getMyApplicationCacheDirectory = getMyApplicationDirectoryFor Directory.XdgCache
 getMyApplicationDirectoryFor :: Directory.XdgDirectory -> FilePath -> IO FilePath
 getMyApplicationDirectoryFor xdg path = do
 
-  subdirectory <- subdirectory_MyApplication
+  subdirectory <- subdirectory_Xxx_Program_xxX
 
   let relativePath = subdirectory File.</> path
 
@@ -163,7 +146,7 @@ See <https://stackoverflow.com/questions/43853548/xdg-basedir-directories-for-wi
 
 -}
 
-subdirectoryOfMyApplicationFor :: Platform -> FilePath
+subdirectoryOfMyApplicationFor :: ApplicationPlatform -> FilePath
 subdirectoryOfMyApplicationFor = \case
 
   PosixPlatform     -> thePosixApplicationDirectory

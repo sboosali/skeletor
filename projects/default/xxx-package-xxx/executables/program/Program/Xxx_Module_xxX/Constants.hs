@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 --------------------------------------------------
 --------------------------------------------------
 
@@ -11,18 +13,27 @@
 
 module Program.Xxx_Module_xxX.Constants
 
-  ( programName
-  , programVersion
- --, programVersionPatch
-  , programLicenseIdentifier
-  , programLicenseContents
+  (
+
+    xxx_program_xxx_name
+  , xxx_program_xxx_version
+  , xxx_program_xxx_executableName
+  , xxx_program_xxx_license
+  , xxx_program_xxx_licenseText
+
   ) where
+
+--------------------------------------------------
+-- Includes --------------------------------------
+--------------------------------------------------
+
+#include "cabal_macros.h"
 
 --------------------------------------------------
 -- Imports ---------------------------------------
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Prelude
+import Program.Xxx_Module_xxX.Prelude
 
 --------------------------------------------------
 
@@ -33,43 +44,42 @@ import           "base" Data.Version (Version (..))
 -- Constants -------------------------------------
 --------------------------------------------------
 
--- | The name of this program (as invoked in a terminal).
+-- | The english name of this program.
 
-programName :: String
-programName = "xxx-program-xxx"
+xxx_program_xxx_name :: String
+xxx_program_xxx_name = "__PROGRAM__"
 
 --------------------------------------------------
 
 -- | The current version of this program.
 
-programVersion :: Version
-programVersion = Version.makeVersion (majorVersion ++ minorVersion)
-
-  where
-
-  majorVersion = [0,1]
-  minorVersion = [0]
+xxx_program_xxx_version :: String
+#ifdef CURRENT_PACKAGE_VERSION
+xxx_program_xxx_version = CURRENT_PACKAGE_VERSION
+#else
+xxx_program_xxx_version = "0.0.0"
+#endif
 
 --------------------------------------------------
 
--- | The current build of this program (a Git commit).
+-- | The executable @basename@ of this program (as invoked in a terminal).
 
-programVersionPatch :: String
-programVersionPatch = "" --TODO-- inject current git commit via preprocesser.
+xxx_program_xxx_executableName :: String
+xxx_program_xxx_executableName = "xxx-program-xxx"
 
 --------------------------------------------------
 
 -- | The SPDX License Identifier of this program.
 
-programLicenseIdentifier :: String
-programLicenseIdentifier = "__LICENSE__"
+xxx_program_xxx_license :: String
+xxx_program_xxx_license = "__LICENSE__"
 
 --------------------------------------------------
 
--- | The license of this program (for the user to read).
+-- | The license text of this program (for the user to read).
 
-programLicenseContents :: String
-programLicenseContents = "" -- TODO
+xxx_program_xxx_licenseText :: String
+xxx_program_xxx_licenseText = "" -- TODO
 
 --------------------------------------------------
 -- EOF -------------------------------------------
