@@ -43,6 +43,7 @@ result
 .projectile
 TAGS
 tags
+*_flymake.*
 
 # OS X
 .DS_Store

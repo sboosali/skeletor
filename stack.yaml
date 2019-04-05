@@ -3,9 +3,6 @@
 resolver: lts-13.13
           # ^ (ghc-8.6.4)
 
-# resolver: lts-13.7
-#           # ^ (ghc-8.6.3)
-
 #------------------------------------------------#
 
 packages:
@@ -16,12 +13,12 @@ packages:
 
 extra-deps:
 
-- ../spiros/spiros/
+- git:     https://github.com/sboosali/spiros.git
+  commit:  0158ed5109c8b90c21347180aa84a891276ec007
+  subdirs:
+    - spiros
 
-#e.g.
-# - git: git@github.com:yesodweb/wai
-#   commit: 2f8a8e1b771829f4a8a77c0111352ce45a14c30f
-#   subdirs:
+# - ../spiros/spiros/
 
 ##################################################
 

@@ -35,19 +35,36 @@ these are directories. in nixpkgs (`stdenv.mkDerivation`), by default:
 
 ## Example Invocation
 
+Core fields:
+
 - `xxx-package-xxx`            — `dictation-natlink`
 - `Xxx_Module_xxX`             — `Dictation.Natlink`
 - `__Project__`                — `dictation`
-- `__Name__`                   — `$ echo $USER`
-- `__Year__`                   — `$ date '+%Y'`
+- `__Name__`                   — Spiros Boosalis
 - `__Synopsis__`               — `Bindings for Dragon NaturallySpeaking's Natlink API`
 - `__Categories__`             — `Dictation`
 - `xxx-program-xxx`            — `natlink-parse`
-- `xxx_package_xxx`            — `dictation_natlink`
+- `__HackageName__`            — `$ echo $USER`
+
+Extra fields:
+
 - `Xxx_ModuleAbbreviation_xxX` — `D`
-- `__GithubUser__`             — `sboosali`
+- `__GithubUser__`             — `sboosali`            (not `__HackageName__`, my Hackage Username)
 - `__GithubRepository__`       — `dictation`
-- `__ProjectDirectory__`       — `~/haskell/dictation`
+- `__ProjectDirectory__`       — `~/haskell/dictation` (where I put all the haskell projects I develop, on Linux)
+- `__LegalName__`              — Sam Boosalis          (differs from `__Name__`, my chosen name)
+
+Derived fields:
+
+- `xxx_package_xxx`            — `dictation_natlink`   (derived from `xxx-package-xxx`)
+- `xxx_program_xxx`            — `natlink_parse`       (derived from `xxx-program-xxx`)
+- `__TravisUser__`             — `sboosali`            (derived from `__GithubUser__`)
+- `__CircleCIUser__`           — `sboosali`            (derived from `__GithubUser__`)
+
+Auto fields:
+
+- `__Year__`                   — `$ date '+%Y'`
+
 
 or in a config file:
 

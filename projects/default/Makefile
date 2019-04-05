@@ -870,6 +870,16 @@ static:
 
 .PHONY: static
 
+# TODO: test the program: ① whether static and ② how large.
+#
+# $ ldd ./bin/cabal
+# 	not a dynamic executable
+#
+# $ du -h ./bin/cabal
+# 18M	./bin/cabal
+#
+#
+
 #------------------------------------------------#
 
 ##################################################

@@ -10,6 +10,249 @@
 
 
 
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+
+
+
+-}
+
+module Program.Xxx_Module_xxX.Paths
+
+  ( -- * Application Metadata
+
+    subdirectory_Xxx_Program_xxX
+  , name_Xxx_Program_xxX
+  , version_Xxx_Program_xxX
+
+  -- * Application-Specific Directories
+
+  {- |
+
+The @getMyApplication{Config,Data,Cache}Directory@ operations
+return this application's (platform-specific, user-writeable) directory
+for @{configuration files, data files, caching}@.
+
+The @getMyApplication{Config,Data,Cache}Directory@ operations may throw these exceptions (all 'System.IO.IOError's):
+
+* @System.IO.HardwareFault@
+A physical I\/O error has occurred.
+@[EIO]@
+
+* 'System.IO.isDoesNotExistError'
+There is no path referring to the working directory.
+@[EPERM, ENOENT, ESTALE...]@
+
+* 'System.IO.isPermissionError'
+The process has insufficient privileges to perform the operation.
+@[EACCES]@
+
+* 'System.IO.isFullError'
+Insufficient resources are available to perform the operation.
+
+* @UnsupportedOperation@
+The operating system has no notion of current working directory.
+
+  -}
+
+  , getMyApplicationDataDirectory
+  , getMyApplicationConfigDirectory
+  , getMyApplicationCacheDirectory
+
+  ) where
+
+--------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
+
+import Program.Xxx_Module_xxX.Prelude
+
+--------------------------------------------------
+
+import qualified "filepath"  System.FilePath  as File
+
+--------------------------------------------------
+
+import qualified "directory" System.Directory as Directory
+
+--------------------------------------------------
+
+import qualified "base" Data.Version as Version
+import           "base" Data.Version (Version)
+
+import qualified "base" System.Info  as IO
+
+--------------------------------------------------
+-- Definitions -----------------------------------
+--------------------------------------------------
+
+name_Xxx_Program_xxX :: ApplicationName
+name_Xxx_Program_xxX = "My Application"
+
+--------------------------------------------------
+
+version_Xxx_Program_xxX :: Version
+version_Xxx_Program_xxX = "0.0.0"
+
+--------------------------------------------------
+--------------------------------------------------
+
+subdirectory_Xxx_Program_xxX :: IO FilePath
+subdirectory_Xxx_Program_xxX = do
+
+  platform <- getRuntimeApplicationPlatform
+
+  let directory = subdirectoryOfMyApplicationFor platform
+
+  return directory
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- | Return this application's (platform-specific, user-writeable) configuration directory.
+
+getMyApplicationDataDirectory :: FilePath -> IO FilePath
+getMyApplicationDataDirectory = getMyApplicationDirectoryFor Directory.XdgData
+
+--------------------------------------------------
+
+-- | Return this application's (platform-specific, user-writeable) data directory.
+
+getMyApplicationConfigDirectory :: FilePath -> IO FilePath
+getMyApplicationConfigDirectory = getMyApplicationDirectoryFor Directory.XdgConfig
+
+--------------------------------------------------
+
+-- | Return this application's (platform-specific, user-writeable) cache.
+
+getMyApplicationCacheDirectory :: FilePath -> IO FilePath
+getMyApplicationCacheDirectory = getMyApplicationDirectoryFor Directory.XdgCache
+
+--------------------------------------------------
+-- Utilities -------------------------------------
+--------------------------------------------------
+
+-- | 
+
+getMyApplicationDirectoryFor :: Directory.XdgDirectory -> FilePath -> IO FilePath
+getMyApplicationDirectoryFor xdg path = do
+
+  subdirectory <- subdirectory_Xxx_Program_xxX
+
+  let relativePath = subdirectory File.</> path
+
+  xdgPath <- Directory.getXdgDirectory xdg relativePath
+
+  absolutePath <- Directory.makeAbsolute xdgPath
+
+  return absolutePath
+
+--createDirectoryIfMissing
+
+--------------------------------------------------
+--------------------------------------------------
+
+type ApplicationName = String
+
+--------------------------------------------------
+
+{- | Return this application's (platform-specific, user-writeable) subdirectory (a.k.a. namespace), given:
+
+* the application name        — @"Foo App"@
+* the application institution — @"Mondragon"@
+* the application website     — @"Mondragon.com"@
+
+For example, given an application named @Foo App@ by company @Mondragon@ with web address @Mondragon.co.uk@:
+
+* @"fooapp/"@                on Linux   — i.e. lower-cased, no spaces
+* @"MegaCrop\Foo App\"@      on Windows — i.e. two folders, @Mondragon.com@ and @Foo App\@.
+* @"com.Mondragon.Foo-App/"@ on MacOS   — i.e. invalid characters are replaced with @-@.
+
+See <https://stackoverflow.com/questions/43853548/xdg-basedir-directories-for-windows>.
+
+-}
+
+subdirectoryOfMyApplicationFor :: ApplicationPlatform -> FilePath
+subdirectoryOfMyApplicationFor = \case
+
+  PosixPlatform     -> thePosixApplicationDirectory
+  WindowsPlatform   -> theWindowsApplicationDirectory
+  MacintoshPlatform -> theMacintoshApplicationDirectory
+
+  where
+
+  thePosixApplicationDirectory     = "myapplication/"
+
+  theWindowsApplicationDirectory   = "sboosali/My Application/"
+
+  theMacintoshApplicationDirectory = "io.sboosali.My-Application/"
+
+--------------------------------------------------
+--------------------------------------------------
+
+data ApplicationPlatform
+
+  = PosixPlatform
+  | WindowsPlatform
+  | MacintoshPlatform
+
+--------------------------------------------------
+
+getRuntimeApplicationPlatform :: IO (Maybe ApplicationPlatform)
+getRuntimeApplicationPlatform = do
+
+  return IO.os >>= \case
+
+    "linux"   -> Just PosixPlatform
+
+    "mingw32" -> Just WindowsPlatform
+    "mingw64" -> Just WindowsPlatform
+
+    "darwin"  -> Just MacintoshPlatform
+
+    _         -> Nothing
+
+--------------------------------------------------
+-- EOF -------------------------------------------
+--------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1113,73 +1356,581 @@ etags:
 
 --------------------------------------------------
 
+[![License BSD3](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](http://opensource.org/licenses/BSD-3-Clause)
+[![Hackage](https://img.shields.io/hackage/v/modern-uri.svg?style=flat)](https://hackage.haskell.org/package/modern-uri)
+[![Stackage Nightly](http://stackage.org/package/modern-uri/badge/nightly)](http://stackage.org/nightly/package/modern-uri)
+[![Stackage LTS](http://stackage.org/package/modern-uri/badge/lts)](http://stackage.org/lts/package/modern-uri)
+[![Build Status](https://travis-ci.org/mrkkrp/modern-uri.svg?branch=master)](https://travis-ci.org/mrkkrp/modern-uri)
+
+--------------------------------------------------
+
+extra-deps:
+
+- git:     git@github.com:sboosali/spiros.git
+  commit:  0158ed5109c8b90c21347180aa84a891276ec007
+  subdirs: spiros
+
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+data CreateProjectArguments = CreateProjectArguments
+
+  { location    :: Location
+  , destination :: FilePath
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
+
+--------------------------------------------------
+
+
+{- Return the application's (platform-specific) **configuration directory**.
+
+Output:
+
+* is an absolute path
+* should be a user-writeable directory.
+
+Conforms to the @XDG BaseDir@s specification.
+
+Environment Variables:
+
+* @$XDG_CONFIG_DIR@ — on POSIX.
+* @%LOCALAPPDATA%@  — on Windows.
+
+Notes:
+
+> 
+
+-}
+
+getApplicationSpecificConfigurationDirectory :: FilePath -> IO FilePath
+getApplicationSpecificConfigurationDirectory = getApplicationSpecificXdgDirectory Directory.XdgConfig
+
+--------------------------------------------------
+
+{- Return the application's (platform-specific) **data directory**.
+
+Output:
+
+* is an absolute path
+* should be a user-writeable directory.
+
+Conforms to the @XDG BaseDir@s specification.
+
+Environment Variables:
+
+* @$XDG_DATA_DIR@  — on POSIX.
+* @%LOCALAPPDATA%@ — on Windows.
+
+Notes:
+
+> 
+
+-}
+
+getApplicationSpecificDataDirectory :: FilePath -> IO FilePath
+getApplicationSpecificDataDirectory = getApplicationSpecificXdgDirectory Directory.XdgData
+
+--------------------------------------------------
+
+{- Return the application's (platform-specific) **cache directory**.
+
+Output:
+
+* is an absolute path
+* should be a user-writeable directory.
+
+Conforms to the @XDG BaseDir@s specification.
+
+Environment Variables:
+
+* @$XDG_CACHE_DIR@ — on POSIX.
+* @%TEMP%@         — on Windows.
+
+Notes:
+
+> 
+
+-}
+
+getApplicationSpecificCacheDirectory :: FilePath -> IO FilePath
+getApplicationSpecificCacheDirectory = getApplicationSpecificXdgDirectory Directory.XdgCache
+
+--------------------------------------------------
+
+getXdgDirectory :: XdgDirectory         -- ^ which special directory
+                -> FilePath             -- ^ a relative path that is appended
+                                        --   to the path; if empty, the base
+                                        --   path is returned
+                -> IO FilePath
+getXdgDirectory xdgDir suffix =
+  (`ioeAddLocation` "getXdgDirectory") `modifyIOError` do
+    simplify . (</> suffix) <$> getXdgDirectoryInternal getHomeDirectory xdgDir
+
+
+getHomeDirectoryInternal :: IO FilePath
+getHomeDirectoryInternal = getEnv "HOME"
+
+getXdgDirectoryInternal :: IO FilePath -> XdgDirectory -> IO FilePath
+getXdgDirectoryInternal getHomeDirectory xdgDir = do
+  case xdgDir of
+    XdgData   -> get "XDG_DATA_HOME"   ".local/share"
+    XdgConfig -> get "XDG_CONFIG_HOME" ".config"
+    XdgCache  -> get "XDG_CACHE_HOME"  ".cache"
+  where
+    get name fallback = do
+      env <- lookupEnv name
+      case env of
+        Nothing   -> (</> fallback) <$> getHomeDirectory
+        Just path -> pure path
+
+--------------------------------------------------
+
+  let getDefaultPath = Directory.getHomeDirectory <&> (</> suffix)
+
+--------------------------------------------------
+
+
+getPathFromEnvironmentOrDefault :: IO FilePath -> [String] -> IO FilePath
+getPathFromEnvironmentOrDefault getDefaultPath variables = do
+
+  valueDynamicPath <- go
+
+  case valueDynamicPath of
+
+    Nothing -> do
+      defaultPath <- getDefaultPath
+      pure defaultPath
+
+    Just dynamicPath -> pure dynamicPath
+
+  where
+
+  go = IO.lookupEnv variableDynamicPath
+
+--------------------------------------------------
+
+
+{-| Return the value of the first environment variable that's been set, or a default value if all are unset.
+
+Examples:
+
+@
+> firstEnvironmentVariable "/usr/run" [ "XDG_RUNTIME_HOME", "TMP" ]
+@
+
+Properties:
+
+@
+firstEnvironmentVariable x [] ≈ return x
+@
+
+-}
+
+firstEnvironmentVariable :: String -> [String] -> IO String
+firstEnvironmentVariable x vs =
+
+xDefault = First x
+
+xs = vs
+
+foldr x xs
+
+
+
+foldr xDefault xs
+
+--------------------------------------------------
+
+eval "$(my-program --bash-completion-script $(which my-program))"
+
+source <(cabal new-run my-program -- --bash-completion-script `which my-program`)
+
+--------------------------------------------------
+
+writeApplicationSpecificCacheFile relativePath fileContents = do
+
+  applicationDirectory <- getApplicationSpecificCacheDirectory 
+
+  file      = applicationDirectory </> relativePath
+  directory = Directory. file
+  
+  createDirectoryIfMissing True directory
+  IO.writeFile file fileContents
+
+
+--------------------------------------------------
+
+TODO make sure symlinks to directories work.
+
+P.completer (P.mkCompleter (completeFilesWithExtension tarballExtensions))
+
+tar
+zip
+json
+
+
+completeFilesWithExtension :: [String] -> (String -> IO [String])
+completeFilesWithExtension extensions prefix = do
+
+Directory.
+File.
+
+--------------------------------------------------
+
+{-| Return the value of the first environment variable that's been set, or a default value if all are unset.
+
+Examples:
+
+@
+> firstEnvironmentVariable \"\/usr\/run\" [ \"XDG_RUNTIME_HOME\", \"TMP\" ]
+@
+
+Properties:
+
+@
+firstEnvironmentVariable x [] ≡ return x
+@
+
+-}
+
+firstEnvironmentVariable :: String -> [String] -> IO String
+firstEnvironmentVariable x0 ns = do
+
+  x' <- getFirst <$> foldrM go (First (Just x0)) ns
+
+  E.evaluate (Deep.force x')
+
+  x = x' & maybe x0 id
+
+  return x
+
+  where
+
+  go :: String -> First String -> m (First String)
+  go n y = do
+
+    x <- lookupEnv n
+
+    let z = First x <> y
+
+    return z
+
+--------------------------------------------------
+
+firstNonemptyEnvironmentVariable :: String -> [String] -> IO String
+firstNonemptyEnvironmentVariable x0 ns = do
+
+  x <- getFirst <$> foldrM go (First x0) ns
+
+  E.evaluate (Deep.force x)
+
+  return x
+
+  where
+
+  go :: String -> String -> m String
+  go n x = do
+
+    y <- lookupEnv n
+
+    let z = x <> First y
+
+    return z
+
+--------------------------------------------------
+firstNumericEnvironmentVariable :: (Num n) => n -> [String] -> IO n
+firstNumericEnvironmentVariable n = toNumber $
+
+  firstEnvironmentVariableSatisfying isNumber n
+
+  where
+
+  toNumber = readMaybe > maybe n
+  isNumber = readMaybe > maybe False (const True)
+
+--------------------------------------------------
+
+readTextFileWith :: IO FilePath -> IO (Maybe Text)
+readTextFileWith getFilePath = do
+
+  absolutePath <- getFilePath
+
+  if IO.doesFileExist absolutePath
+
+  then do
+    s <- IO.readFile absolutePath
+    let fileContents = T.pack s
+    return (Just fileContents)
+
+  else do
+    return Nothing
+
+--------------------------------------------------
+
+
+programVersion :: Version
+programVersion = Version.makeVersion (majorVersion ++ minorVersion)
+
+  where
+
+  majorVersion = [0,1]
+  minorVersion = [0]
+
+--------------------------------------------------
+
+-- | The current build of this program (a Git commit).
+
+programVersionPatch :: String
+programVersionPatch = "" --TODO-- inject current git commit via preprocesser.
+
+--------------------------------------------------
+
+-- | The SPDX License Identifier of this program.
+
+programLicenseIdentifier :: String
+programLicenseIdentifier = "__LICENSE__"
+
+--------------------------------------------------
+
+-- | The license of this program (for the user to read).
+
+programLicenseContents :: String
+programLicenseContents = "" -- TODO
 
 
 --------------------------------------------------
 
 
+--------------------------------------------------
+-- Constants -------------------------------------
+--------------------------------------------------
+
+-- | The english name of this program.
+
+name_Xxx_Program_xxX :: String
+name_Xxx_Program_xxX = (application_Xxx_Program_xxX & name)
+
+--------------------------------------------------
+
+-- | The current version of this program.
+
+version_Xxx_Program_xxX :: Version
+version_Xxx_Program_xxX = (application_Xxx_Program_xxX & version)
+
+--------------------------------------------------
+
+-- | The name of this program (as invoked in a terminal).
+
+executable_Xxx_Program_xxX :: String
+executable_Xxx_Program_xxX = (application_Xxx_Program_xxX & executable)
+
+-- = "xxx-program-xxx"
+
+--------------------------------------------------
+-- Definitions -----------------------------------
+--------------------------------------------------
+
+application_Xxx_Program_xxX :: ApplicationInformation
+application_Xxx_Program_xxX = ApplicationInformation{..}
+  where
+
+  name                  = "My Application"
+  version               = "0.0.0"
+  license               = "GPL-3.0-or-later"
+
+  executable            = "my-application"
+  interface             = ApplicationCLI
+  platforms             = [ DesktopPOSIX, DesktopMacintosh ]
+
+  posixSubDirectory     = "myapplication/"
+  windowsSubDirectory   = "sboosali/My Application/"
+  macintoshSubDirectory = "io.sboosali.My-Application/"
+
+
+subdirectory_Xxx_Program_xxX :: IO FilePath
+subdirectory_Xxx_Program_xxX = do
+
+  platform <- getRuntimeApplicationPlatform
+
+  let directory = subdirectoryOfMyApplicationFor platform
+
+  return directory
+
 
 --------------------------------------------------
 
 
---------------------------------------------------
+pCommand :: P.Parser Command
+pCommand = go (P.hsubparser ps <|> os)
+  where
 
+  os = asum
 
+    [ pGlobalOptions
+    , pPseudoSubcommands
+    ]
 
---------------------------------------------------
+  ps = mconcat
 
+    [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
+    , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
+    , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
+    ]
 
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
+  go = _
 
 
 --------------------------------------------------
 
 
+{-| The (top-level) program invocation; @main@ parses this.
+
+If no subcommand can be parsed, real ('pSubCommand')
+or fake ('pPseudoSubcommand'), the parser fails; and
+@main@ throws an exception, exiting with exit code @2@.
+
+-}
+
+pCommand :: P.Parser Command
+pCommand = do
+
+  options <- pO
+
+  mCommand <- pC
+
+  mCommand & maybe pE (go options)
+
+  where
+
+  pO :: P.Parser GlobalOptions
+  pO = pGlobalOptions
+
+  pC :: P.Parser (Maybe Command)
+  pC = asum
+
+    [ Just <$> pPseudoSubcommand
+    ,          pSubCommand
+    ]
+
+  pE :: forall x. P.Parser x
+  pE = P.
+
+  go :: GlobalOptions -> Command -> Command
+  go options command = _
+
 
 --------------------------------------------------
 
 
---------------------------------------------------
+addOptionsToCommand :: GlobalOptions -> Command -> Command
+addOptionsToCommand options command = case command of
 
+  CommandCreateProject CreateProjectOptions{..} ->
 
+    return CreateProjectOptions{..}
 
---------------------------------------------------
+  CommandDownloadProject DownloadProjectOptions{..} ->
 
+    return DownloadProjectOptions{..}
 
+  CommandResolveProject ResolveProjectOptions{..} ->
 
---------------------------------------------------
+    return ResolveProjectOptions{..}
 
-
-
---------------------------------------------------
-
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
+  command -> command  
 
 
 --------------------------------------------------
 
+addOptionsToCommand :: GlobalOptions -> Command -> Command
+addOptionsToCommand options = \case
+
+  CommandCreateProject CreateProjectOptions{..} ->
+
+    return CreateProjectOptions{..}
+
+  CommandDownloadProject DownloadProjectOptions{..} ->
+
+    return DownloadProjectOptions{..}
+
+  CommandResolveProject ResolveProjectOptions{..} ->
+
+    return ResolveProjectOptions{..}
+
+  command -> command
+
+--------------------------------------------------
+
+
+mergeGlobalOptions :: GlobalOptions -> GlobalOptions -> GlobalOptions
+mergeGlobalOptions globals1 globals2 = globals
+  where
+
+  globals = _ globals1 globals2
 
 
 --------------------------------------------------
+
+-- | The current version of this program.
+
+xxx_program_xxx_version :: Version
+xxx_program_xxx_version = "0.0.0"
+
+--------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------
+
+-- source-repository-package
+--       type:     git
+--       location: https://github.com/ghcjs/ghcjs-base
+--       tag:      01014ade3f8f5ae677df192d7c2a208bd795b96c
+
+--------------------------------------------------
+-- LocalFlags (i.e. only for project/vendored packages)
+--------------------------------------------------
+
+documentation:            True
+haddock-hyperlink-source: True
+
+-- haddock-all: True
+-- haddock-internal: true
+
+-- NOTE <<< haddock-all: True >>> implies <<< haddock-executables >>> and <<< haddock-tests >>> and <<< haddock-benchmarks >>>
+
+-- haddock-benchmarks: True
+-- haddock-executables: True
+-- haddock-tests: True
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 --------------------------------------------------

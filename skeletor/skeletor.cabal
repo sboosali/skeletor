@@ -32,7 +32,7 @@ category: Data
 
 license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
-copyright:           2018 Spiros Boosalis
+copyright:           2019 Spiros Boosalis
 
 author:              Spiros Boosalis
 maintainer:          samboosalis@gmail.com
@@ -616,10 +616,10 @@ library
    -- my libraries.
    --------------------
 
-               spiros >= 0.3.1
---TODO rename spiros to sboo.
-               --TODO , spiros-base
-   --          , enumerate
+               spiros
+
+   --          spiros    ^>= 0.4
+   --        , enumerate ^>= 0.3
 
   --------------------
   -- boot-libraries & standard-library packages,
@@ -702,8 +702,8 @@ library
              , cryptohash-sha256
              , base16-bytestring
 
-           -- , raaz
-           -- , cryptonite
+          -- , raaz >= 0.2.1 && < 0.3
+          -- , cryptonite
 
    --------------------
    -- (miscellaneous libraries).

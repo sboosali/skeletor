@@ -1679,7 +1679,58 @@ Common actions include file and directory. See http://www.gnu.org/software/bash/
 
 > Notice that the ArgumentFields type doesn’t have a HasName instance, as it wouldn’t make sense for positional arguments. You can’t use long or short with it. It does have a HasMetavar instance, so you can still use metavar. Conversely, FlagFields doesn’t have a HasMetavar instance.
 
-### 
+### `parserFailure`
+
+`parserFailure`:
+
+```
+parserFailure :: ParserPrefs -> ParserInfo a -> ParseError -> [Context] -> ParserFailure ParserHelp
+```
+
+`handleParseResult`:
+
+```
+handleParseResult :: ParserResult a -> IO a
+```
+
+`data ParserResult`:
+
+```
+Success (x :: a) :: ParserResult a
+
+Failure (ParserFailure ParserHelp) :: ParserResult a
+```
+
+e.g.:
+
+```
+showParserHelpText :: ParserPrefs -> ParserInfo a -> ParserFailure ParserHelp
+showParserHelpText preferences information = (parserFailure preferences information ShowHelpText mempty)
+
+printParserHelpText :: ParserPrefs -> ParserInfo a -> IO ()
+printParserHelpText preferences information = (handleParseResult . Failure) (parserFailure preferences information ShowHelpText mempty)
+```
+
+### ``
+
+### ``
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1787,6 +1838,22 @@ try p = p
 ```haskell
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
