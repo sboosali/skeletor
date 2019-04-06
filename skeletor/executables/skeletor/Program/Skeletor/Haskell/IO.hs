@@ -63,10 +63,12 @@ runCommand = \case
     result <- (downloadProjectWith DownloadProject{..})
     return (toStatus result)
 
-  CommandResolveConfiguration () -> do
+  CommandResolveConfiguration ResolveConfigurationOptions{..} -> do
 
-    nothing
-    return Success
+    let extraConfig = mempty
+
+    result <- (resolveConfigurationWith ResolveConfiguration{ extraConfig })
+    return (toStatus result)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -99,6 +101,23 @@ downloadProjectWith DownloadProject{..} = do
   return ProjectDownloaded
     { status = Success
     , path
+    }
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+resolveConfigurationWith :: (MonadThrow m, MonadIO m) => ResolveConfiguration -> m ConfigurationResolved
+resolveConfigurationWith ResolveConfiguration{..} = do
+
+  let config = extraConfig
+
+  return ConfigurationResolved
+    { status = Success
+    , config = config
     }
 
 --------------------------------------------------

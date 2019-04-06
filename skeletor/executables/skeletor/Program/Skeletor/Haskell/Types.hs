@@ -280,6 +280,25 @@ data ProjectDownloaded = ProjectDownloaded
 --------------------------------------------------
 --------------------------------------------------
 
+{-|  
+
+-}
+
+data Project = Project
+
+  { location       :: Location
+  , bindings       :: Bindings
+  , license        :: SpdxLicenseIdentifier
+  , isSubdirectory :: WhichPackageDirectory
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData)
+
+--------------------------------------------------
+--------------------------------------------------
+
 {-| 
 
 -}
@@ -287,6 +306,21 @@ data ProjectDownloaded = ProjectDownloaded
 data ResolveConfigurationOptions = ResolveConfigurationOptions
 
   { globals     :: GlobalOptions
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+data ResolveConfiguration = ResolveConfiguration
+
+  { extraConfig :: Configuration
   }
 
   deriving stock    (Show,Eq,Ord)
@@ -303,6 +337,7 @@ data ResolveConfigurationOptions = ResolveConfigurationOptions
 data ConfigurationResolved = ConfigurationResolved
 
   { status :: Status
+  , config :: Configuration
   }
 
   deriving stock    (Show,Eq,Ord)
@@ -312,21 +347,44 @@ data ConfigurationResolved = ConfigurationResolved
 --------------------------------------------------
 --------------------------------------------------
 
-{-|  
+{-| 
 
 -}
 
-data Project = Project
+data Configuration = Configuration
 
-  { location       :: Location
-  , bindings       :: Bindings
-  , license        :: SpdxLicenseIdentifier
-  , isSubdirectory :: WhichPackageDirectory
+  { 
   }
 
   deriving stock    (Show,Eq,Ord)
   deriving stock    (Generic)
-  deriving anyclass (NFData)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+instance Semigroup Configuration where
+
+  Configuration{} <> Configuration{} = Configuration{}
+
+--------------------------------------------------
+
+instance Monoid Configuration where
+
+  mempty = Configuration{}
+
+--------------------------------------------------
+
+-- | @= 'defaultConfiguration'@
+
+instance Default Configuration where
+  def = defaultConfiguration
+
+--------------------------------------------------
+
+-- | @= 'Configuration'@
+
+defaultConfiguration :: Configuration
+defaultConfiguration = Configuration{}
 
 --------------------------------------------------
 --------------------------------------------------
