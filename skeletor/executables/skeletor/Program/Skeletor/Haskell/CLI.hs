@@ -110,17 +110,19 @@ parseCommand
 -}
 
 preferences :: P.ParserPrefs
-preferences = P.prefs (mconcat
+preferences = config { P.prefShowHelpOnError = True, P.prefShowHelpOnEmpty = True }
+  where
 
-  [ P.disambiguate
-  , P.showHelpOnError
-  , P.showHelpOnEmpty
-  ])
+  config = P.prefs (mconcat
+
+    [ P.showHelpOnError
+    , P.showHelpOnEmpty
+    ])
 
 --------------------------------------------------
 
-printHelpTextForCommand :: IO Command
-printHelpTextForCommand = printParserHelpText preferences piCommand
+-- printHelpTextForCommand :: IO Command
+-- printHelpTextForCommand = printParserHelpText preferences piCommand
 
 --------------------------------------------------
 -- « ParserInfo »s -------------------------------
@@ -209,72 +211,88 @@ If no subcommand can be parsed, real ('pCommand')
 or fake ('pPseudoSubCommand'), the parser fails; and
 @main@ throws an exception, exiting with exit code @2@.
 
--}
-
-pResult :: P.Parser Command
-pResult = do
-
-  globals <- pGlobalOptions
-
-  command <- pCommand
-
-  return (fromResult (globals, command))
-
---------------------------------------------------
-
-{-| The program's (primary) subcommands.
+Parses the program's (primary) subcommands.
 
 -}
 
 pCommand :: P.Parser Command
-pCommand = pFakeSubCommand <|> pRealSubCommand
-  where
+pCommand = do
 
-  pRealSubCommand = P.hsubparser ps
+  globals <- pGlobalOptions
 
-  ps = mconcat
+  command <- pSubCommand
 
-    [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
-    , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
-    , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
-    ]
-
---------------------------------------------------
-
-{-| Options that “standalone”.
-
-For idiomatically printing information about:
-
-* the version
-* the license
-
-Semantically, they behaves like subcommands.
-Syntactically, they're (double-dash) options.
-
--}
-
-pFakeSubCommand :: P.Parser Command
-pFakeSubCommand = asum
-
-  [ pVersionCommand
-  , pLicenseCommand
-  ]
+  return (fromResult (globals, command))
 
   where
 
-  pVersionCommand = (P.flag' CommandPrintVersion) (mconcat
+  pSubCommand :: P.Parser Command
+  pSubCommand = pFakeSubCommand <|> pRealSubCommand
+    where
 
-        [ P.long    "version"
-        , P.style  P.bold
-        , P.help "Print the version of this program. Format is: dot-separated numberics."
-        ])
+    pRealSubCommand = asum
 
-  pLicenseCommand = (P.flag' CommandPrintLicense) (mconcat
+      [ P.hsubparser ps
+      , P.subparser  qs
+      ]
 
-        [ P.long    "license"
-        , P.style  P.bold
-        , P.help "Print the license of this program. Format is: an SPDX License Identifier."
-        ])
+    ps = mconcat
+
+      [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
+      , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
+      , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
+      ]
+
+    qs = mconcat
+
+      [ pVersionRealCommand
+      , pLicenseRealCommand
+      ]
+
+    pFakeSubCommand :: P.Parser Command
+    pFakeSubCommand = asum
+
+      [ pVersionFakeCommand
+      , pLicenseFakeCommand
+      ]
+
+    pVersionFakeCommand :: P.Parser Command
+    pVersionFakeCommand = (P.flag' (CommandPrintVersion def)) $ mconcat
+
+            [ P.long "version"
+            , P.style P.bold
+            , P.help helpVersion
+            ]
+
+    pLicenseFakeCommand :: P.Parser Command
+    pLicenseFakeCommand = (P.flag' (CommandPrintLicense def)) $ mconcat
+
+            [ P.long "license"
+            , P.style P.bold
+            , P.help helpLicense
+            ]
+
+    pVersionRealCommand :: P.Mod P.CommandFields Command
+    pVersionRealCommand = P.command "version" piVersionCommand
+
+    pLicenseRealCommand :: P.Mod P.CommandFields Command
+    pLicenseRealCommand = P.command "license" piLicenseCommand
+
+    piVersionCommand :: P.ParserInfo Command
+    piVersionCommand = info helpVersion do
+      globals  <- pGlobalOptions
+      return (CommandPrintVersion globals)
+
+    piLicenseCommand :: P.ParserInfo Command
+    piLicenseCommand = info helpLicense do
+      globals  <- pGlobalOptions
+      return (CommandPrintLicense globals)
+
+    helpVersion :: String
+    helpVersion = "Print the version of this program. The format is: dot-separated numerics. For example: « 0.11.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the patch version (i.e. the git commit) and build information (the compiler version, and transitive dependencies' versions)."
+
+    helpLicense :: String
+    helpLicense = "Print the license of this program. The format is: an SPDX License Identifier (alphanumerics, plus hyphens and/or dots). For example: « Apache-2.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the license contents."
 
 --------------------------------------------------
 
@@ -460,66 +478,8 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
 
 --------------------------------------------------
 
-{-|
-
-Options, Arguments, and Flags include:
-
-* @-v@, @--verbose@.
-* @--subdir@, @--no-subdir@.
-* @-f@, @--project-filepath@, @-p@, @--project-name@,
-
--}
-
 options :: P.Parser Options
 options = do
-
-  verbosity <- (P.flag Concise Verbose) (mconcat
-
-        [ (P.long    "verbose")
-        , (P.short   'v')
-        , P.help    "Enable verbose messages. (Includes printing the config that's derived from the invokation of this command: ① parsing these command-line options; and ② defaulting the values of any optional options)."
-        , P.style P.bold
-        ])
-
-  dryrun <- (P.flag TrueRun DryRun) (mconcat
-
-        [ (P.long    "dryrun")
-        , (P.short   'i')
-        , P.help    "Whether the execution will just be a 'dry-run' (i.e. effects are disabled, instead they are printed out)."
-        , P.style P.bold
-        ])
-
-  printVersion <- empty
-
-     <|> (P.switch (mconcat
-
-        [ (P.long    "print-version")
-        , P.help    "Print the version of this program. The format is, for example, « 0.0.0 ». No other text is printed."
-        , P.style P.bold
-        ]))
-
-     <|> (P.switch (mconcat
-
-        [ (P.long    "version")
-        , P.help    "Alias for « --print-version »."
-        , P.style P.bold
-        ]))
-
-  printLicense <- P.switch (mconcat   -- TODO -- subcommand, not option.
-
-        [ (P.long    "print-license")
-        , P.help    "Print the SPDX license identifier of this program, then print out the license text."
-        , P.style P.bold
-        ])
-
-  printConfig <- P.switch (mconcat
-        [ (P.long    "print-config")
-        , P.internal                  -- .hidden
-        , P.help    "[INTERNAL] Print the internal configuration which the command-line options are parsed into."
-        , P.style P.bold
-        ])
-
-  resolveConfiguration <- P.switch (mconcat [])
 
   projectpath <- optional (P.strOption (mconcat
 
@@ -576,7 +536,7 @@ options = do
         , P.style P.bold
         ]))
 
-  license <- defaulting "BSD-3-Clause" (P.strOption (mconcat
+  license <- defaulting "Apache-2.0" (P.strOption (mconcat
 
         [ (P.long    "license")
         , (P.metavar "LICENSE")
@@ -621,7 +581,8 @@ addOptionsToCommand globalOptions = \case
 -}
 
 info
-  :: forall a. String -> P.Parser a
+  :: forall a.
+    String -> P.Parser a
   -> P.ParserInfo a
 
 info description parser = P.info (P.helper <*> parser) information

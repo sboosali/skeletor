@@ -46,7 +46,8 @@ import qualified "unix-compat" System.PosixCompat.Files as UNIX
 -- Imports (StdLib) ------------------------------
 --------------------------------------------------
 
-import qualified "text" Data.Text as Text
+import qualified "text" Data.Text    as Text
+import qualified "text" Data.Text.IO as Text
 
 import qualified "base" System.IO    as IO
 import qualified "base" Data.Version as Version
@@ -62,14 +63,14 @@ import qualified "base" Data.Version as Version
 runCommand :: (MonadThrow m, MonadIO m) => Command -> m Status
 runCommand = \case
 
-  CommandPrintVersion -> do
+  CommandPrintVersion options -> do
 
-    printVersionWith ()
+    printVersionWith options
     return Success
 
-  CommandPrintLicense -> do
+  CommandPrintLicense options -> do
 
-    printLicenseWith ()
+    printLicenseWith options
     return Success
 
   CommandCreateProject CreateProjectOptions{..} -> do
@@ -88,7 +89,14 @@ runCommand = \case
 
     ConfigurationResolved{ status, config } <- resolveConfigurationWith ResolveConfiguration{ extraConfig }
 
-    io $ print config -- TODO
+    let sConfig = show config & fromString
+
+    io $ do
+
+      Text.putStrLn sConfig -- TODO
+
+      fp <- newTemporaryFilePath "config"
+      Text.writeFile fp sConfig
 
     return status
 
@@ -178,14 +186,14 @@ fetchLocation = \case
 
 -}
 
-printVersionWith :: (MonadThrow m, MonadIO m) => () -> m ()
-printVersionWith () = liftIO $ do
+printVersionWith :: (MonadThrow m, MonadIO m) => GlobalOptions -> m ()
+printVersionWith GlobalOptions{..} = liftIO $ do
 
-  putStrLn version
+  putStrLn versionString
 
   where
 
-  version = Version.showVersion programVersion
+  versionString = Version.showVersion programVersion
 
 --------------------------------------------------
 --------------------------------------------------
@@ -194,14 +202,14 @@ printVersionWith () = liftIO $ do
 
 -}
 
-printLicenseWith :: (MonadThrow m, MonadIO m) => () -> m ()
-printLicenseWith () = liftIO $ do
+printLicenseWith :: (MonadThrow m, MonadIO m) => GlobalOptions -> m ()
+printLicenseWith GlobalOptions{..} = liftIO $ do
 
-  putStrLn license
+  putStrLn licenseString
 
   where
 
-  license = programLicenseIdentifier
+  licenseString = programLicenseIdentifier
 
 --------------------------------------------------
 -- Utilities -------------------------------------

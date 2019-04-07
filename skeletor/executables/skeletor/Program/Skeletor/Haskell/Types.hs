@@ -99,6 +99,24 @@ data GlobalOptions = GlobalOptions
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
+
+-- | @= 'defaultGlobalOptions'@
+
+instance Default GlobalOptions where
+  def = defaultGlobalOptions
+
+--------------------------------------------------
+
+-- | @'defaultVerbosity'@ and @'defaultDryness'@
+
+defaultGlobalOptions :: GlobalOptions
+defaultGlobalOptions = GlobalOptions
+
+  { verbosity = def
+  , dryrun    = def
+  }
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-| 'Command' represents this program's subcommands.
@@ -111,8 +129,8 @@ data Command
   | CommandDownloadProject      DownloadProjectOptions
   | CommandResolveConfiguration ResolveConfigurationOptions
 
-  | CommandPrintVersion
-  | CommandPrintLicense
+  | CommandPrintVersion GlobalOptions
+  | CommandPrintLicense GlobalOptions
 
   deriving stock    (Show,Eq,Ord)
   deriving stock    (Generic)
@@ -414,8 +432,10 @@ data Settings = Settings
 
 data Verbosity
 
-  = Concise
+  = Silent
+  | Concise
   | Verbose
+  | Vociferous
 
   deriving stock    (Enum,Bounded,Ix)
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
@@ -427,6 +447,8 @@ data Verbosity
 
 instance Default Verbosity where
   def = defaultVerbosity
+
+--------------------------------------------------
 
 -- | @= 'Concise'@
 
@@ -647,6 +669,32 @@ mergeGlobalOptions GlobalOptions{ verbosity = verbosity1, dryrun = dryrun1 } Glo
   verbosity = min verbosity1 verbosity2 -- prefer « Concise »
 
   dryrun    = min dryrun1 dryrun2       -- prefer « DryRun »
+
+--------------------------------------------------
+-- Notes -----------------------------------------
+--------------------------------------------------
+
+-- Cabal's Verbosity Levels:
+-- 
+-- data VerbosityLevel = Silent | Normal | Verbose | Deafening
+-- 
+-- -- We shouldn't print /anything/ unless an error occurs in silent mode
+-- silent :: Verbosity
+-- 
+-- -- Print stuff we want to see by default
+-- normal :: Verbosity
+-- 
+-- -- Be more verbose about what's going on
+-- verbose :: Verbosity
+-- 
+-- -- Not only are we verbose ourselves (perhaps even noisier than when
+-- -- being "verbose"), but we tell everything we run to be verbose too
+-- deafening :: Verbosity
+-- 
+
+--------------------------------------------------
+
+-- 
 
 --------------------------------------------------
 -- EOF -------------------------------------------

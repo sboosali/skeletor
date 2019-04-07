@@ -204,7 +204,7 @@ lib:
 
 skeletor-haskell:
 
-	$(Cabal) new-run skeletor-haskell -- --help
+	LC_ALL=C.UTF-8 $(Cabal) new-run skeletor-haskell -- --help
 
 .PHONY: skeletor-haskell
 
