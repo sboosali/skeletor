@@ -253,6 +253,16 @@ flag static
   manual:      True
 
 --------------------------------------------------
+
+flag macros
+
+  default:     True
+
+  description: Whether to inject the current Git commit and the current timestamp into the executable at build-time (via Template-Haskell Macros).
+
+  manual:      True
+
+--------------------------------------------------
 -- Common Stanzas --------------------------------
 --------------------------------------------------
 
@@ -504,6 +514,11 @@ library
                   Skeletor.Core.Hash
                   Skeletor.Core.Hash.Types
 
+                  -- Skeletor.Core.Location
+                  -- Skeletor.Core.Location.Types
+
+                  ------------
+
                   -- Skeletor.Core.File
                   -- Skeletor.Core.File.Types
                   -- Skeletor.Core.File.Read
@@ -525,9 +540,6 @@ library
                   -- Skeletor.Core.Path.Values
 
                   -- Skeletor.Core.Fetch
-
-                  -- Skeletor.Core.Location
-                  -- Skeletor.Core.Location.Types
 
                   -- --Skeletor.Core.Git
                   -- Skeletor.Core.Git.Types
@@ -558,6 +570,7 @@ library
 
                   Skeletor.Haskell
                   Skeletor.Haskell.Types
+                  Skeletor.Haskell.Errors
 
                   Skeletor.Haskell.Core
                   Skeletor.Haskell.Derived
@@ -798,27 +811,44 @@ executable skeletor-haskell
 
  ------------------------------
 
-  build-depends:
-                skeletor
-              , spiros
-              , optparse-applicative
+  build-depends: skeletor
+               , spiros
+               , optparse-applicative
 
-              , text
-              , case-insensitive
-              , directory
-              , filepath
-              , unix-compat
-              , filemanip
-              , modern-uri
+               , text
+               , case-insensitive
+               , directory
+               , filepath
+               , unix-compat
+               , filemanip
+               , modern-uri
 
-              , time
+               , time
 
-              , attoparsec
-              , megaparsec
+               , attoparsec
+               , megaparsec
 
                 -- TODO rm attoparsec, export helpers from library
 
-              , generic-lens
+               , generic-lens
+
+ ------------------------------
+ 
+ if flag(macros) && (!os(windows))
+      -- ^ the macros use POSIX tools, like « date » and « grep ».
+
+      build-depends: template-haskell
+                   , process
+
+      other-modules: Program.Skeletor.Haskell.Macros
+      -- ^ « _.Macros » exports « currentGitCommit » and « currentTimestamp ».
+
+      cpp-options: -DSKELETOR_HASKELL_FLAG_MACROS
+      -- ^ define the « SKELETOR_HASKELL_FLAG_MACROS » symbol.
+
+      default-extensions: TemplateHaskell
+
+ ------------------------------
 
 --------------------------------------------------
 --------------------------------------------------
