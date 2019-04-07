@@ -116,6 +116,16 @@ programExamples =
 
   [ "skeletor-haskell --help"
 
+  , (unlines ["skeletor-haskell create --dry-run - -"
+             , "New Project Desintation (default ./): ./location<RET>"
+             , "Project Skeleton   (default default): default<RET>"
+             ])
+  , "skeletor-haskell create ./egg --name=egg --license=GPL-3.0-or-later -s \"name=Sam M Boosalis\"" 
+  , (unlines [ "$EDITOR /tmp/skeletor.ini"
+             , "# (edit the file and close the editor...)"
+             , "skeletor-haskell create -c /tmp/skeletor.ini"
+             ])
+
   , "skeletor-haskell examples"
 
   , "skeletor-haskell version"
@@ -128,17 +138,12 @@ programExamples =
   , "skeletor-haskell config --license=Apache-2.0"
 
   , "skeletor-haskell fetch git@github.com:sboosali/skeletor-haskell-contrib.git --subdir signatures"
+  , "skeletor-haskell fetch git@github.com:sboosali/skeletor-haskell-contrib.git --subdirs signatures,javascript"
   , "skeletor-haskell fetch all"
 
-  , (unlines ["skeletor-haskell create --dry-run - -"
-             , "New Project Desintation (default ./): ./location<RET>"
-             , "Project Skeleton   (default default): default<RET>"
-             ])
-  , "skeletor-haskell create ./egg --name=egg --license=GPL-3.0-or-later -s \"name=Sam M Boosalis\"" 
-  , (unlines [ "$EDITOR /tmp/skeletor.ini"
-             , "# (edit the file and close the editor...)"
-             , "skeletor-haskell create -c /tmp/skeletor.ini"
-             ])
+  , "skeletor-haskell test git@github.com:sboosali/skeletor-haskell-contrib.git --all"
+
+  , "skeletor-haskell build git@github.com:sboosali/skeletor-haskell-contrib.git --all"
 
   ]
 

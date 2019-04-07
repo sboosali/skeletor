@@ -510,12 +510,13 @@ library
 
                   Skeletor.Core
                   -- Skeletor.Core.Types
+                  Skeletor.Core.Errors
+
+                  Skeletor.Core.Location
+                  Skeletor.Core.Location.Types
 
                   Skeletor.Core.Hash
                   Skeletor.Core.Hash.Types
-
-                  -- Skeletor.Core.Location
-                  -- Skeletor.Core.Location.Types
 
                   ------------
 

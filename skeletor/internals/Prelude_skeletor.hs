@@ -1,17 +1,16 @@
 --------------------------------------------------
 
-{- |
-
-a project-specific custom prelude.
+{- | Project-specific custom @Prelude@.
 
 -}
 
 module Prelude_skeletor
-    ( module X
-    ) where
+
+  ( module EXPORT
+  ) where
 
 --------------------------------------------------
 
-import "spiros" Prelude.Spiros as X hiding (Text)
+import "spiros" Prelude.Spiros as EXPORT
 
 --------------------------------------------------

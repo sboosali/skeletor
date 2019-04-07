@@ -1,21 +1,16 @@
 --------------------------------------------------
 
-{- |
-
-a project-specific custom prelude.
+{- | Project-specific custom @Prelude@.
 
 -}
 
 module Prelude_xxx_package_xxx
-    ( module X
-    ) where
+
+  ( module EXPORT
+  ) where
 
 --------------------------------------------------
 
-import "spiros" Prelude.Spiros as X
-
---------------------------------------------------
-
-
+import "spiros" Prelude.Spiros as EXPORT
 
 --------------------------------------------------

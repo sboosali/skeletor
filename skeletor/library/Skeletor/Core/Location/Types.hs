@@ -13,9 +13,14 @@
 module Skeletor.Core.Location.Types where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Core.EnvironmentVariable
+import Prelude_skeletor
+
+--------------------------------------------------
+
+import Skeletor.Core.Errors
 
 --------------------------------------------------
 -- Imports ---------------------------------------
@@ -29,11 +34,12 @@ import qualified "modern-uri" Text.URI as URI
 import qualified "filepath" System.FilePath as File
 
 --------------------------------------------------
---------------------------------------------------
 
 import qualified "unordered-containers" Data.HashMap.Lazy as Map
 import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
+--------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import qualified "base" System.IO as IO
@@ -43,11 +49,76 @@ import qualified "base" System.IO as IO
 import           "base" Control.Exception (Exception(..))
 
 --------------------------------------------------
+-- Definitions -----------------------------------
+--------------------------------------------------
 
-import Prelude_skeletor
+{-| Locate either a 'LocationFile' or a 'LocationDirectory'.
+
+A 'Location' can be identified by:
+
+* itself — i.e. inline contents literally (into a string or tree).
+* a filepath — a directory (the root of the files being located).
+* an archive — a `.tar`; to be un-archived (into the above).
+* a tarball — a `.tar.gz`; to be decompressed (into the above).
+* a URI — download it, following links ([TODO]: detect cycles, ditto with hardlinks of filepaths).
+* a Git repository — clone it.
+* a name — a known name (e.g. builtin into your system).
+
+-}
+
+data Location
+
+  = LocationFile      LocationFile
+  | LocationDirectory LocationDirectory
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData{-,Hashable-})
 
 --------------------------------------------------
--- Definitions -----------------------------------
+--------------------------------------------------
+
+{-| 'LocationFile' identifies (or is) a /string/.
+
+-}
+
+data LocationFile
+
+  = LocationFileInline   Text          -- ^ Write this string.
+  | LocationFilePath     FilePath      -- ^ Copy this file.
+  | LocationFileURI      URI           -- ^ Download this URI.
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData{-,Hashable-})
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| A 'LocationDirectory' identifies (or is) a /tree/.
+
+== Notes
+
+For example, in Nixpkgs, by default, @unpackPhase@ can decompress these compressed/archived file-types:
+
+* gzip — @.tar.gz@, @.tgz@, @.tar.Z@.
+* bzip2 — @.tar.bz2@, @.tbz2@, @.tbz@.
+* xz — @.tar.xz@, @.tar.lzma@, @.txz@.
+
+-}
+
+data LocationDirectory
+
+  = LocationDirectoryPath    FilePath        -- ^ Copy this directory, recursively.
+
+  | LocationDirectoryURI     URI             -- ^ Download this URL.
+  | LocationDirectoryGit     URI             -- ^ Clone this Git repository.
+
+  | LocationDirectoryArchive FilePath        -- ^ Un-Archive this file, then copy the 'LocationDirectory'.
+  | LocationDirectoryTarball FilePath        -- ^ Un-Compress this file, un-archive it, then copy the 'LocationDirectory'.
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData{-,Hashable-})
+
+--------------------------------------------------
 --------------------------------------------------
 
 {-| Syntax for locations.
@@ -103,7 +174,7 @@ But these strings are invalid:
 data LocationSyntax
 
   = LocationURI  URI
-  | LocationPath Path
+  | LocationPath FilePath
 
   deriving stock    (Show,Eq,Ord,Generic)
   deriving anyclass (NFData)
@@ -111,124 +182,20 @@ data LocationSyntax
 --------------------------------------------------
 --------------------------------------------------
 
-{-| Locate either a 'LocationFile' or a 'LocationDirectory'.
+{-| The result of locating a 'Location':
 
-A 'Location' can be identified by:
-
-* itself — i.e. inline contents literally (into a string or tree).
-* a filepath — a directory (the root of the files being located).
-* an archive — a `.tar`; to be un-archived (into the above).
-* a tarball — a `.tar.gz`; to be decompressed (into the above).
-* a URI — download it, following links ([TODO]: detect cycles, ditto with hardlinks of filepaths).
-* a Git repository — clone it.
-* a name — a known name (e.g. builtin into your system).
+* 'YesLocated' upon successful download — the text (or tree) that was downloaded
+* 'NotLocated' upon failed download     — an error message, which describes what failed.
 
 -}
 
-data Location
+data Located a
 
-  = LocationFile      LocationFile
-  | LocationDirectory LocationDirectory
+  = YesLocated !a
+  | NotLocated String
 
   deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
---------------------------------------------------
-
-{-| 'LocationFile' identifies (or is) a /string/.
-
--}
-
-data LocationFile
-
-  = LocationFileInline   Text          -- ^ Write this string.
-  | LocationFileFilePath FilePath      -- ^ Copy this file.
-
-  | LocationFileURI URI                -- ^ Download this URI.
-
-  | LocationFileEnvironmentVariable EV -- ^ Read (TODO: a path or URI?) from this environment variable.
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
---------------------------------------------------
-
-{-| A 'LocationDirectory' identifies (or is) a /tree/.
-
-== Notes
-
-For example, in Nixpkgs, by default, @unpackPhase@ can decompress these compressed/archived file-types:
-
-* gzip — @.tar.gz@, @.tgz@, @.tar.Z@.
-* bzip2 — @.tar.bz2@, @.tbz2@, @.tbz@.
-* xz — @.tar.xz@, @.tar.lzma@, @.txz@.
-
--}
-
-data LocationDirectory
-
-  = LocationDirectoryInline FileTree        -- ^ Write these strings.
-  | LocationDirectoryPath   FilePath        -- ^ Copy this directory, recursively.
-
-  | LocationDirectoryURI URI                -- ^ Download this URL.
-  | LocationDirectoryGit URI                -- ^ Clone this Git repository.
-
-  | LocationDirectoryArchive FilePath       -- ^ Un-Archive this file, then copy the 'LocationDirectory'.
-  | LocationDirectoryTarball FilePath       -- ^ Un-Compress this file, un-archive it, then copy the 'LocationDirectory'.
-
-  | LocationDirectoryEnvironmentVariable EV -- ^ Read (TODO: a path or URI?) from this environment variable.
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
-newtype FileTree = FileTree
-
-  (HashMap FilePath String)         -- TODO Text
-
-  deriving stock    (Show,Read,Generic)
-  deriving newtype  (Eq,Ord,Semigroup,Monoid)
-  deriving newtype  (NFData,Hashable)
-
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
-data LocationParseError
-
-  = LocationParseError String
-
-  deriving stock    (Generic,Lift)
-  deriving stock    (Show,Read,Eq,Ord)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
-
-instance Exception LocationParseError where
-
-  displayException :: LocationParseError -> String
---displayException = show
-  displayException = \case
-
-    LocationParseError msg -> "{{{ LocationParseError.LocationParseError }}} " <>
-      msg
-
---------------------------------------------------
-
-instance IsString LocationParseError where
-
-  fromString = LocationParseError
+  deriving anyclass (NFData)
 
 --------------------------------------------------
 -- Definitions -----------------------------------
@@ -236,15 +203,28 @@ instance IsString LocationParseError where
 
 {-|
 
+== Exceptions
+
+May throw 'LocationParseError' or 'URI.ParseException'.
+
 -}
 
 parseLocation :: (MonadThrow m) => String -> m Location
-parseLocation s = _
+parseLocation s =
+
+  if   (isValidAsFile && isFilePathLiteral)
+
+  then return (LocationPath s)
+
+  else LocationURI <$> URI.mkURI (fromString s)
+
   where
 
-    isValid = File.isValid s
+    isValidAsFile     = File.isValid s
+    isFilePathLiteral = any (s `doesStartWith`) validFilePathLiteralPrefixSymbols || File.hasDrive s
 
-    hasDrive
+    doesStartWith [] _ = False
+    doesStartWith (c : cs) c' = c == c'
 
 --------------------------------------------------
 
@@ -262,6 +242,7 @@ validFilePathLiteralPrefixSymbols =
   , '%'
   ]
 
+--------------------------------------------------
 --------------------------------------------------
 
 {-|
