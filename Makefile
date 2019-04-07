@@ -90,7 +90,13 @@ Pandoc ?=pandoc
 Markdown ?=multimarkdown
  #TODO pandoc
 
-Open ?=xdg-open
+#------------------------------------------------#
+
+Open          ?=xdg-open
+
+ClipboardCopy ?=xclip -selection clipboard
+
+#------------------------------------------------#
 
 Cabal2nix ?=cabal2nix
 
@@ -111,7 +117,8 @@ CheckNix ?=nix-instantiate
  # ^ nix-instantiate:
  # parse the given `.nix`, and return its `.drv` file.
 
-CheckStaticExecutables ?=lld    #TODO# grep too, return non-zero-exit-code when any dynamic dependencies exist
+CheckStaticExecutable ?=! ldd
+#TODO# grep too, return non-zero-exit-code when any dynamic dependencies exist
 
  # ^ TODO on OSX, otool -o
 
@@ -124,7 +131,9 @@ PackageDirectory ?=$(PackageName)
 
 BuildDirectory ?=./dist-newstyle
 
-BashCompletionDirectory ?=./etc/bash_completion.d
+BashCompletionDirectory ?=./share/bash-completion
+ZshCompletionDirectory  ?=./share/zsh-completion
+FishCompletionDirectory ?=./share/fish-completion
 
 NixDirectory      ?=./nix
 ScriptDirectory   ?=./scripts
@@ -204,7 +213,38 @@ lib:
 
 skeletor-haskell:
 
-	LC_ALL=C.UTF-8 $(Cabal) new-run skeletor-haskell -- --help
+	@echo '=================================================='
+	@echo
+
+	LC_ALL=C.UTF-8 $(Cabal) new-run "skeletor:exe:skeletor-haskell" -- --help
+
+	@echo
+	@echo '=================================================='
+	@echo
+
+	@mkdir -p "$(BashCompletionDirectory)"
+	skeletor-haskell --bash-completion-script skeletor-haskell > "$(BashCompletionDirectory)/skeletor-haskell.bash"
+
+	@mkdir -p "$(ZshCompletionDirectory)"
+#	skeletor-haskell --zsh-completion-script skeletor-haskell > "$(ZshCompletionDirectory)/skeletor-haskell.zsh"
+
+	@mkdir -p "$(FishCompletionDirectory)"
+#	skeletor-haskell --fish-completion-script skeletor-haskell > "$(FishCompletionDirectory)/skeletor-haskell.fish"
+
+	@echo
+	@echo '=================================================='
+	@echo
+
+	$(CheckStaticExecutable) `which skeletor-haskell` || true
+
+	@echo
+	@echo '=================================================='
+	@echo
+
+	source `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
+
+	@echo
+	@echo '=================================================='
 
 .PHONY: skeletor-haskell
 
@@ -433,37 +473,44 @@ locate-executable:
 
 #------------------------------------------------#
 
-# install-skeletor-haskell: static-build-skeletor-haskell
+install-skeletor-haskell:
 
-# 	@echo '=================================================='
-# 	@echo
+	@echo '=================================================='
+	@echo
 
-# 	time $(Cabal) new-install -overwrite-policy=always "skeletor:exe:skeletor-haskell"
+	time $(Cabal) new-install --overwrite-policy=always "skeletor:exe:skeletor-haskell"
 
-# 	@echo
-# 	@echo '=================================================='
-# 	@echo
+	@echo
+	@echo '=================================================='
+	@echo
 
-# 	@mkdir -p "$(BashCompletionDirectory)"
+	@mkdir -p "$(BashCompletionDirectory)"
+	skeletor-haskell --bash-completion-script `which skeletor-haskell` > "$(BashCompletionDirectory)/skeletor-haskell.bash"
 
-# 	skeletor-haskell --bash-completion-script skeletor-haskell > "$(BashCompletionDirectory)/skeletor-haskell.bash"
+	@mkdir -p "$(ZshCompletionDirectory)"
+	skeletor-haskell --zsh-completion-script  `which skeletor-haskell` > "$(ZshCompletionDirectory)/skeletor-haskell.zsh"
 
-# 	@echo
-# 	@echo '=================================================='
-# 	@echo
+	@mkdir -p "$(FishCompletionDirectory)"
+	skeletor-haskell --fish-completion-script `which skeletor-haskell` > "$(FishCompletionDirectory)/skeletor-haskell.fish"
 
-# 	@echo $(Lld) `which skeletor-haskell`
+	@echo
+	@echo '=================================================='
+	@echo
 
-# 	@echo
-# 	@echo '=================================================='
-# 	@echo
+	@echo `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
 
-# 	@echo source `readlink -f "$(BashCompletionDirectory)/skeletor-haskell.bash"`
+	@$(ClipboardCopy) <(printf "%s\n" 'source "$(BashCompletionDirectory)/skeletor-haskell.bash"')
 
-# 	@echo
-# 	@echo '=================================================='
+	@echo
+	@echo '=================================================='
+	@echo
 
-# .PHONY: install-skeletor-haskell
+	$(CheckStaticExecutable) `which skeletor-haskell` || true
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: install-skeletor-haskell
 
 #------------------------------------------------#
 

@@ -253,7 +253,6 @@ pCommand = do
     pFakeSubCommand = asum
 
       [ pVersionFakeCommand
-      , pLicenseFakeCommand
       ]
 
     pVersionFakeCommand :: P.Parser Command
@@ -261,15 +260,7 @@ pCommand = do
 
             [ P.long "version"
             , P.style P.bold
-            , P.help helpVersion
-            ]
-
-    pLicenseFakeCommand :: P.Parser Command
-    pLicenseFakeCommand = (P.flag' (CommandPrintLicense def)) $ mconcat
-
-            [ P.long "license"
-            , P.style P.bold
-            , P.help helpLicense
+            , P.help "(The « --version » option is an alias for the « version » subcommand.)"
             ]
 
     pVersionRealCommand :: P.Mod P.CommandFields Command

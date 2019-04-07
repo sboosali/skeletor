@@ -2232,6 +2232,95 @@ pFakeSubCommand = asum
 
 --------------------------------------------------
 
+{-| The (top-level) program invocation; @main@ parses this.
+
+If no subcommand can be parsed, real ('pCommand')
+or fake ('pPseudoSubCommand'), the parser fails; and
+@main@ throws an exception, exiting with exit code @2@.
+
+Parses the program's (primary) subcommands.
+
+-}
+
+pCommand :: P.Parser Command
+pCommand = do
+
+  globals <- pGlobalOptions
+
+  command <- pSubCommand
+
+  return (fromResult (globals, command))
+
+  where
+
+  pSubCommand :: P.Parser Command
+  pSubCommand = pFakeSubCommand <|> pRealSubCommand
+    where
+
+    pRealSubCommand = asum
+
+      [ P.hsubparser ps
+      , P.subparser  qs
+      ]
+
+    ps = mconcat
+
+      [ (P.command "create" (CommandCreateProject        <$> piCreateProjectOptions))
+      , (P.command "fetch"  (CommandDownloadProject      <$> piDownloadProjectOptions))
+      , (P.command "config" (CommandResolveConfiguration <$> piResolveConfigurationOptions))
+      ]
+
+    qs = mconcat
+
+      [ pVersionRealCommand
+      , pLicenseRealCommand
+      ]
+
+    pFakeSubCommand :: P.Parser Command
+    pFakeSubCommand = asum
+
+      [ pVersionFakeCommand
+      , pLicenseFakeCommand
+      ]
+
+    pVersionFakeCommand :: P.Parser Command
+    pVersionFakeCommand = (P.flag' (CommandPrintVersion def)) $ mconcat
+
+            [ P.long "version"
+            , P.style P.bold
+            , P.help helpVersion
+            ]
+
+    pLicenseFakeCommand :: P.Parser Command
+    pLicenseFakeCommand = (P.flag' (CommandPrintLicense def)) $ mconcat
+
+            [ P.long "license"
+            , P.style P.bold
+            , P.help helpLicense
+            ]
+
+    pVersionRealCommand :: P.Mod P.CommandFields Command
+    pVersionRealCommand = P.command "version" piVersionCommand
+
+    pLicenseRealCommand :: P.Mod P.CommandFields Command
+    pLicenseRealCommand = P.command "license" piLicenseCommand
+
+    piVersionCommand :: P.ParserInfo Command
+    piVersionCommand = info helpVersion do
+      globals  <- pGlobalOptions
+      return (CommandPrintVersion globals)
+
+    piLicenseCommand :: P.ParserInfo Command
+    piLicenseCommand = info helpLicense do
+      globals  <- pGlobalOptions
+      return (CommandPrintLicense globals)
+
+    helpVersion :: String
+    helpVersion = "Print the version of this program. The format is: dot-separated numerics. For example: « 0.11.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the patch version (i.e. the git commit) and build information (the compiler version, and transitive dependencies' versions)."
+
+    helpLicense :: String
+    helpLicense = "Print the license of this program. The format is: an SPDX License Identifier (alphanumerics, plus hyphens and/or dots). For example: « Apache-2.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the license contents."
+
 
 --------------------------------------------------
 
