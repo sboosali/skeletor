@@ -128,6 +128,17 @@ printedFetchBy = printFetchBy <$> constructors'
 --------------------------------------------------
 --------------------------------------------------
 
+{- |
+
+>>> parseLocation "-"
+LocationStdin
+>>> parseLocation "~/configuration/skeletor/haskell"
+LocationPath "~/configuration/skeletor/haskell"
+>>> parseLocation "git@github.com:sboosali/skeletor-haskell-contrib.git"
+LocationURI
+
+-}
+
 parseLocation :: SimpleParse Location
 parseLocation string = go string
   where
@@ -242,6 +253,13 @@ throwFailure = \case
 
   Success -> return ()
   Failure -> throwM (E.toException Failure)
+
+--------------------------------------------------
+
+printDivider :: IO ()
+printDivider = do
+
+  putStrLn "----------------------------------------"
 
 --------------------------------------------------
 -- Notes -----------------------------------------

@@ -45,7 +45,8 @@ import Prelude_skeletor
 data KnownProjectConfig -- TODO rename -- KnownHaskellProject
 
   = DefaultProjectConfig   UniversalProjectConfig
-  | ComplexProjectConfig   UniversalProjectConfig
+  | MaximalProjectConfig   UniversalProjectConfig
+  | MinimalProjectConfig   UniversalProjectConfig
   | SimpleProjectConfig    UniversalProjectConfig
   | ForeignProjectConfig   UniversalProjectConfig
 

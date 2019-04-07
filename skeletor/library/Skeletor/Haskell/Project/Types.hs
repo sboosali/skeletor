@@ -8,31 +8,20 @@
 module Skeletor.Haskell.Project.Types where
 
 --------------------------------------------------
--- Imports (Project) -----------------------------
---------------------------------------------------
-
-import Skeletor.Haskell.Types
---import Skeletor.Haskell.Core.Types
-
---------------------------------------------------
--- Imports (External) ----------------------------
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
---------------------------------------------------
--- Imports (Standard Library) --------------------
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
---------------------------------------------------
--- Imports (Custom Prelude) ----------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import Prelude_skeletor
+
+--------------------------------------------------
+
+import Skeletor.Haskell.Types
+import Skeletor.Haskell.Errors
+
+--------------------------------------------------
+--------------------------------------------------
+
+import qualified "base" Data.Char as Char
 
 --------------------------------------------------
 -- Types -----------------------------------------
@@ -52,7 +41,7 @@ import Prelude_skeletor
 
 -}
 
-type ProjectName = UnknownOr KnownProjectName
+type ProjectName = UnknownOr BuiltinHaskellProjectName
 
 --------------------------------------------------
 --------------------------------------------------
@@ -61,7 +50,24 @@ type ProjectName = UnknownOr KnownProjectName
 
 -}
 
-type ProjectIdentifier = ProjectName --TODO-- 
+type HaskellProjectName = Either CustomHaskellProjectName BuiltinHaskellProjectName
+
+--type HaskellProjectIdentifier
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+newtype CustomHaskellProjectName = CustomHaskellProjectName
+
+  String
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -70,10 +76,11 @@ type ProjectIdentifier = ProjectName --TODO--
 
 -}
 
-data KnownProjectName -- TODO rename -- KnownHaskellProject
+data BuiltinHaskellProjectName
 
   = DefaultProject
-  | ComplexProject
+  | MaximalProject
+  | MinimalProject
   | SimpleProject
   | ForeignProject
 
@@ -86,8 +93,8 @@ data KnownProjectName -- TODO rename -- KnownHaskellProject
 
 -- | @= 'defaultKnownProject'@
 
-instance Default KnownProjectName where
-  def = defaultKnownProjectName
+instance Default BuiltinHaskellProjectName where
+  def = defaultBuiltinHaskellProjectName
 
 --------------------------------------------------
 -- Definitions -----------------------------------
@@ -95,8 +102,78 @@ instance Default KnownProjectName where
 
 -- | @= 'DefaultProject'@
 
-defaultKnownProjectName :: KnownProjectName
-defaultKnownProjectName = DefaultProject
+defaultBuiltinHaskellProjectName :: BuiltinHaskellProjectName
+defaultBuiltinHaskellProjectName = DefaultProject
 
 --------------------------------------------------
+
+allBuiltinHaskellProjectNames :: [BuiltinHaskellProjectName]
+allBuiltinHaskellProjectNames = genum
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+printBuiltinProjectName :: BuiltinHaskellProjectName -> String
+printBuiltinProjectName = \case
+
+  DefaultProject -> "default"
+  MaximalProject -> "maximal"
+  MinimalProject -> "minimal"
+  SimpleProject  -> "simple"
+  ForeignProject -> "foreign"
+
+--------------------------------------------------
+
+{-| Smart Constructor for names of custom haskell project-skeletons.
+
+Syntactically, a valid 'CustomHaskellProjectName':
+
+* has only are alphanumeric characters and/or the hyphen character.
+* differs from any 'BuiltinHaskellProjectName' (those are “reserved”).
+
+-}
+
+parseCustomProjectName :: (MonadThrow m) => String -> m CustomHaskellProjectName
+parseCustomProjectName s =
+
+  if   isCustomProjectNameValid s
+  then return (CustomHaskellProjectName s)
+  else throwM exception
+
+  where
+
+  exception = SkeletorHaskellSyntaxError message
+  message   = "[parseCustomProjectName] " <> (show s) <> " is not a valid 'CustomHaskellProjectName'"
+
+--------------------------------------------------
+
+{-| Predicate for valid names (of custom haskell project-skeletons).
+
+Syntactically, a valid 'CustomHaskellProjectName':
+
+* has only are alphanumeric characters and/or the hyphen character.
+* differs from any 'BuiltinHaskellProjectName' (those are “reserved”).
+
+-}
+
+isCustomProjectNameValid :: String -> Bool
+isCustomProjectNameValid s = 
+
+ (not . isReserved) s && areAllCharactersAlphanumericOrHyphen s
+
+  where
+
+  isReserved = (`elem` allPrintedBuiltinHaskellProjectNames)
+
+  areAllCharactersAlphanumericOrHyphen = all isCharacterAlphanumericOrHyphen
+
+  isCharacterAlphanumericOrHyphen c = Char.isAlphaNum c || ('-' == c)
+
+  allPrintedBuiltinHaskellProjectNames = (printBuiltinProjectName <$> allBuiltinHaskellProjectNames)
+
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

@@ -129,64 +129,13 @@ data Command
   | CommandDownloadProject      DownloadProjectOptions
   | CommandResolveConfiguration ResolveConfigurationOptions
 
-  | CommandPrintVersion GlobalOptions
-  | CommandPrintLicense GlobalOptions
+  | CommandPrintVersion  GlobalOptions
+  | CommandPrintLicense  GlobalOptions
+  | CommandPrintExamples GlobalOptions
 
   deriving stock    (Show,Eq,Ord)
   deriving stock    (Generic)
   deriving anyclass (NFData)
-
---------------------------------------------------
---------------------------------------------------
-
-{-|  
-
--}
-
-data Options = Options
-
-  { verbosity    :: Verbosity
-  , dryrun       :: Dryness
-  , printVersion :: Bool
-  , printLicense :: Bool
-  , license      :: String
-  , configpath   :: Maybe FilePath
-  , projectpath  :: Maybe FilePath
-  , projectname  :: Maybe String
-  , subdirectory :: Maybe FilePath
-  , bindings     :: [Binding]
-  , environment  :: Bindings
-  }
-
-  deriving stock    (Show,Read,Eq,Ord,Generic)
-  deriving anyclass (NFData,Hashable)
-
---------------------------------------------------
-
--- | @= 'defaultOptions'@
-
-instance Default Options where
-  def = defaultOptions
-
-{-|
-
--}
-
-defaultOptions :: Options
-defaultOptions = Options{..}
-  where
-
-  verbosity    = def
-  dryrun       = def
-  printVersion = False
-  printLicense = False
-  license      = def
-  configpath   = def
-  projectpath  = Nothing
-  projectname  = Just defaultProjectName
-  subdirectory = Nothing
-  bindings     = def
-  environment  = def
 
 --------------------------------------------------
 --------------------------------------------------

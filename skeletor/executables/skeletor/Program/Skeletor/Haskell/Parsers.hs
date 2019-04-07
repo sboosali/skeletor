@@ -41,6 +41,8 @@ module Program.Skeletor.Haskell.Parsers
 import Program.Skeletor.Haskell.Types hiding (URI)
 import Program.Skeletor.Haskell.Utilities
 
+import Skeletor.Haskell.Project
+
 --------------------------------------------------
 
 import Skeletor.Haskell
@@ -98,9 +100,10 @@ rURI :: Optparse.ReadM URI
 rURI = fromMonadParsec (Just "URI") URI.parser
 
 --------------------------------------------------
+--------------------------------------------------
 
-rProject :: Optparse.ReadM KnownProjectName
-rProject = fromMonadThrow parseBuiltinProjectName
+rSkeletonIdentifier :: Optparse.ReadM SkeletonIdentifier
+rSkeletonIdentifier = fromMonadThrow parseHaskellProjectName
 
 --------------------------------------------------
 --------------------------------------------------

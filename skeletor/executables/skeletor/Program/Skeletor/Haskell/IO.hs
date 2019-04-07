@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -73,6 +74,11 @@ runCommand = \case
     printLicenseWith options
     return Success
 
+  CommandPrintExamples options -> do
+
+    printExamplesWith options
+    return Success
+
   CommandCreateProject CreateProjectOptions{..} -> do
 
     result <- (createProjectWith CreateProject{..})
@@ -89,14 +95,7 @@ runCommand = \case
 
     ConfigurationResolved{ status, config } <- resolveConfigurationWith ResolveConfiguration{ extraConfig }
 
-    let sConfig = show config & fromString
-
-    io $ do
-
-      Text.putStrLn sConfig -- TODO
-
-      fp <- newTemporaryFilePath "config"
-      Text.writeFile fp sConfig
+    io $ printAndSaveConfig config
 
     return status
 
@@ -189,11 +188,31 @@ fetchLocation = \case
 printVersionWith :: (MonadThrow m, MonadIO m) => GlobalOptions -> m ()
 printVersionWith GlobalOptions{..} = liftIO $ do
 
-  putStrLn versionString
+  go verbosity
 
   where
 
-  versionString = Version.showVersion programVersion
+  go = \case
+
+    Silent  -> printVersionConcise
+    Concise -> printVersionConcise
+
+    Verbose    -> printVersionVerbose
+    Vociferous -> printVersionVerbose
+
+  printVersionConcise = do
+
+    putStrLn $ programVersionBranch
+
+  printVersionVerbose = do
+
+    let versionLine = mconcat [ programName, ", version ", programVersion ]
+
+    putStrLn $ versionLine
+
+--  let versionString = versionStringBranch ++ versionStringTags
+
+{-# INLINEABLE printVersionWith #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -205,11 +224,87 @@ printVersionWith GlobalOptions{..} = liftIO $ do
 printLicenseWith :: (MonadThrow m, MonadIO m) => GlobalOptions -> m ()
 printLicenseWith GlobalOptions{..} = liftIO $ do
 
-  putStrLn licenseString
+  go verbosity
 
   where
 
-  licenseString = programLicenseIdentifier
+  go = \case
+
+    Silent  -> printLicenseConcise
+    Concise -> printLicenseConcise
+
+    Verbose    -> printLicenseVerbose
+    Vociferous -> printLicenseVerbose
+
+  printLicenseConcise = do
+
+    putStrLn $ programLicenseIdentifier
+
+  printLicenseVerbose = do
+
+    printLicenseConcise
+    putStrLn ""
+
+    putStrLn $ programLicenseContents
+
+{-# INLINEABLE printLicenseWith #-}
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+printExamplesWith :: (MonadThrow m, MonadIO m) => GlobalOptions -> m ()
+printExamplesWith GlobalOptions{..} = liftIO $ do
+
+  go verbosity
+
+  where
+
+  go = \case
+
+    Silent  -> printExamplesConcise
+    Concise -> printExamplesConcise
+
+    Verbose    -> printExamplesVerbose
+    Vociferous -> printExamplesVerbose
+
+  printExamplesConcise = do
+
+    putStrLn `traverse_` programExamples
+
+  printExamplesVerbose = do
+
+    printExamplesConcise
+
+{-# INLINEABLE printExamplesWith #-}
+
+--------------------------------------------------
+
+printAndSaveConfig :: Configuration -> IO ()
+printAndSaveConfig config = do
+
+   printDivider
+
+   Text.putStrLn sConfig -- TODO
+
+   printDivider
+
+   fpConfig <- newTemporaryFilePath "config"
+   Text.writeFile fpConfig sConfig
+
+   putStrLn fpConfig
+
+   printDivider
+
+  where
+
+  sConfig :: Text
+  sConfig = show config & fromString
+
+{-# INLINEABLE printAndSaveConfig #-}
 
 --------------------------------------------------
 -- Utilities -------------------------------------
@@ -234,7 +329,7 @@ newTemporaryFilePath name = do
 
   let timestamp = formatZonedTimeAsFilePath time
 
-  let dirname  = directory </> programName
+  let dirname  = directory </> programExecutable
   let basename = timestamp <> "_" <> name 
 
   let path = dirname </> basename

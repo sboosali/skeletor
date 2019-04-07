@@ -64,7 +64,7 @@ import           "base" Data.Semigroup
 
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Prelude
+import Skeletor.Haskell.Prelude
 
 --------------------------------------------------
 -- Types -----------------------------------------
@@ -79,8 +79,8 @@ pURI = _
 
 --------------------------------------------------
 
-pProject :: P.ReadM Project
-pProject = _
+pSkeleton :: P.ReadM Skeleton
+pSkeleton = _
 
 --------------------------------------------------
 

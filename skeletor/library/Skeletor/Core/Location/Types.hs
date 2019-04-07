@@ -21,8 +21,6 @@ import Skeletor.Core.EnvironmentVariable
 -- Imports ---------------------------------------
 --------------------------------------------------
 
---------------------------------------------------
-
 import           "modern-uri" Text.URI (URI)
 import qualified "modern-uri" Text.URI as URI
 
@@ -52,7 +50,9 @@ import Prelude_skeletor
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-{-| Syntax for (i.e. a concrete, human-readable representation of) locations.
+{-| Syntax for locations.
+
+i.e. A concrete representation that's (as conveniently as possible) human-readable and human-writeable.
 
 Locate by (any of) these syntaxes:
 
@@ -70,6 +70,33 @@ Example Paths:
 * @./.@
 * @~/.local/share@
 * @/usr/local/share@
+
+Parsing:
+
+* 'LocationPath' — by 'parseLocationPath'.
+* 'LocationURI'  — by 'mkURI'.
+
+Validation: TODO
+
+NOTE Syntactically, we require filepaths to start with either:
+
+* a *filepath prefix character* (see 'validFilePathLiteralPrefixSymbols').
+* an *environment variable* (in POSIX syntax or in Windows syntax)
+* a *letter drive* (for Windows, see 'validFilePathLiteralPrefixSymbols').)
+
+For example, these *filepath literals* are valid:
+
+* @/etc/skeletor@ — an absolute path (starts with @/@)
+* @~/skeletor@ — an absolute path (starts with @~@, as part of @~/@)
+* @./skeletor@ — a relative path (starts with @.@, as part of @./@)
+* @${XDG_CONFIG_HOME}/skeletor@ — an environment variable (starts with @$@, , as part of @${ ... }@)
+* @%APPDATA%/skeletor@ — an environment variable (starts with @%@, as part of @% ... %@)
+* @C:\\\\skeletor@ — (starts with an uppercase letter, as part of @... :\\\\@)
+
+But these strings are invalid:
+
+* @skeletor@ 
+* @etc/skeletor@ 
 
 -}
 
@@ -109,7 +136,7 @@ data Location
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 'LocationFile' is identifies (or is) a string.
+{-| 'LocationFile' identifies (or is) a /string/.
 
 -}
 
@@ -118,7 +145,7 @@ data LocationFile
   = LocationFileInline   Text          -- ^ Write this string.
   | LocationFileFilePath FilePath      -- ^ Copy this file.
 
-  | LocationFileURL URL                -- ^ Download this URL.
+  | LocationFileURI URI                -- ^ Download this URI.
 
   | LocationFileEnvironmentVariable EV -- ^ Read (TODO: a path or URI?) from this environment variable.
 
@@ -128,11 +155,11 @@ data LocationFile
 --------------------------------------------------
 --------------------------------------------------
 
-{-| A 'LocationDirectory' is a  Location to a Directory.
+{-| A 'LocationDirectory' identifies (or is) a /tree/.
 
 == Notes
 
-in Nixpkgs, by default, @unpackPhase@ can decompress these compressed/archived file-types:
+For example, in Nixpkgs, by default, @unpackPhase@ can decompress these compressed/archived file-types:
 
 * gzip — @.tar.gz@, @.tgz@, @.tar.Z@.
 * bzip2 — @.tar.bz2@, @.tbz2@, @.tbz@.
@@ -145,8 +172,8 @@ data LocationDirectory
   = LocationDirectoryInline FileTree        -- ^ Write these strings.
   | LocationDirectoryPath   FilePath        -- ^ Copy this directory, recursively.
 
-  | LocationDirectoryURL URL                -- ^ Download this URL.
-  | LocationDirectoryGit URL                -- ^ Clone this Git repository.
+  | LocationDirectoryURI URI                -- ^ Download this URL.
+  | LocationDirectoryGit URI                -- ^ Clone this Git repository.
 
   | LocationDirectoryArchive FilePath       -- ^ Un-Archive this file, then copy the 'LocationDirectory'.
   | LocationDirectoryTarball FilePath       -- ^ Un-Compress this file, un-archive it, then copy the 'LocationDirectory'.
@@ -171,16 +198,6 @@ newtype FileTree = FileTree
   deriving newtype  (Eq,Ord,Semigroup,Monoid)
   deriving newtype  (NFData,Hashable)
 
-
---------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
-type URL = FilePath
-
 --------------------------------------------------
 --------------------------------------------------
 
@@ -204,7 +221,7 @@ instance Exception LocationParseError where
 --displayException = show
   displayException = \case
 
-    LocationParseError msg -> "« LocationParseError.LocationParseError » " <>
+    LocationParseError msg -> "{{{ LocationParseError.LocationParseError }}} " <>
       msg
 
 --------------------------------------------------
@@ -214,4 +231,46 @@ instance IsString LocationParseError where
   fromString = LocationParseError
 
 --------------------------------------------------
+-- Definitions -----------------------------------
+--------------------------------------------------
+
+{-|
+
+-}
+
+parseLocation :: (MonadThrow m) => String -> m Location
+parseLocation s = _
+  where
+
+    isValid = File.isValid s
+
+    hasDrive
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+validFilePathLiteralPrefixSymbols :: [Char]
+validFilePathLiteralPrefixSymbols =
+
+  [ '/'
+  , '~'
+  , '.'
+  , '$'
+  , '%'
+  ]
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+fromLocation :: Location -> Either LocationParseError URI
+fromLocation = _
+
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

@@ -148,12 +148,11 @@ piCreateProjectOptions :: P.ParserInfo CreateProjectOptions
 piCreateProjectOptions = info description do
 
   globals     <- pGlobalOptions
-
-  location    <- pLocation
-
+  project     <- pProject
   destination <- pDestination
-
+  name        <- pName
   license     <- pLicense
+  bindings    <- pBindings
 
   return CreateProjectOptions{..}
 
@@ -246,7 +245,8 @@ pCommand = do
     qs = mconcat
 
       [ pVersionRealCommand
-      , pLicenseRealCommand
+      , pLicenseCommand
+      , pExamplesCommand
       ]
 
     pFakeSubCommand :: P.Parser Command
@@ -258,16 +258,19 @@ pCommand = do
     pVersionFakeCommand :: P.Parser Command
     pVersionFakeCommand = (P.flag' (CommandPrintVersion def)) $ mconcat
 
-            [ P.long "version"
-            , P.style P.bold
-            , P.help "(The {{{ --version }}} option is an alias for the {{{ version }}} subcommand.)"
-            ]
+      [ P.long "version"
+      , P.style P.bold
+      , P.help "(The {{{ --version }}} option is an alias for the {{{ version }}} subcommand.)"
+      ]
 
     pVersionRealCommand :: P.Mod P.CommandFields Command
     pVersionRealCommand = P.command "version" piVersionCommand
 
-    pLicenseRealCommand :: P.Mod P.CommandFields Command
-    pLicenseRealCommand = P.command "license" piLicenseCommand
+    pLicenseCommand :: P.Mod P.CommandFields Command
+    pLicenseCommand = P.command "license" piLicenseCommand
+
+    pExamplesCommand :: P.Mod P.CommandFields Command
+    pExamplesCommand = P.command "examples" piExamplesCommand
 
     piVersionCommand :: P.ParserInfo Command
     piVersionCommand = info helpVersion do
@@ -279,11 +282,19 @@ pCommand = do
       globals  <- pGlobalOptions
       return (CommandPrintLicense globals)
 
+    piExamplesCommand :: P.ParserInfo Command
+    piExamplesCommand = info helpExamples do
+      globals  <- pGlobalOptions
+      return (CommandPrintExamples globals)
+
     helpVersion :: String
     helpVersion = "Print the version of this program. The format is: dot-separated numerics. For example: {{{ 0.11.0 }}}. When the verbosity is {{{ 1 }}} (the default) or less, no other text is printed (also see option {{{ --verbose }}}); when {{{ 2 }}} or greater, also print the patch version (i.e. the git commit) and build information (the compiler version, and transitive dependencies' versions)."
 
     helpLicense :: String
     helpLicense = "Print the license of this program. The format is: an SPDX License Identifier (alphanumerics, plus hyphens and/or dots). For example: {{{ Apache-2.0 }}}. When the verbosity is {{{ 1 }}} (the default) or less, no other text is printed (also see option {{{ --verbose }}}); when {{{ 2 }}} or greater, also print the license contents."
+
+    helpExamples :: String
+    helpExamples = "Print several example invocations of this program. The format is: one per line of {{{ stdout }}}."
 
 --------------------------------------------------
 
@@ -305,7 +316,7 @@ pGlobalOptions = do
         [ P.long    "verbose"
         , P.short   'v'
         , embolden
-        , P.help    "Enable verbose messages. (Includes network progress from downloading any resources. Includes printing the config that's derived from the invokation of this command: ①, parsing these command-line options; and ②, defaulting the values of any optional options.)"
+        , P.help    "Enable verbose messages. (Includes network progress from downloading any resources. Includes printing the config that's derived from the invocation of this command: (1), parsing these command-line options; and (2), defaulting the values of any optional options.)"
         ])
 
   dryrun <- (P.flag TrueRun DryRun) (mconcat
@@ -344,8 +355,45 @@ pLocation = P.option rLocation (mconcat
 
 -}
 
-pProject :: P.Parser KnownProjectName
-pProject = P.option rProject (mconcat
+pBindings :: P.Parser Bindings
+pBindings = P.option rProjectIdentifier (mconcat
+
+  bindings <- many (P.option rBinding (mconcat
+
+        [ (P.long    "set")
+        , (P.short   's')
+        , (P.metavar "BINDING")
+        , P.help    "A configuration variable binding. For example, {{{ -s \"name=Sam M Boosalis\" }}} (equivalently, {{{ \"--set=name=Sam M Boosalis\" }}}) sets the Template Variable {{{ name }}} to the String Value {{{ \"Sam M Boosalis\" }}}. (NOTE In this example, the quotation-marks are stripped from the argument by the shell; they group {{{ name=value }}} into a single argument when the {{{ value }}} has whitespace, which saves us from escaping every whitespace character in the {{{ value }}}.)"
+        , P.style P.bold
+        ]))
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+pProjectIdentifier :: P.Parser ProjectIdentifier
+pProjectIdentifier = P.option rProjectIdentifier (mconcat
+
+  projectpath <- optional (P.strOption (mconcat
+
+        [ P.long    "project-filepath"
+        , P.short   'f'
+        , P.metavar "PROJECT"
+        , P.action  "directory"
+        , P.help    "Which project skeleton, by path. (When both {{{ --project-filepath }}} and {{{ --project-name }}} are given, this option takes precedence. When neither are given, the default value equivalent to {{{ --project-name=default }}})."
+        , P.style P.bold
+        ]))                
+
+--------------------------------------------------
+
+{-|
+
+-}
+
+pProjectName :: P.Parser BuiltinHaskellProjectName
+pProjectName = P.option rProject (mconcat
 
         [ P.long    "project-name"
         , P.metavar "n"
@@ -371,6 +419,7 @@ pProject = P.option rProject (mconcat
 
 -- Directory.
 -- File.
+
 
 --------------------------------------------------
 
@@ -445,7 +494,7 @@ pOSILicense = defaulting defaultLicense (P.option rOSILicense (mconcat
         , P.completeWith knownOSILicenseIds
 
         , embolden
-        , P.help    "Like {{{ --license _», but only for Open Source Initiative licenses."
+        , P.help    "Like {{{ --license _ }}}, but only for Open Source Initiative licenses. Usage: to ensure your license is an “open-source” one."
         , embolden
         ]))
 
@@ -464,11 +513,11 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
         , P.completeWith knownFLOSSLicenseIds
 
         , embolden
-        , P.help    "Like {{{ --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
+        , P.help    "Like {{{ --license _ }}}, but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses. Usage: to ensure your license is a “libre” one."
         ]))
 
 --------------------------------------------------
-
+{-
 options :: P.Parser Options
 options = do
 
@@ -505,7 +554,7 @@ options = do
         , (P.short   'c')
         , (P.metavar "CONFIG_FILE")
         , P.action  "file"
-        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an {{{ INI }}} file (c.f. a UNIX-style {{{ .conf }}} file). Relative filepaths are interpreted relative: to ① the current directory from which this command was invoked; ② to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
+        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an {{{ INI }}} file (c.f. a UNIX-style {{{ .conf }}} file). Relative filepaths are interpreted relative: to (1) the current directory from which this command was invoked; (2) to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
         , P.style P.bold
         ]))
 
@@ -537,7 +586,7 @@ options = do
         ]))
 
   return Options{..}
-
+-}
 --------------------------------------------------
 -- Utilities -------------------------------------
 --------------------------------------------------
@@ -592,7 +641,7 @@ fromParserResult :: P.ParserResult a -> Either CommandFailure a
 fromParserResult = \case
 
     P.Success a           -> Right a
-    P.Failure e           -> Left (toCommandFailure (P.renderFailure e programName))
+    P.Failure e           -> Left (toCommandFailure (P.renderFailure e programExecutable))
     P.CompletionInvoked _ -> Left def
 
 --------------------------------------------------

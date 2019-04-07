@@ -12,28 +12,17 @@ module Skeletor.Haskell.Project
   , module Skeletor.Haskell.Project
   ) where
 
+
 --------------------------------------------------
--- Imports (Project) -----------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import Skeletor.Haskell.Project.Types
 
 --------------------------------------------------
--- Imports (External) ----------------------------
---------------------------------------------------
 
--- import qualified "" _ as _
--- import           "" _ ()
+import "base" Control.Exception (SomeException)
 
---------------------------------------------------
--- Imports (Standard Library) --------------------
---------------------------------------------------
-
--- import qualified "" _ as _
--- import           "" _ ()
-
---------------------------------------------------
--- Imports (Custom Prelude) ----------------------
 --------------------------------------------------
 
 import Prelude_skeletor
@@ -51,7 +40,7 @@ import Prelude_skeletor
 -- parseProjectName :: (MonadThrow m) => String -> m ProjectName
 -- parseProjectName =
 
---   mkParserFromPrinterWith "KnownProjectName" printBuiltinProjectName allBuiltinProjects
+--   mkParserFromPrinterWith "BuiltinHaskellProjectName" printBuiltinProjectName allBuiltinHaskellProjectNames
 
 -- --------------------------------------------------
 
@@ -65,6 +54,21 @@ import Prelude_skeletor
 --   DefaultProject -> "default"
 
 --------------------------------------------------
+
+parseHaskellProjectName :: (MonadThrow m) => String -> m HaskellProjectName
+parseHaskellProjectName s = m
+  where
+
+  m = eBC & either throwM return
+
+  eBC = eB & either (eC & either throwM return) return
+
+  eB :: Either SomeException BuiltinHaskellProjectName
+  eB = parseBuiltinProjectName s
+
+  eC :: Either SomeException CustomHaskellProjectName
+  eC = parseCustomProjectName s
+
 --------------------------------------------------
 
 {-|
@@ -73,29 +77,13 @@ Inverts 'printBuiltinProjectName'.
 
 -}
 
-parseBuiltinProjectName :: (MonadThrow m) => String -> m KnownProjectName
+parseBuiltinProjectName :: (MonadThrow m) => String -> m BuiltinHaskellProjectName
 parseBuiltinProjectName =
 
-  mkParserFromPrinterWith "KnownProjectName" printBuiltinProjectName allBuiltinProjects
-
---------------------------------------------------
-
-{-|
-
--}
-
-printBuiltinProjectName :: KnownProjectName -> String
-printBuiltinProjectName = \case
-
-  DefaultProject -> "default"
+  mkParserFromPrinterWith "BuiltinHaskellProjectName" printBuiltinProjectName allBuiltinHaskellProjectNames
 
 --------------------------------------------------
 -- Definitions -----------------------------------
---------------------------------------------------
-
-allBuiltinProjects :: [KnownProjectName]
-allBuiltinProjects = genum
-
 --------------------------------------------------
 
 {-|
@@ -111,7 +99,7 @@ locateProject = either id locateKnownProject
 
 -}
 
-locateKnownProject :: KnownProjectName -> FilePath
+locateKnownProject :: BuiltinHaskellProjectName -> FilePath
 locateKnownProject = \case
 
   DefaultProject -> "/home/sboo/haskell/skeletor/projects/default"  --TODO-- data-files  --TODO-- respect home-directory e.g. ~ or %USER%.
@@ -120,11 +108,11 @@ locateKnownProject = \case
 
 -- |
 --
--- @≡ 'printBuiltinProjectName' <$> 'allBuiltinProjects'@
+-- @≡ 'printBuiltinProjectName' <$> 'allBuiltinHaskellProjectNames'@
 --
 
 builtinProjectNames :: [String]
-builtinProjectNames = printBuiltinProjectName <$> allBuiltinProjects
+builtinProjectNames = printBuiltinProjectName <$> allBuiltinHaskellProjectNames
 
 --------------------------------------------------
 
@@ -135,7 +123,7 @@ builtinProjectNames = printBuiltinProjectName <$> allBuiltinProjects
 --
 
 defaultProjectName :: String
-defaultProjectName = printBuiltinProjectName defaultKnownProjectName
+defaultProjectName = printBuiltinProjectName defaultBuiltinHaskellProjectName
 
 --------------------------------------------------
 -- EOF -------------------------------------------

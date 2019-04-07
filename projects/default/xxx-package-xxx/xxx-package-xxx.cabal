@@ -65,7 +65,7 @@ tested-with: GHC   == 8.6.4
 
 license:             Apache-2.0
 license-file:        LICENSE
-copyright:           2019 __Name__
+copyright:           __Year__ __LegalName__
 
 -- license:             GPL-3.0-or-later
 -- license:             Apache-2.0
