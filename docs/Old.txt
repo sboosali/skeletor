@@ -2478,6 +2478,43 @@ parseHaskellProjectName s = m
 --------------------------------------------------
 
 
+{-| Locate either a 'LocationFile' or a 'LocationDirectory'.
+
+A 'Location' can be identified by:
+
+* itself — i.e. inline contents literally (into a string or tree).
+* a filepath — a directory (the root of the files being located).
+* an archive — a `.tar`; to be un-archived (into the above).
+* a tarball — a `.tar.gz`; to be decompressed (into the above).
+* a URI — download it, following links ([TODO]: detect cycles, ditto with hardlinks of filepaths).
+* a Git repository — clone it.
+* a name — a known name (e.g. builtin into your system).
+
+-}
+
+data Location
+
+  = LocationFile      LocationFile
+  | LocationDirectory LocationDirectory
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData{-,Hashable-})
+
+--------------------------------------------------
+
+{-| 'LocationFile' identifies (or is) a /string/.
+
+-}
+
+data LocationFile
+
+  = LocationFileInline   Text          -- ^ Write this string.
+  | LocationFilePath     FilePath      -- ^ Copy this file.
+  | LocationFileURI      URI           -- ^ Download this URI.
+
+  deriving stock    (Show,Eq,Ord,Generic)
+  deriving anyclass (NFData{-,Hashable-})
+
 --------------------------------------------------
 
 

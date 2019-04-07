@@ -138,12 +138,29 @@ programExamples =
   , "skeletor-haskell config --license=Apache-2.0"
 
   , "skeletor-haskell fetch git@github.com:sboosali/skeletor-haskell-contrib.git --subdir signatures"
-  , "skeletor-haskell fetch git@github.com:sboosali/skeletor-haskell-contrib.git --subdirs signatures,javascript"
+  , "skeletor-haskell fetch git@github.com:sboosali/skeletor-haskell-contrib.git --subdirs signatures,ghcjs"
   , "skeletor-haskell fetch all"
+
+  , "skeletor-haskell parse default"
+  , "skeletor-haskell parse default --json"
+  , (unlines [ "$EDITOR /tmp/manifest.ini"
+             , "# (edit the file and close the editor...)"
+             , "# 
+             , "# [
+             , "# 
+             , "# {type: "symbol", l:"Xxx", r:"xxX"},
+             , "# {type: "text", l:"__", r:"__"}
+             , "# 
+             , "# ]
+             , "# 
+             , "skeletor-haskell parse default --manifest=/tmp/manifest.json"
+             ])
 
   , "skeletor-haskell test git@github.com:sboosali/skeletor-haskell-contrib.git --all"
 
   , "skeletor-haskell build git@github.com:sboosali/skeletor-haskell-contrib.git --all"
+
+  , "skeletor-haskell tarball git@github.com:sboosali/skeletor-haskell-contrib.git --all\n# {{{ skeletor-haskell tarball }}} is like {{{ cabal sdist }}}."
 
   ]
 

@@ -1,4 +1,13 @@
+--------------------------------------------------
+--------------------------------------------------
+
+{-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE DataKinds #-}
+
+--------------------------------------------------
+
 {-# LANGUAGE BinaryLiterals #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -10,10 +19,13 @@
 module Skeletor.Core.URI.Types where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
 
-import Skeletor.Core.EnvironmentVariable
+import Prelude_location
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import           "modern-uri" Text.URI (URI)
@@ -24,6 +36,8 @@ import qualified "modern-uri" Text.URI as URI
 import qualified "unordered-containers" Data.HashMap.Lazy as HashMap
 import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 
+--------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import qualified "containers" Data.Map as Map
@@ -44,40 +58,10 @@ import qualified "bytestring" Data.ByteString as B
 
 --import qualified "bytestring" Data.ByteString.Lazy as B
 
---------------------------------------------------
-
 --import qualified "base" System.IO as IO
 
-import Prelude_location
-
 --------------------------------------------------
---------------------------------------------------
-
-{-|
-
--}
-
---------------------------------------------------
---------------------------------------------------
-
-{-| a 'URI' represents:
-
-* 
-* 
-
-See 'readURI'.
-
--}
-
-data URI a
-
-  = URIPath     URIPath
-  | URIContents !a
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData)
-
---------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 {-| 
@@ -86,7 +70,7 @@ data URI a
 
 data RemoteFileLocation = RemoteFileLocation
 
-  { 
+  { remoteLocation :: URI
   }
 
 --------------------------------------------------
@@ -94,7 +78,7 @@ data RemoteFileLocation = RemoteFileLocation
 {-| A filetree within a Git repository is identified by:
 
 * the location of that repository
-  (@URI@s can be both remote and, wtih the @file://@ scheme, local).
+  (@URL@s can be both remote and, wtih the @file://@ scheme, local).
 * a reference, to @git checkout@.
 * a subdirectory (within that reference), to @cd@ into.
 
@@ -142,7 +126,7 @@ instance IsString GitReference where
 
 instance Default GitReference where
 
-  def = GitNotReference
+  def = GitNoReference
 
 --------------------------------------------------
 --------------------------------------------------
@@ -183,4 +167,6 @@ type _ = File
 
 
 -}
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

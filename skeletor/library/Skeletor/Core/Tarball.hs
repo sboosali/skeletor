@@ -41,6 +41,7 @@ import qualified "zlib" Codec.Compression.Zlib.Internal (DecompressError)
 import qualified "bytestring" Data.ByteString.Lazy as LazyByteString
 
 --------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 data CompressionAlgorithm
@@ -198,6 +199,7 @@ readTarballZlib directoryPath tarballPath = rethrowing $ do
   rethrowing = catches_throwM (Proxy :: Proxy DecompressError)
 
 --------------------------------------------------
+-- Utilities -------------------------------------
 --------------------------------------------------
 
 catches_throwM
@@ -219,4 +221,5 @@ catches_throwM effect =
     ]
 
 --------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

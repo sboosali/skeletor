@@ -20,6 +20,7 @@ import Prelude_skeletor
 
 --------------------------------------------------
 
+import Skeletor.Core.URI
 import Skeletor.Core.Errors
 
 --------------------------------------------------
@@ -52,7 +53,7 @@ import           "base" Control.Exception (Exception(..))
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-{-| Locate either a 'LocationFile' or a 'LocationDirectory'.
+{-| Locate a directory.
 
 A 'Location' can be identified by:
 
@@ -66,34 +67,12 @@ A 'Location' can be identified by:
 
 -}
 
-data Location
-
-  = LocationFile      LocationFile
-  | LocationDirectory LocationDirectory
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData{-,Hashable-})
+type Location = LocationDirectory
 
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 'LocationFile' identifies (or is) a /string/.
-
--}
-
-data LocationFile
-
-  = LocationFileInline   Text          -- ^ Write this string.
-  | LocationFilePath     FilePath      -- ^ Copy this file.
-  | LocationFileURI      URI           -- ^ Download this URI.
-
-  deriving stock    (Show,Eq,Ord,Generic)
-  deriving anyclass (NFData{-,Hashable-})
-
---------------------------------------------------
---------------------------------------------------
-
-{-| A 'LocationDirectory' identifies (or is) a /tree/.
+{-| A 'LocationDirectory' identifies (or realizes) a directory (a /tree of files/).
 
 == Notes
 
@@ -209,7 +188,7 @@ May throw 'LocationParseError' or 'URI.ParseException'.
 
 -}
 
-parseLocation :: (MonadThrow m) => String -> m Location
+parseLocation :: (MonadThrow m) => String -> m LocationSyntax
 parseLocation s =
 
   if   (isValidAsFile && isFilePathLiteral)
@@ -225,6 +204,24 @@ parseLocation s =
 
     doesStartWith [] _ = False
     doesStartWith (c : cs) c' = c == c'
+
+--------------------------------------------------
+
+{-| 
+
+-}
+
+desugarLocation :: (MonadThrow m) => LocationSyntax -> m Location
+desugarLocation = \case
+
+  LocationURI  uri -> desugarURI
+  LocationPath fp  -> desugarFilePath
+
+  where
+
+  desugarURI uri = LocationDirectoryURI uri
+
+  desugarFilePath fp = LocationDirectoryPath fp
 
 --------------------------------------------------
 
@@ -252,6 +249,24 @@ validFilePathLiteralPrefixSymbols =
 fromLocation :: Location -> Either LocationParseError URI
 fromLocation = _
 
+--------------------------------------------------
+-- Notes -----------------------------------------
+--------------------------------------------------
+{-
+
+desugarLocation :: (MonadThrow m) => LocationSyntax -> m Location
+desugarLocation = \case
+
+  LocationURI  uri -> desugarURI
+  LocationPath fp  -> desugarFilePath
+
+  where
+
+  desugarURI uri = _ scheme
+
+  desugarFilePath fp = _ fileExt
+
+-}
 --------------------------------------------------
 -- EOF -------------------------------------------
 --------------------------------------------------

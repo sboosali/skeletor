@@ -20,10 +20,19 @@ module Skeletor.Core.Location
   ) where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
 
-import Skeletor.Core.Location.Types
+import Prelude_location
 
 --------------------------------------------------
+
+import Skeletor.Core.Location.Types
+-- import Skeletor.Core.Archive
+-- import Skeletor.Core.Tarball
+
+--------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import           "modern-uri" Text.URI (URI)
@@ -45,6 +54,8 @@ import           "unordered-containers" Data.HashMap.Lazy (HashMap)
 import qualified "containers" Data.Map as Map
 import           "containers" Data.Map (Map)
 
+--------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import qualified "filepath"   System.FilePath as File
@@ -68,10 +79,6 @@ import qualified "base" System.Environment as IO
 import qualified "base" Data.List as List
 
 --------------------------------------------------
-
-import Prelude_location
-
---------------------------------------------------
 -- Definitions -----------------------------------
 --------------------------------------------------
 
@@ -81,33 +88,23 @@ A 'Location' can be identified by:
 
 * itself           — i.e. inline contents (into a string or tree).
 * a filepath       — a directory (the root of the files being located).
-* an archive       — a @.tar@; to be un-archived (into the above).
-* a tarball        — a @.tar.gz@; to be decompressed (into the above).
-* a URI            — download it, following links ([TODO]: detect cycles,
+* an archive       — a @.tar@ file; to be un-archived (into the above).
+* a tarball        — a @.tar.gz@ file; to be decompressed (into the above).
+* a URI            — a link; to be downloaded, following links ([TODO]: detect cycles,
                      ditto with hardlinks of filepaths).
 * a Git repo       — clone the repository.
-* a name           — a known name (e.g. built-into your system).
-* an env-var       — TODO read the environment variable
-                     (containing one of the kinds of locations above).
+* a name           — a known name (e.g. built-into your @skeletor-*@ plugin, or registered via a "Skeletor.Core.Repository").
 
 -}
 
 readLocation :: (MonadIO m) => Location -> m (Located Text)
 readLocation = \case
 
-  LocationInlineFile      x -> readInlineFile x
-  LocationFile            x -> readFile x
+  LocationURL             x -> readURI x
+  -- LocationGit             x -> readGit x
 
-  LocationInlineDirectory x -> readInlineDirectory x
-  LocationDirectory       x -> readDirectory x
-
-  LocationURL             x -> readURI_GET x
-  LocationGit             x -> readGit x
-
-  LocationArchive         x -> readArchive x
-  LocationTarball         x -> readTarball x
-
-  LocationEnvironment     x -> readEnvironmentVariable x
+  -- LocationArchive         x -> readArchive x
+  -- LocationTarball         x -> readTarball x
 
 --------------------------------------------------
 --------------------------------------------------
@@ -122,33 +119,10 @@ readFilePath path = do
   return $ contents
 
 --------------------------------------------------
-
--- | wraps ''.
-
-readDirectoryPath :: (MonadIO m) => FilePath -> m (FileTree)
-readDirectoryPath path = do
-
-  
-
-  return $ ""
-
+-- Notes -----------------------------------------
 --------------------------------------------------
 
--- | wraps 'System.Environment.lookupEnv'.
-
-readEnvironmentVariable :: (MonadIO m) => EV -> m (Text)
-readEnvironmentVariable (EV k) = do
-
-  v <- IO.lookupEnv (T.unpack k) <&> go
-
-  return $ v
-
-  where
-  go = maybe "" id > T.pack
-
---------------------------------------------------
-
-{- Notes / Old Code
+{- Notes / Old Code...
 
 
 

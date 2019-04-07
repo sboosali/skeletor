@@ -1,4 +1,13 @@
+--------------------------------------------------
+--------------------------------------------------
+
+{-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE DataKinds #-}
+
+--------------------------------------------------
+
 {-# LANGUAGE BinaryLiterals #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -11,8 +20,6 @@ Currently, these URI Schemes are recognized:
 * @https://@ (and @http://@)
 * @git://@
 * @ssh://@
-* @://@
-* @://@
 
 See 'interpretURI'.
 
@@ -21,26 +28,27 @@ See 'interpretURI'.
 module Skeletor.Core.URI.Schemes where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
+import Prelude_location
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import           "modern-uri" Text.URI (URI(..))
 import qualified "modern-uri" Text.URI as URI
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
 
 import qualified "text"       Data.Text    as T
 import qualified "text"       Data.Text.IO as T
 
 --------------------------------------------------
---------------------------------------------------
-
-import Prelude_location
-
---------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 {-| Interpret a URI as a Location given its Scheme and\/or its Path.
@@ -51,7 +59,7 @@ Otherwise, take the URI Path, and guess the Scheme from the Path.
 -}
 
 interpretURI :: URI -> _
-interpretURI (URI uri) = _
+interpretURI (URI{}) = _
 
 --------------------------------------------------
 --------------------------------------------------
@@ -59,35 +67,36 @@ interpretURI (URI uri) = _
 -- | 
 
 fileScheme :: URI.RText URI.Scheme
-fileScheme = mkScheme "file" & fromJust
+fileScheme = URI.mkScheme "file" & fromJust
 
 --------------------------------------------------
 
 -- | 
 
 gitScheme :: URI.RText URI.Scheme
-gitScheme = mkScheme "git" & fromJust
+gitScheme = URI.mkScheme "git" & fromJust
 
 --------------------------------------------------
 
 -- | 
 
 httpsScheme :: URI.RText URI.Scheme
-httpsScheme = mkScheme "https" & fromJust
+httpsScheme = URI.mkScheme "https" & fromJust
 
 --------------------------------------------------
 
 -- | 
 
 httpScheme :: URI.RText URI.Scheme
-httpScheme = mkScheme "http" & fromJust
+httpScheme = URI.mkScheme "http" & fromJust
 
 --------------------------------------------------
 
 -- | 
 
 sshScheme :: URI.RText URI.Scheme
-sshScheme = mkScheme "ssh" & fromJust
+sshScheme = URI.mkScheme "ssh" & fromJust
 
 --------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

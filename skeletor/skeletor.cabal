@@ -504,6 +504,7 @@ library
 
  ------------------------------
  ------------------------------
+
  exposed-modules: Skeletor
 
                   ------------
@@ -515,8 +516,10 @@ library
                   Skeletor.Core.Location
                   Skeletor.Core.Location.Types
 
-                  Skeletor.Core.Hash
-                  Skeletor.Core.Hash.Types
+                  Skeletor.Core.URI
+                  Skeletor.Core.URI.Types
+                  Skeletor.Core.URI.Schemes
+                  Skeletor.Core.URI.Read
 
                   ------------
 
@@ -531,10 +534,6 @@ library
                   
                   -- Skeletor.Core.FileTree
                   -- Skeletor.Core.FileTree.Types
-
-                  -- Skeletor.Core.URI
-                  -- Skeletor.Core.URI.Types
-                  -- Skeletor.Core.URI.Read
 
                   -- Skeletor.Core.Path
                   -- Skeletor.Core.Path.Types
@@ -562,6 +561,9 @@ library
                   -- Skeletor.Core.EnvironmentVariable.Path
                   -- Skeletor.Core.EnvironmentVariable.List
                   -- Skeletor.Core.EnvironmentVariable.Number
+
+                  -- Skeletor.Core.Hash
+                  -- Skeletor.Core.Hash.Types
 
                   -- Skeletor.Core.Archive
                   -- Skeletor.Core.Compressed
@@ -611,6 +613,14 @@ library
                   Prelude_location
 
                   ------------
+
+ ------------------------------
+
+ other-modules:   
+
+                  -- Skeletor.Core.URI
+                  -- Skeletor.Core.URI.Read
+                  -- Skeletor.Core.URI.Types
 
  -- other-modules:   Paths_skeletor
  -- autogen-modules: Paths_skeletor
@@ -682,6 +692,7 @@ library
    --------------------
 
              , modern-uri
+             , network-uri
 
              , http-types
              , http-client
