@@ -330,6 +330,11 @@ data ConfigurationVariableType
   deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
   deriving anyclass (NFData,Hashable)
 
+--TODO-- Refinement Types:
+-- for numbers, strings, .
+-- for lists, records, .
+-- see LiquidHaskell?
+
 --------------------------------------------------
 --------------------------------------------------
 

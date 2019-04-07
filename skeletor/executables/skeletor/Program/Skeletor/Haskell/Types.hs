@@ -353,7 +353,9 @@ data ConfigurationResolved = ConfigurationResolved
 
 data Configuration = Configuration
 
-  { 
+  { settings :: Settings
+  , bindings :: Bindings
+  
   }
 
   deriving stock    (Show,Eq,Ord)
@@ -385,6 +387,23 @@ instance Default Configuration where
 
 defaultConfiguration :: Configuration
 defaultConfiguration = Configuration{}
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-| 
+
+-}
+
+data Settings = Settings
+
+  { extraRepositories :: () -- [RepositoryLocation]
+  
+  }
+
+  deriving stock    (Show,Eq,Ord)
+  deriving stock    (Generic)
+  deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
 --------------------------------------------------

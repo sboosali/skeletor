@@ -805,9 +805,13 @@ executable skeletor-haskell
 
               , text
               , case-insensitive
+              , directory
               , filepath
+              , unix-compat
               , filemanip
               , modern-uri
+
+              , time
 
               , attoparsec
               , megaparsec

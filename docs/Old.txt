@@ -2015,7 +2015,23 @@ pPseudoSubCommand = do
 
 --------------------------------------------------
 
+newTemporaryFilePath :: String -> IO FilePath
+newTemporaryFilePath name = do
 
+  directory <- Directory.getTemporaryDirectory
+  time      <- Time.getCurrentTime
+  timezone  <- Time.getCurrentTimeZone
+
+  --locale    <- Time.getCurrentLocale
+
+  let timestamp = formatUTCTimeAsFilePath (Just locale) time
+
+  let dirname  = directory </> programName
+  let basename = timestamp <> "_" <> name 
+
+  let path = dirname </> basename
+
+  return path
 
 --------------------------------------------------
 

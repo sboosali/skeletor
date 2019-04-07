@@ -2516,6 +2516,141 @@ human = Human { name = "Tunyasz", age = 50, address = "London", other = False }
 
 
 
+## `time`
+
+### module `Data.Time.Clock`
+
+e.g.:
+
+```haskell
+
+import qualified "time" Data.Time.Clock as Time
+
+timeUTC   <- Time.getCurrentTime
+
+show timeUTC
+-- "2019-04-07 03:49:49.872235996 UTC"
+```
+
+### module `Data.Time.Format`
+
+e.g.:
+
+```haskell
+import qualified "time" Data.Time.Format as Time
+
+timeUTC <- Time.getCurrentTime
+
+Time.formatTime Time.defaultTimeLocale "%Y-%m-%d-%Hh-%Mm-%Ss-%qms" timeUTC
+-- "2019-04-07-03h-49m-49s-872ms"
+```
+
+
+### module `Data.Time.LocalTime`
+
+e.g.:
+
+```haskell
+import qualified "time" Data.Time.LocalTime as Time
+
+
+timeZoned <- Time.getZonedTime
+-- "2019-04-06 21:25:55.231867351 PDT"
+
+format = Time.formatTime Time.defaultTimeLocale "%Y-%m-%d-%Hh-%Mm-%Ss-%qps" 
+
+format timeZoned
+-- "2019-04-06-21h-30m-07s-910071764000ps"
+
+format = Time.formatTime Prelude.undefined "%Y-%m-%d-%Hh-%Mm-%Ss-%03qms"
+
+format timeZoned
+-- "2019-04-06-21h-43m-51s-852ms"
+```
+
+```haskell
+getZonedTime :: IO ZonedTime
+```
+
+
+### module ``
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
+## ``
+
+### module ``
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
+## ``
+
+### module ``
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
+## ``
+
+### module ``
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
+## ``
+
+### module ``
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
 ## ``
 
 ### module ``
