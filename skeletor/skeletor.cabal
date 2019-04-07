@@ -517,9 +517,9 @@ library
                   Skeletor.Core.Location.Types
 
                   Skeletor.Core.URI
-                  Skeletor.Core.URI.Types
                   Skeletor.Core.URI.Schemes
-                  Skeletor.Core.URI.Read
+                  Skeletor.Core.URI.Types
+                  --Skeletor.Core.URI.Read
 
                   ------------
 

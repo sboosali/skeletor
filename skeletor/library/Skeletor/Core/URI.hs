@@ -16,7 +16,7 @@ module Skeletor.Core.URI
   , module Skeletor.Core.URI.Schemes
 
     -- * "Reading" (downloading) different 'URI's.
-  , module Skeletor.Core.URI.Read
+  , --module Skeletor.Core.URI.Read
   ) where
 
 --------------------------------------------------
@@ -24,7 +24,7 @@ module Skeletor.Core.URI
 
 import Skeletor.Core.URI.Types
 import Skeletor.Core.URI.Schemes
-import Skeletor.Core.URI.Read
+--import Skeletor.Core.URI.Read
 
 --------------------------------------------------
 --------------------------------------------------

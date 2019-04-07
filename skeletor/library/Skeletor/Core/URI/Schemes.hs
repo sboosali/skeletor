@@ -51,6 +51,8 @@ import qualified "text"       Data.Text.IO as T
 -- Definitions -----------------------------------
 --------------------------------------------------
 
+{-
+
 {-| Interpret a URI as a Location given its Scheme and\/or its Path.
 
 If the @uri@ has a URI Scheme, assume that.
@@ -60,6 +62,8 @@ Otherwise, take the URI Path, and guess the Scheme from the Path.
 
 interpretURI :: URI -> _
 interpretURI (URI{}) = _
+
+-}
 
 --------------------------------------------------
 --------------------------------------------------

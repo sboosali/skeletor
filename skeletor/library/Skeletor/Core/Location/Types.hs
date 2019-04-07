@@ -87,12 +87,14 @@ For example, in Nixpkgs, by default, @unpackPhase@ can decompress these compress
 data LocationDirectory
 
   = LocationDirectoryPath    FilePath        -- ^ Copy this directory, recursively.
+{-
 
   | LocationDirectoryURI     URI             -- ^ Download this URL.
   | LocationDirectoryGit     URI             -- ^ Clone this Git repository.
 
   | LocationDirectoryArchive FilePath        -- ^ Un-Archive this file, then copy the 'LocationDirectory'.
   | LocationDirectoryTarball FilePath        -- ^ Un-Compress this file, un-archive it, then copy the 'LocationDirectory'.
+-}
 
   deriving stock    (Show,Eq,Ord,Generic)
   deriving anyclass (NFData{-,Hashable-})
@@ -214,14 +216,13 @@ parseLocation s =
 desugarLocation :: (MonadThrow m) => LocationSyntax -> m Location
 desugarLocation = \case
 
-  LocationURI  uri -> desugarURI
-  LocationPath fp  -> desugarFilePath
+  LocationPath fp  -> desugarPath fp
+  LocationURI  uri -> errorM "{{{ desugarLocation }}}" --desugarURI
 
   where
 
-  desugarURI uri = LocationDirectoryURI uri
-
-  desugarFilePath fp = LocationDirectoryPath fp
+  desugarPath fp  = return (LocationDirectoryPath fp)
+  -- desugarURI  uri = return (LocationDirectoryURI  uri)
 
 --------------------------------------------------
 
@@ -241,6 +242,7 @@ validFilePathLiteralPrefixSymbols =
 
 --------------------------------------------------
 --------------------------------------------------
+{-
 
 {-|
 
@@ -249,6 +251,7 @@ validFilePathLiteralPrefixSymbols =
 fromLocation :: Location -> Either LocationParseError URI
 fromLocation = _
 
+-}
 --------------------------------------------------
 -- Notes -----------------------------------------
 --------------------------------------------------

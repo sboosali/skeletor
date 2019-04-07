@@ -8,29 +8,29 @@ a project-specific custom prelude.
 
 module Prelude_location
 
-  ( module X
-  , Text
-
+  ( module EXPORT
   , module Prelude_location
+
   ) where
 
 --------------------------------------------------
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import "text" Data.Text (Text)
-
---------------------------------------------------
-
-import "spiros" Prelude.Spiros as X hiding (Text)
+import "spiros" Prelude.Spiros as EXPORT
 
 --------------------------------------------------
 -- Imports ---------------------------------------
 --------------------------------------------------
 
+--import qualified "base" Control.Exception as E
+
+--------------------------------------------------
+
 import "base" System.Environment as Environment
 
 --------------------------------------------------
+-- Definitions -----------------------------------
 --------------------------------------------------
 
 {-| Set the (given) Environment Variable with the (given) 'String'.
@@ -55,4 +55,5 @@ unsafelySetEnvironmentVariable name = \case
   Just value -> Environment.setEnv name value
 
 --------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

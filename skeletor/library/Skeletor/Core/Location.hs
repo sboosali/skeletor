@@ -1,6 +1,9 @@
-{-# LANGUAGE OverloadedStrings #-}
+--------------------------------------------------
+--------------------------------------------------
 
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE BinaryLiterals #-}
+{-# LANGUAGE BlockArguments #-}
 
 --------------------------------------------------
 --------------------------------------------------
@@ -69,9 +72,9 @@ import qualified "text"       Data.Text.IO as T
 
 import qualified "bytestring" Data.ByteString as B
 
---import qualified "bytestring" Data.ByteString.Lazy as B
-
 --------------------------------------------------
+
+import qualified "base" Control.Exception as E
 
 import qualified "base" System.Environment as IO
 --import qualified "base" System.IO as IO
@@ -100,23 +103,36 @@ A 'Location' can be identified by:
 readLocation :: (MonadIO m) => Location -> m (Located Text)
 readLocation = \case
 
-  LocationURL             x -> readURI x
-  -- LocationGit             x -> readGit x
+  LocationDirectoryPath             x -> readPath x
 
-  -- LocationArchive         x -> readArchive x
-  -- LocationTarball         x -> readTarball x
+  -- LocationDirectoryURL             x -> readURI x
+  -- LocationDirectoryGit             x -> readGit x
+
+  -- LocationDirectoryArchive         x -> readArchive x
+  -- LocationDirectoryTarball         x -> readTarball x
 
 --------------------------------------------------
 --------------------------------------------------
 
 -- | wraps 'Data.Text.IO.readFile'.
 
-readFilePath :: (MonadIO m) => FilePath -> m (Text)
-readFilePath path = do
+readPath :: (MonadIO m) => FilePath -> m (Located Text)
+readPath path = io do
 
-  contents <- T.readFile path
+  reader `E.catch` handler
 
-  return $ contents
+  where
+
+  reader = do
+
+    contents <- T.readFile path
+    return (YesLocated contents)
+
+  handler :: E.IOException -> IO (Located Text)
+  handler e = do
+
+    let s = (show e)
+    return (NotLocated s)
 
 --------------------------------------------------
 -- Notes -----------------------------------------
