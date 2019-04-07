@@ -135,13 +135,19 @@ PackageDirectory ?=$(PackageName)
 
 BuildDirectory ?=./dist-newstyle
 
-BashCompletionDirectory ?=./share/bash-completion
-ZshCompletionDirectory  ?=./share/zsh-completion
-FishCompletionDirectory ?=./share/fish-completion
-
 NixDirectory      ?=./nix
 ScriptDirectory   ?=./scripts
 DocumentDirectory ?=./docs
+
+#------------------------------------------------#
+
+ShareDirectory          ?=./ignore/share
+# ^ gitignore'd during development.
+#  for a release, override to « ./share ».
+
+BashCompletionDirectory ?=$(ShareDirectory)/bash-completion
+ZshCompletionDirectory  ?=$(ShareDirectory)/zsh-completion
+FishCompletionDirectory ?=$(ShareDirectory)/fish-completion
 
 #------------------------------------------------#
 
