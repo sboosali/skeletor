@@ -260,7 +260,7 @@ pCommand = do
 
             [ P.long "version"
             , P.style P.bold
-            , P.help "(The « --version » option is an alias for the « version » subcommand.)"
+            , P.help "(The {{{ --version }}} option is an alias for the {{{ version }}} subcommand.)"
             ]
 
     pVersionRealCommand :: P.Mod P.CommandFields Command
@@ -280,10 +280,10 @@ pCommand = do
       return (CommandPrintLicense globals)
 
     helpVersion :: String
-    helpVersion = "Print the version of this program. The format is: dot-separated numerics. For example: « 0.11.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the patch version (i.e. the git commit) and build information (the compiler version, and transitive dependencies' versions)."
+    helpVersion = "Print the version of this program. The format is: dot-separated numerics. For example: {{{ 0.11.0 }}}. When the verbosity is {{{ 1 }}} (the default) or less, no other text is printed (also see option {{{ --verbose }}}); when {{{ 2 }}} or greater, also print the patch version (i.e. the git commit) and build information (the compiler version, and transitive dependencies' versions)."
 
     helpLicense :: String
-    helpLicense = "Print the license of this program. The format is: an SPDX License Identifier (alphanumerics, plus hyphens and/or dots). For example: « Apache-2.0 ». When the verbosity is « 1 » (the default) or less, no other text is printed (also see option « --verbose »); when « 2 » or greater, also print the license contents."
+    helpLicense = "Print the license of this program. The format is: an SPDX License Identifier (alphanumerics, plus hyphens and/or dots). For example: {{{ Apache-2.0 }}}. When the verbosity is {{{ 1 }}} (the default) or less, no other text is printed (also see option {{{ --verbose }}}); when {{{ 2 }}} or greater, also print the license contents."
 
 --------------------------------------------------
 
@@ -427,7 +427,7 @@ pLicense = defaulting defaultLicense (P.option rLicense (mconcat
         , P.completeWith knownLicenseIds
 
         , embolden
-        , P.help    "The project's license (an SPDX license identifier). Examples include: « GPL-3.0-or-later », « GPL-3.0-only », « BSD-3-Clause », « CC-BY-SA-4.0 », « MIT ». Press <tab> (twice) to autocomplete all (~350) licenses."
+        , P.help    "The project's license (an SPDX license identifier). Examples include: {{{ GPL-3.0-or-later }}}, {{{ GPL-3.0-only }}}, {{{ BSD-3-Clause }}}, {{{ CC-BY-SA-4.0 }}}, {{{ MIT }}}. Press <tab> (twice) to autocomplete all (~350) licenses."
         ]))
 
 --------------------------------------------------
@@ -445,7 +445,7 @@ pOSILicense = defaulting defaultLicense (P.option rOSILicense (mconcat
         , P.completeWith knownOSILicenseIds
 
         , embolden
-        , P.help    "Like « --license _», but only for Open Source Initiative licenses."
+        , P.help    "Like {{{ --license _», but only for Open Source Initiative licenses."
         , embolden
         ]))
 
@@ -464,7 +464,7 @@ pFLOSSLicense = defaulting defaultFLOSSLicense (P.option rFLOSSLicense (mconcat
         , P.completeWith knownFLOSSLicenseIds
 
         , embolden
-        , P.help    "Like « --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
+        , P.help    "Like {{{ --license _», but only for Free/Libre and Open-Source Software (a.k.a Copyleft) licenses."
         ]))
 
 --------------------------------------------------
@@ -478,7 +478,7 @@ options = do
         , (P.short   'f')
         , (P.metavar "PROJECT_PATH")
         , P.action  "directory"
-        , P.help    "Which project skeleton, by path. (When both « --project-filepath » and « --project-name » are given, this option takes precedence. When neither are given, the default value equivalent to « --project-name=default »)."
+        , P.help    "Which project skeleton, by path. (When both {{{ --project-filepath }}} and {{{ --project-name }}} are given, this option takes precedence. When neither are given, the default value equivalent to {{{ --project-name=default }}})."
         , P.style P.bold
         ]))
 
@@ -488,14 +488,14 @@ options = do
         , (P.short   'p')
         , (P.metavar "PROJECT_NAME")
         , P.completeWith builtinProjectNames
-        , P.help    "Which project skeleton, by name. (Press the « TAB » key for shell-completion of known projects)."
+        , P.help    "Which project skeleton, by name. (Press the {{{ TAB }}} key for shell-completion of known projects)."
         , P.style P.bold
         ]))
 
   subdirectory <- optional (P.strOption (mconcat
         [ (P.long    "subdir")
         , P.action  "file"
-        , P.help    "The subdirectory of the « --location » (when unpacked)."
+        , P.help    "The subdirectory of the {{{ --location }}} (when unpacked)."
         , P.style P.bold
         ]))
 
@@ -505,7 +505,7 @@ options = do
         , (P.short   'c')
         , (P.metavar "CONFIG_FILE")
         , P.action  "file"
-        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an « INI » file (c.f. a UNIX-style « .conf » file). Relative filepaths are interpreted relative: to ① the current directory from which this command was invoked; ② to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
+        , P.help    "Non-Command-Line Options & Arguments — most (but not all) options can be passed via an {{{ INI }}} file (c.f. a UNIX-style {{{ .conf }}} file). Relative filepaths are interpreted relative: to ① the current directory from which this command was invoked; ② to the XDG configuraton directories (both global and user). Absolute filepaths are accepted too. NOTE any explicit Command-Line options override any options written in CONFIG_FILE."
         , P.style P.bold
         ]))
 
@@ -514,7 +514,7 @@ options = do
         [ (P.long    "binding")
         , (P.short   'b')
         , (P.metavar "VARIABLE_BINDING")
-        , P.help    "A configuration variable binding. e.g. « -b \"name=Sam Boosalis\" » (NOTE the quotes are stripped from the argument by the shell, they group the « name=value » into a single argument, when the « value » has whitespace.)."
+        , P.help    "A configuration variable binding. e.g. {{{ -b \"name=Sam Boosalis\" }}} (NOTE the quotes are stripped from the argument by the shell, they group the {{{ name=value }}} into a single argument, when the {{{ value }}} has whitespace.)."
         , P.style P.bold
         ]))
 
@@ -523,7 +523,7 @@ options = do
         [ (P.long    "bindings")
         , (P.short   'e')
         , (P.metavar "VARIABLE_BINDING...")
-        , P.help    "A set of configuration variable bindings. e.g. « -e 'user=sboosali:name=Sam Boosalis:' ». one « --bindings _ » is equivalent to multiple « --binding _ --binding _ ...»."
+        , P.help    "A set of configuration variable bindings. e.g. {{{ -e 'user=sboosali:name=Sam Boosalis:' }}}. one {{{ --bindings _ }}} is equivalent to multiple {{{ --binding _ --binding _ ... }}}."
         , P.style P.bold
         ]))
 
