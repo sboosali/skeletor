@@ -10,6 +10,10 @@ SHELL=bash
 # Makefile Variables #############################
 ################################################## Haskell
 
+FlagDevelop ?=+
+FlagMacros  ?=+
+FlagStatic  ?=-
+
 #------------------------------------------------#
 
 PackageName ?=skeletor
@@ -28,7 +32,7 @@ CompilerFlavor ?=ghc
 
 CompilerVersion ?=8.6.3
 
-Stackage ?=lts-13.9
+Stackage ?=lts-13.15
 
 ##################################################
 
@@ -216,7 +220,7 @@ skeletor-haskell:
 	@echo '=================================================='
 	@echo
 
-	LC_ALL=C.UTF-8 $(Cabal) new-run "skeletor:exe:skeletor-haskell" -- --help
+	LC_ALL=C.UTF-8 $(Cabal) new-run -f"$(FlagDevelop)develop" -f"$(FlagMacros)macros" "skeletor:exe:skeletor-haskell" -- --help
 
 	@echo
 	@echo '=================================================='
@@ -363,6 +367,22 @@ run-skeletor-haskell:
 
 #------------------------------------------------#
 
+bash-completion-skeletor-haskell:
+
+	@printf "\n%s\n" "========================================"
+
+	@$(Cabal) new-run skeletor-haskell -- --bash-completion-script `$(Cabal) new-exec -- which skeletor-haskell` > "./$(BashCompletionDirectory)/skeletor-haskell.bash"
+
+	@printf "\n%s\n" "========================================"
+
+	@$(ClipboardCopy) <(printf "%s\n" 'source "$(BashCompletionDirectory)/skeletor-haskell.bash"')
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: bash-completion-skeletor-haskell
+
+#------------------------------------------------#
+
 test-all:
 	$(Cabal) new-test all
 
@@ -478,6 +498,26 @@ install-skeletor-haskell:
 	@echo '=================================================='
 	@echo
 
+	$(Cabal) new-install --overwrite-policy=always -f"-develop" -f"$(FlagMacros)macros" "skeletor:exe:skeletor-haskell"
+
+	@echo
+	@echo '=================================================='
+	@echo
+
+	@$(ClipboardCopy) <(printf "%s\n" "source <(skeletor-haskell --bash-completion-script `which skeletor-haskell`)")
+
+	@echo
+	@echo '=================================================='
+
+.PHONY: install-skeletor-haskell
+
+#------------------------------------------------#
+
+release-skeletor-haskell:
+
+	@echo '=================================================='
+	@echo
+
 	time $(Cabal) new-install --overwrite-policy=always "skeletor:exe:skeletor-haskell"
 
 	@echo
@@ -510,7 +550,7 @@ install-skeletor-haskell:
 	@echo
 	@echo '=================================================='
 
-.PHONY: install-skeletor-haskell
+.PHONY: release-skeletor-haskell
 
 #------------------------------------------------#
 

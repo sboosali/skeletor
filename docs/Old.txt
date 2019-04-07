@@ -2324,29 +2324,155 @@ pCommand = do
 
 --------------------------------------------------
 
+programVersion :: Version
+programVersion = Version.makeVersion (majorVersion ++ minorVersion)
+
+  where
+
+  majorVersion = [0,1]
+  minorVersion = [0]
+
+--------------------------------------------------
+
+  versionNumeral = Version.showVersion programVersion
 
 
 --------------------------------------------------
 
 
+currentGitCommit :: Q (TExp String)
+currentGitCommit = io do
+
+  string <- shell "git rev-parse --verify HEAD"
+
+  let expression = [|| string ||]
+  return expression
+
+--------------------------------------------------
+
+{- | Invokes @date@.
+
+e.g.:
+
+@
+$ date +%Y-%m-%d-%Hh-%Mm
+2019-04-07-02h-55m
+@
+
+-}
+
+currentTimestamp :: Q (TExp String)
+currentTimestamp = io do
+
+  string <- shell "date +%Y-%m-%d-%Hh-%Mm"
+
+  let expression = (TH.TExp (string))
+  return expression
 
 --------------------------------------------------
 
 
+pProject :: P.Parser ProjectOption
+pProject = P.option rProject (mconcat
+
+  projectpath <- optional (P.strOption (mconcat
+
+        [ P.long    "project-filepath"
+        , P.short   'f'
+        , P.metavar "PROJECT"
+        , P.action  "directory"
+        , P.help    "Which project skeleton, by path. (When both {{{ --project-filepath }}} and {{{ --project-name }}} are given, this option takes precedence. When neither are given, the default value equivalent to {{{ --project-name=default }}})."
+        , P.style P.bold
+        ]))
+--------------------------------------------------
+
+
+
+data Options = Options
+
+  { verbosity    :: Verbosity
+  , dryrun       :: Dryness
+  , printVersion :: Bool
+  , printLicense :: Bool
+  , license      :: String
+  , configpath   :: Maybe FilePath
+  , projectpath  :: Maybe FilePath
+  , projectname  :: Maybe String
+  , subdirectory :: Maybe FilePath
+  , bindings     :: [Binding]
+  , environment  :: Bindings
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+-- | @= 'defaultOptions'@
+
+instance Default Options where
+  def = defaultOptions
+
+{-|
+
+-}
+
+defaultOptions :: Options
+defaultOptions = Options{..}
+  where
+
+  verbosity    = def
+  dryrun       = def
+  printVersion = False
+  printLicense = False
+  license      = def
+  configpath   = def
+  projectpath  = Nothing
+  projectname  = Just defaultProjectName
+  subdirectory = Nothing
+  bindings     = def
+  environment  = def
 
 --------------------------------------------------
 
 
+{-|  
+
+-}
+
+data ProjectArgument
+
+  = ProjectByName     String
+  | ProjectByLocation Location
+
+
+{-|  
+
+-}
+
+data ProjectOption
+
+  = ProjectByName     String
+  | ProjectByLocation Location
+
+
 --------------------------------------------------
 
 
+parseHaskellProjectName :: (MonadThrow m) => String -> m HaskellProjectName
+parseHaskellProjectName s = m
+  where
 
---------------------------------------------------
+  m = eBC & either throwM return
 
+  eBC = (Right <$> eB)
+    <|> (Left  <$> eC)
 
+  eB :: Either SomeException BuiltinHaskellProjectName
+  eB = parseBuiltinProjectName s
 
---------------------------------------------------
-
+  eC :: Either SomeException CustomHaskellProjectName
+  eC = parseCustomProjectName s
 
 
 --------------------------------------------------
