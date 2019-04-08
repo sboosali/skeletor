@@ -4,6 +4,9 @@
 
 {-| 
 
+A few builtin project-skeletons are included, as @data-files@
+(TODO or injected into the executeable via @TemplateHaskell?).
+
 -}
 
 module Skeletor.Haskell.Skeleton where
@@ -67,79 +70,33 @@ defaultSkeletonIdentifier = SkeletonByName "default"
 -- Definitions -----------------------------------
 --------------------------------------------------
 
--- | @= 'DefaultSkeleton'@
-
-defaultBuiltinHaskellSkeletonName :: BuiltinHaskellSkeletonName
-defaultBuiltinHaskellSkeletonName = DefaultSkeleton
-
---------------------------------------------------
-
-allBuiltinHaskellSkeletonNames :: [BuiltinHaskellSkeletonName]
-allBuiltinHaskellSkeletonNames = genum
-
---------------------------------------------------
-
-{-|
-
--}
-
-printBuiltinSkeletonName :: BuiltinHaskellSkeletonName -> String
-printBuiltinSkeletonName = \case
-
-  DefaultSkeleton -> "default"
-  MaximalSkeleton -> "maximal"
-  MinimalSkeleton -> "minimal"
-  SimpleSkeleton  -> "simple"
-  ForeignSkeleton -> "foreign"
-
---------------------------------------------------
-
-{-| Smart Constructor for names of custom haskell skeleton-skeletons.
-
-Syntactically, a valid 'CustomHaskellSkeletonName':
-
-* has only are alphanumeric characters and/or the hyphen character.
-* differs from any 'BuiltinHaskellSkeletonName' (those are “reserved”).
-
--}
-
-parseCustomSkeletonName :: (MonadThrow m) => String -> m CustomHaskellSkeletonName
-parseCustomSkeletonName s =
-
-  if   isCustomSkeletonNameValid s
-  then return (CustomHaskellSkeletonName s)
-  else throwM exception
-
-  where
-
-  exception = SkeletorHaskellSyntaxError message
-  message   = "[parseCustomSkeletonName] " <> (show s) <> " is not a valid 'CustomHaskellSkeletonName'"
-
---------------------------------------------------
-
 {-| Predicate for valid names (of custom haskell skeleton-skeletons).
 
 Syntactically, a valid 'CustomHaskellSkeletonName':
 
-* has only are alphanumeric characters and/or the hyphen character.
-* differs from any 'BuiltinHaskellSkeletonName' (those are “reserved”).
+* has only printable, non-whitespace characters.
+* differs from any 'reservedSkeletonNames'.
 
 -}
 
 isCustomSkeletonNameValid :: String -> Bool
-isCustomSkeletonNameValid s = 
+isCustomSkeletonNameValid s
 
- (not . isReserved) s && areAllCharactersAlphanumericOrHyphen s
+   = areAllCharactersVisible s
+  && (not . isReserved) s
 
   where
 
-  isReserved = (`elem` allPrintedBuiltinHaskellSkeletonNames)
+  isReserved = (`elem` reservedSkeletonNames)
 
-  areAllCharactersAlphanumericOrHyphen = all isCharacterAlphanumericOrHyphen
+  areAllCharactersVisible = all isCharacterPrintableAndNotWhitespace
 
-  isCharacterAlphanumericOrHyphen c = Char.isAlphaNum c || ('-' == c)
+  isCharacterPrintableAndNotWhitespace c = Char.isPrint c && Char.isSpace c
 
-  allPrintedBuiltinHaskellSkeletonNames = (printBuiltinSkeletonName <$> allBuiltinHaskellSkeletonNames)
+--------------------------------------------------
+
+reservedSkeletonNames :: [String]
+reservedSkeletonNames = [ "default" ]
 
 --------------------------------------------------
 -- EOF -------------------------------------------

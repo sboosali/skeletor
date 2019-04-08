@@ -215,9 +215,18 @@ develop:
 ##################################################
 
 lib:
+
 	$(Cabal) new-run $(LibraryTarget)
 
 .PHONY: lib
+
+#------------------------------------------------#
+
+skeletor:
+
+	$(Cabal) new-build "skeletor:lib:skeletor"
+
+.PHONY: skeletor
 
 #------------------------------------------------#
 

@@ -145,14 +145,14 @@ programExamples =
   , "skeletor-haskell parse default --json"
   , (unlines [ "$EDITOR /tmp/manifest.ini"
              , "# (edit the file and close the editor...)"
-             , "# 
-             , "# [
-             , "# 
-             , "# {type: "symbol", l:"Xxx", r:"xxX"},
-             , "# {type: "text", l:"__", r:"__"}
-             , "# 
-             , "# ]
-             , "# 
+             , "# "
+             , "# ["
+             , "# "
+             , "# {type: \"symbol\", l:\"Xxx\", r:\"xxX\"},"
+             , "# {type: \"text\", l:\"__\", r:\"__\"}"
+             , "# "
+             , "# ]"
+             , "# "
              , "skeletor-haskell parse default --manifest=/tmp/manifest.json"
              ])
 

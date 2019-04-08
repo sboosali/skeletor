@@ -581,8 +581,8 @@ library
                   Skeletor.Haskell.Find
                   Skeletor.Haskell.Find.Types
 
-                  Skeletor.Haskell.Project
-                  Skeletor.Haskell.Project.Types
+                  Skeletor.Haskell.Skeleton
+                  -- Skeletor.Haskell.Skeleton.Types
 
                   Skeletor.Haskell.Chiaroscuro
                   Skeletor.Haskell.Chiaroscuro.Types

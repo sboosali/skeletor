@@ -36,8 +36,8 @@ module Skeletor.Haskell
     -- * Licenses (@SPDX@).
   , module Skeletor.Haskell.License
 
-    -- * Built-in Projects (included as @data-files@).
-  , module Skeletor.Haskell.Project
+    -- * Project Skeletons.
+  , module Skeletor.Haskell.Skeleton
 
   ) where
 
@@ -51,7 +51,7 @@ import Skeletor.Haskell.Variable
 import Skeletor.Haskell.Find
 import Skeletor.Haskell.Turtle
 import Skeletor.Haskell.License
-import Skeletor.Haskell.Project
+import Skeletor.Haskell.Skeleton
 
 --------------------------------------------------
 --------------------------------------------------
