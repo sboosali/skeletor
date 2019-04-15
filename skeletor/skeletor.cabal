@@ -640,10 +640,8 @@ library
    -- my libraries.
    --------------------
 
-               spiros
-
-   --          spiros    ^>= 0.4
-   --        , enumerate ^>= 0.3
+               spiros    ^>= 0.4
+             , enumerate ^>= 0.3
 
   --------------------
   -- boot-libraries & standard-library packages,

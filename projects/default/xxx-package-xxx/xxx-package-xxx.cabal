@@ -66,7 +66,7 @@ tested-with: GHC   == 8.6.4
 license:             Apache-2.0
 license-file:        LICENSE
 copyright:           __Year__ __LegalName__
-
+       
 -- license:             GPL-3.0-or-later
 -- license:             Apache-2.0
 
@@ -75,11 +75,9 @@ copyright:           __Year__ __LegalName__
 --------------------------------------------------
 
 extra-source-files: LICENSE
-
-                    README.md
-                    CHANGELOG.md
-
-                   -- CONTRIBUTING.md
+                  , README.md
+                  , CHANGELOG.md
+                  , CONTRIBUTING.md
 
   --TODO: how to include project files (parent directory) in package?
   --
@@ -150,13 +148,13 @@ flag static
 
   default:     False
 
-  description: Both « -fexecutable-static » and « -flibrary-static ».
+  description: Both « -fstatic-executables » and « -fstatic-library ».
 
   manual:      True
 
 --------------------------------------------------
 
-flag executable-static
+flag static-executables
 
   default:     False
 
@@ -166,7 +164,7 @@ flag executable-static
 
 --------------------------------------------------
 
-flag library-static
+flag static-library
 
   default:     False
 
@@ -260,7 +258,7 @@ common Haskell2020Library
 
  -----------------------------
 
- if flag(static) || flag(library-static)
+ if flag(static) || flag(static-library)
     ghc-options: -staticlib
 
  -----------------------------
@@ -534,7 +532,7 @@ common Haskell2020Program
 
  -----------------------------
 
- if flag(static) || flag(executable-static)
+ if flag(static) || flag(static-executables)
     ghc-options: -static -optl=-static
 
  -----------------------------
@@ -614,8 +612,8 @@ library
   -- My Libraries ----
   --------------------
 
-               spiros       ^>= 0.4
-   --        , enumerate
+               spiros    ^>= 0.4
+             , enumerate ^>= 0.3
 
   --------------------
   -- Standard Library
@@ -841,15 +839,43 @@ executable xxx-program-xxx
                  Program.Xxx_Module_xxX.Paths
                  Program.Xxx_Module_xxX.Main
 
+
   ----------------------------
 
   build-depends: xxx-package-xxx
+
+               -----------------
+
                , spiros               >= 0.3.3
 
-               , optparse-applicative ^>= 0.14
+               -----------------
 
+               , bytestring
                , filepath
                , directory
+
+               -----------------
+
+               , optparse-applicative ^>= 0.14
+               , attoparsec           ^>= 0.13
+
+               -----------------
+
+               , prettyprinter               ^>= 1.2
+               , prettyprinter-ansi-terminal ^>= 1.1
+               , formatting                  ^>= 6.3
+
+               -----------------
+
+               , lens
+
+               -----------------
+
+               , zlib
+               , tar
+               , zip-archive
+
+               -----------------
 
 --TODO--
 -- 
@@ -971,4 +997,7 @@ benchmark space
 --               , bytestring
 --               , safe-exceptions-checked
 --   -----------------------------
+
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

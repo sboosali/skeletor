@@ -162,6 +162,85 @@ Tags ?=etags
 # the `default` and `all` targets
 ##################################################
 
+
+
+
+
+
+
+build:
+	@printf "\n%s\n" "========================================"
+
+	@printf "%s\n\n" "Building..."
+
+	$(Cabal) new-build $(CabalOptions) $(CabalTargets)
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: build
+
+#------------------------------------------------#
+
+check:
+	@printf "\n%s\n" "========================================"
+
+	@printf "%s\n\n" "Testing..."
+
+	$(Cabal) new-test $(CabalOptions) $(CabalTargets)
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: check
+
+#------------------------------------------------#
+
+install:
+	@printf "\n%s\n" "========================================"
+
+	@printf "%s\n\n" "Installing..."
+
+	$(Cabal) new-install $(CabalOptions) $(CabalProgram)
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: install
+
+#------------------------------------------------#
+
+dist:
+	@printf "\n%s\n" "========================================"
+
+	@printf "%s\n\n" "Archiving..."
+
+	$(Cabal) new-sdist $(CabalOptions) $(CabalTargets)
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: dist
+
+#------------------------------------------------#
+
+all: build check install dist
+
+.PHONY: all
+
+#------------------------------------------------#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 default: build-all
 
 .PHONY: default

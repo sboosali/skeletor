@@ -1,6 +1,6 @@
 --------------------------------------------------
 
-{- | Project-specific custom @Prelude@.
+{- | Custom @Prelude@ for the @skeletor@ package.
 
 -}
 
@@ -10,7 +10,13 @@ module Prelude_skeletor
   ) where
 
 --------------------------------------------------
+-- Exports ---------------------------------------
+--------------------------------------------------
 
-import "spiros" Prelude.Spiros as EXPORT
+import "spiros" Prelude.Spiros        as EXPORT
+import "spiros" Prelude.Spiros.Parse  as EXPORT
+import "spiros" Prelude.Spiros.Pretty as EXPORT
 
+--------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

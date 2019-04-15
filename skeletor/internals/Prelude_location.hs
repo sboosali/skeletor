@@ -1,8 +1,6 @@
 --------------------------------------------------
 
-{- |
-
-a project-specific custom prelude.
+{- | Custom @Prelude@ for the @location@ package.
 
 -}
 
@@ -15,6 +13,12 @@ module Prelude_location
 
 --------------------------------------------------
 -- Exports ---------------------------------------
+--------------------------------------------------
+
+import "spiros" Prelude.Spiros        as EXPORT
+import "spiros" Prelude.Spiros.Parse  as EXPORT
+import "spiros" Prelude.Spiros.Pretty as EXPORT
+
 --------------------------------------------------
 
 import "spiros" Prelude.Spiros as EXPORT
