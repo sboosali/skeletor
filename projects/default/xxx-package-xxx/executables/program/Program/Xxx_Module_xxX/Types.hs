@@ -2,9 +2,6 @@
 -- Extensions ------------------------------------
 --------------------------------------------------
 
-{-# LANGUAGE BlockArguments        #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE ApplicativeDo         #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NamedFieldPuns        #-}
 
@@ -64,7 +61,6 @@ data Subcommand
   deriving anyclass (NFData,Hashable)
 
 --------------------------------------------------
--- Types -----------------------------------------
 --------------------------------------------------
 
 {-|  Represents this program's global options.
@@ -74,7 +70,7 @@ data Subcommand
 data Options = Options
 
   { verbosity :: Verbosity
-  , dryrun    :: Dryness
+  , dryrun    :: Effectfulness
   }
 
   deriving stock    (Show,Read,Eq,Ord)
@@ -100,16 +96,33 @@ defaultOptions = Options{..}
   dryrun       = def
 
 --------------------------------------------------
+-- Types -----------------------------------------
 --------------------------------------------------
 
-{-|
+-- |
+
+type URI = FilePath
+
+--------------------------------------------------
+--------------------------------------------------
+
+{- |
+
+== CLI
+
+* `Quiet`   — @$ xxx-program-xxx -q  ...@ (a.k.a. @--quiet@.)
+* `Concise` — @$ xxx-program-xxx     ...@ (i.e. the `defaultVerbosity`.)
+* `Verbose` — @$ xxx-program-xxx -v  ...@ (i.e. one flag.)
+* `Loud`    — @$ xxx-program-xxx -vv ...@ (i.e. two flags.)
 
 -}
 
 data Verbosity
 
-  = Concise
+  = Quiet
+  | Concise
   | Verbose
+  | Loud
 
   deriving stock    (Enum,Bounded,Ix)
   deriving stock    (Show,Read,Eq,Ord)
@@ -134,10 +147,14 @@ defaultVerbosity = Concise
 --------------------------------------------------
 
 {-|
+== CLI
+
+* `TrueRun` — @$ xxx-program-xxx    ...@ (i.e. the `defaultEffectfulness`.)
+* `DryRun`  — @$ xxx-program-xxx -z ...@ (a.k.a. @--dryrun@.)
 
 -}
 
-data Dryness
+data Effectfulness
 
   = DryRun
   | TrueRun
@@ -150,29 +167,28 @@ data Dryness
 
 --------------------------------------------------
 
--- | @= 'defaultDryness'@
+-- | @= 'defaultEffectfulness'@
 
-instance Default Dryness where def = defaultDryness
+instance Default Effectfulness where def = defaultEffectfulness
 
 --------------------------------------------------
 
 -- | @= 'TrueRun'@
 
-defaultDryness :: Dryness
-defaultDryness = TrueRun
+defaultEffectfulness :: Effectfulness
+defaultEffectfulness = TrueRun
 
 --------------------------------------------------
--- Types -----------------------------------------
 --------------------------------------------------
 
-{- | Read the source ('Src'), write it to a destination ('Dst').
+{- | Read the source ('Src'), and write it to a destination ('Dst').
 
 -}
 
 data SrcDst = SrcDst
 
-  { src :: Maybe Src
-  , dst :: Maybe Dst
+  { src :: Src
+  , dst :: Dst
   }
 
   deriving stock    (Show,Read,Eq,Ord)
@@ -199,8 +215,33 @@ data Src
 
 --------------------------------------------------
 
--- | @≡ 'SrcFile'@
-instance IsString Src where fromString = SrcFile
+-- | @≡ 'parseSrc'@
+instance IsString Src where fromString = parseSrc
+
+--------------------------------------------------
+
+{- | 
+== Examples
+
+>>> parseSrc "-"
+SrcStdin
+>>> parseSrc "./mtg.json"
+SrcFile "./mtg.json"
+>>> parseSrc "          ./mtg.json          "
+SrcFile "./mtg.json"
+
+-}
+
+parseSrc :: String -> Src
+parseSrc = munge > \case
+
+  "-" -> SrcStdin
+
+  s -> SrcFile s
+
+  where
+
+  munge = lrstrip
 
 --------------------------------------------------
 --------------------------------------------------
@@ -220,9 +261,83 @@ data Dst
 
 --------------------------------------------------
 
--- | @≡ 'DstFile'@
-instance IsString Dst where fromString = DstFile
+-- | @≡ 'parseDst'@
+instance IsString Dst where fromString = parseDst
 
+--------------------------------------------------
+
+{- | 
+== Examples
+
+>>> parseDst "-"
+DstStdin
+>>> parseDst "./mtg.hs"
+DstFile "./mtg.hs"
+>>> parseDst "          ./mtg.hs          "
+DstFile "./mtg.hs"
+
+-}
+
+parseDst :: String -> Dst
+parseDst = munge > \case
+
+  "-" -> DstStdout
+
+  s -> DstFile s
+
+  where
+
+  munge = lrstrip
+
+--------------------------------------------------
+--------------------------------------------------
+{-TODO-
+
+{-| Whether the program output is colorful or not.
+
+c.f. @grep@:
+
+@
+$ grep --color=auto ...
+$ grep --color=on   ...
+$ grep --color=off  ...
+@
+
+-}
+
+data WhetherColorful
+
+  = ColorAuto
+  | ColorOn
+  | ColorOff
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving anyclass (GEnum)
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving stock    (Generic,Lift)
+  deriving anyclass (NFData,Hashable)
+
+-}
+--------------------------------------------------
+--------------------------------------------------
+{-TODO-
+
+{-| Whether the program output has unicode characters or not.
+
+-}
+
+data WhetherUnicode
+
+  = AsciiOnly
+  | UnicodeToo
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving anyclass (GEnum)
+  deriving stock    (Show,Read,Eq,Ord)
+  deriving stock    (Generic,Lift)
+  deriving anyclass (NFData,Hashable)
+
+-}
 --------------------------------------------------
 -- EOF -------------------------------------------
 --------------------------------------------------

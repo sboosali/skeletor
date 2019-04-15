@@ -198,7 +198,7 @@ piResolveConfigurationOptions = info description do
 
   where
 
-  description = "Print an explicit (\"standalone\") configuration file merging the implicit configurations of: the current values of skeletor's environment variables; the user configuration in skeletor's XDG_CONFIG_DIR; skeletor's builtin projects and locations."
+  description = "Print an explicit (\"standalone\") configuration file, merging the implicit configurations of: the current values of skeletor's environment variables (i.e. « ${SKELETOR_...} »); and the user configuration in skeletor's XDG configuration directory (i.e. « ${XDG_CONFIG_HOME}/skeletor/... »); and skeletor's builtin projects and locations."
 
 --------------------------------------------------
 -- « Parser »s -----------------------------------
