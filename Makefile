@@ -67,7 +67,7 @@ CompilerProgram=$(CompilerFlavor)-$(CompilerVersion)
 
 ################################################## Cabal
 
-CabalOptions=--project-file $(ProjectFile) -w $(CompilerProgram)
+CabalOptions=--project-file $(ProjectFile)
 
 #------------------------------------------------#
 
@@ -1142,6 +1142,24 @@ build-ghc-8.4:
 ##################################################
 # Testing ########################################
 ##################################################
+
+#------------------------------------------------#
+# Tests...
+
+checkdocs:
+	@printf "\n%s\n" "========================================"
+	@printf "%s\n\n" "Testing Documentation..."
+
+	$(CabalTest) "skeletor:test:doc"
+
+	@printf "\n%s\n" "========================================"
+	@printf "%s\n\n" "Generating Documentation..."
+
+	$(Cabal) new-haddock $(CabalTargets)
+
+	@printf "\n%s\n" "========================================"
+
+.PHONY: checkdocs
 
 #------------------------------------------------#
 

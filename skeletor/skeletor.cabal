@@ -496,16 +496,21 @@ library
 
  import: sboo-haskell
 
- hs-source-dirs:
-                library
-                internals
+ hs-source-dirs: library
+               , internals
               --signatures
+
  --(TODO: signatures break repl.)
 
  ------------------------------
  ------------------------------
 
  exposed-modules: Skeletor
+
+                  ------------
+
+                  Skeletor.Types
+                  Skeletor.Types.Number
 
                   ------------
 
@@ -736,6 +741,33 @@ library
 
 --------------------------------------------------
 -- Tests -----------------------------------------
+--------------------------------------------------
+
+test-suite doc
+
+ import: sboo-haskell
+
+ -----------------------------
+
+ hs-source-dirs: ./test
+ main-is:        DocTests.hs
+
+ -----------------------------
+
+ build-depends: base
+
+              ----------------
+
+              , skeletor
+
+              ----------------
+
+              , doctest
+
+ -----------------------------
+
+ type: exitcode-stdio-1.0
+
 --------------------------------------------------
 
 test-suite unit
