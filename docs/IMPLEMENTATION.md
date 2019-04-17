@@ -15,7 +15,14 @@ import           "" _      ()
 
 
 
-## `base`
+## `base` package
+
+### `Data.Ratio` module
+
+``` haskell
+type Rational = Ratio Integer 	
+```
+
 
 
 ### `Data.Maybe`
@@ -2210,7 +2217,7 @@ import           "raaz" Raaz.Hash ()
 
 ```
 
-### module ``
+### `` module
 
 ```haskell
 -- | Compute the hash of file.
@@ -2573,7 +2580,41 @@ getZonedTime :: IO ZonedTime
 ```
 
 
-### module ``
+### `` module
+
+```haskell
+```
+
+
+
+
+
+
+
+
+
+
+## `lens` package
+
+### `Control.Lens.Prism` module
+
+``` haskell
+prism' :: (b -> s) -> (s -> Maybe a)    -> Prism s s a b
+prism  :: (b -> t) -> (s -> Either t a) -> Prism s t a b
+```
+
+### 
+
+
+
+
+
+
+
+
+## ``
+
+### `` module
 
 ```haskell
 ```
@@ -2589,7 +2630,7 @@ getZonedTime :: IO ZonedTime
 
 ## ``
 
-### module ``
+### `` module
 
 ```haskell
 ```
@@ -2605,7 +2646,7 @@ getZonedTime :: IO ZonedTime
 
 ## ``
 
-### module ``
+### `` module
 
 ```haskell
 ```
@@ -2621,39 +2662,7 @@ getZonedTime :: IO ZonedTime
 
 ## ``
 
-### module ``
-
-```haskell
-```
-
-
-
-
-
-
-
-
-
-
-## ``
-
-### module ``
-
-```haskell
-```
-
-
-
-
-
-
-
-
-
-
-## ``
-
-### module ``
+### `` module
 
 ```haskell
 ```
