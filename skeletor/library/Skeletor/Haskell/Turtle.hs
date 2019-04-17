@@ -80,7 +80,7 @@ sedDirectory (TemplateBinding [ ("xxx-package-xxx", "example-package"), ("Xxx_Mo
 sedDirectory :: TemplateBinding -> SrcDst -> IO ()
 sedDirectory (TemplateBinding bindings) SrcDst{ src=inputDirectory, dst=outputDirectory } =
 
-  _
+  nothing
 
 --------------------------------------------------
 

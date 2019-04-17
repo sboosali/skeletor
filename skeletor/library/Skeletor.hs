@@ -1,11 +1,12 @@
 --------------------------------------------------
 --------------------------------------------------
 
-{-| 
+{- | 
 
-= Usage
+== Usage
 
-@import qualified "skeletor" Skeletor
+@
+import qualified "skeletor" Skeletor
 @
 
 -}
@@ -18,12 +19,17 @@ module Skeletor
 
     -- * Haskell project scaffolding.
   , module Skeletor.Haskell
+
+    -- * Data@type@s and Type@class@es.
+  , module Skeletor.Types
+
   ) where
 
 --------------------------------------------------
 -- Exports ---------------------------------------
 --------------------------------------------------
 
+import Skeletor.Types
 import Skeletor.Core
 import Skeletor.Haskell
 
