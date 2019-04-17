@@ -7,6 +7,7 @@
 module Skeletor.Types
 
   ( module Skeletor.Types.Number
+  , module Skeletor.Types.Boolean
 
   ) where
 
@@ -15,6 +16,7 @@ module Skeletor.Types
 --------------------------------------------------
 
 import Skeletor.Types.Number
+import Skeletor.Types.Boolean
 
 --------------------------------------------------
 -- Imports ---------------------------------------

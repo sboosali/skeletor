@@ -30,7 +30,7 @@ main = do
 
 sources = modules2filepaths "hs" "library" $
 
-  "Skeletor.Types Skeletor.Types.Number"
+  "Skeletor.Types Skeletor.Types.Number Skeletor.Types.Boolean"
 
 --------------------------------------------------
 

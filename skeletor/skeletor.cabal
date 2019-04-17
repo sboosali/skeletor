@@ -511,6 +511,7 @@ library
 
                   Skeletor.Types
                   Skeletor.Types.Number
+                  Skeletor.Types.Boolean
 
                   ------------
 
