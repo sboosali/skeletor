@@ -2658,11 +2658,24 @@ _Q = L.prism' loosen tighten
 
 --------------------------------------------------
 
+_S :: Iso' Number String
+_S = L.iso from into
+  where
+
+  into :: String -> Number
+  into = S
+
+  from :: Number -> String
+  from = \case
+
+    Z z -> show z
+    Q q -> fromQ q
+    S s -> s
 
 
 --------------------------------------------------
 
-
+(showAsDouble q) & (maybe (showAsRational q) id)
 
 --------------------------------------------------
 

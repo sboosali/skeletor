@@ -167,7 +167,9 @@ _Z = L.prism' loosen tighten
 
     Z z -> Just z
     Q q -> fromQ q
-    S s -> (readMay @Integer) s <|> (readMay @Double >=> (toRational >>> fromQ)) s <|> (readMay @Rational >=> fromQ) s
+    S s -> (readMay @Integer)                             s
+      <|> (readMay @Double   >=> (toRational >>> fromQ)) s
+      <|> (readMay @Rational >=> fromQ)                  s
 
   fromQ :: Rational -> Maybe Integer
   fromQ q =
@@ -214,36 +216,42 @@ _Q = L.prism' loosen tighten
 
     Z z -> Just (fromZ z)
     Q q -> Just q
-    S s -> (toRational <$> (readMay @Double) s) <|> (readMay @Rational) s <|> (fromZ <$> (readMay @Integer) s)
+    S s -> (fromZ      <$> (readMay @Integer) s)
+      <|> (toRational <$> (readMay @Double)  s)
+      <|> (readMay @Rational s)
 
   fromZ :: Integer -> Rational
   fromZ z = (z % 1)
 
 --------------------------------------------------
 
-{-
 {- | Isomorphism via 'S' (all 'Iso's are 'Prism's).
 
 == Examples
 
+>>> (Z 1) ^. _S
+"1"
 
->>> (Z 1) ^? _
-Just 
+>>> (Q 1.0) ^. _S
+"1"
 
->>> (Q 1.0) ^? _
-Just 
+>>> (Q 1.5) ^. _S
+"1.5"
 
->>> (Q 1.5) ^? _
-Just 
+>>> (S "1") ^. _S
+"1"
 
->>> (S "1") ^? _
-Just 
+>>> (S "1.5") ^. _S
+"1.5"
 
->>> (S "1.5") ^? _
-Just 
+>>> (S "one") ^. _S
+"one"
 
->>> (S "one") ^? _
-Just 
+== /NOTE/
+
+Whenever possible, `_S` shows `Q`s via the `Integer` `Show`
+or `Double`'s `Show` instances
+(i.e. not necessarily via its own `Rational`'s).
 
 -}
 
@@ -251,16 +259,39 @@ _S :: Iso' Number String
 _S = L.iso from into
   where
 
-  from :: Number -> String
-  from = S
-
   into :: String -> Number
-  into = \case
+  into = S
 
-    Z z -> let s = show z in s
-    Q q -> let s = show q in s
+  from :: Number -> String
+  from = \case
+
+    Z z -> show z
+    Q q -> (showAsInteger q <|> showAsDouble q) & maybe (showAsRational q) id
     S s -> s
--}
+
+  showAsRational = show @Rational
+
+  showAsDouble :: Rational -> Maybe String
+  showAsDouble q =
+    let
+      d = fromRational q
+    in
+      if isNaN d
+      then Nothing
+      else Just (show @Double d)
+
+  -- NOTE if out-of-bounds, show as Rational.
+
+  -- TODO is checking against « isNaN » enough?
+
+  showAsInteger :: Rational -> Maybe String
+  showAsInteger q =
+    let
+      (z, remainder') = properFraction q
+    in
+      if remainder' == 0
+      then Just (show @Integer z)
+      else Nothing
 
 --------------------------------------------------
 -- Doctest ---------------------------------------
@@ -269,7 +300,7 @@ _S = L.iso from into
 {- $setup
 
 >>> import Data.Ratio   ( (%) )
->>> import Control.Lens ( (^?) )
+>>> import Control.Lens ( (^?), (^.) )
 
 -}
 
@@ -278,7 +309,16 @@ _S = L.iso from into
 --------------------------------------------------
 {-------------------------------------------------
 
-Control.Lens.Prism:
+« Data.Ratio »:
+
+`Fractional` instances:
+
+* `Rational` — /arbitrary-precision/ fractions.
+* `Double`  — /double-precision/ floating-point numbers.
+
+--------------------------------------------------
+
+« Control.Lens.Prism »:
 
 prism'        :: (b -> s) -> (s -> Maybe a) -> Prism s s a b
 prism' @(a~b) :: (a -> s) -> (s -> Maybe a) -> Prism' s a
