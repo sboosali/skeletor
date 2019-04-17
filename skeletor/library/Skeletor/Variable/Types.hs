@@ -1,13 +1,13 @@
 --------------------------------------------------
 
-{- | 
+{- | Types of template\/configuration variables.
 
 -}
 
-module Skeletor.Types
+module Skeletor.Variable.Types
 
-  ( module Skeletor.Types.Number
-  , module Skeletor.Types.Boolean
+  ( module Skeletor.Variable.Types.Number
+  , module Skeletor.Variable.Types.Boolean
 
   ) where
 
@@ -15,8 +15,8 @@ module Skeletor.Types
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Types.Number
-import Skeletor.Types.Boolean
+import Skeletor.Variable.Types.Number
+import Skeletor.Variable.Types.Boolean
 
 --------------------------------------------------
 -- Imports ---------------------------------------

@@ -7,7 +7,7 @@
 
 --------------------------------------------------
 
-{- |
+{- | /Boolean-like/ template\/configuration variables.
 
 Types:
 
@@ -17,9 +17,9 @@ Functions:
 
 -}
 
-module Skeletor.Types.Boolean
+module Skeletor.Variable.Types.Boolean
 
-  ( module Skeletor.Types.Boolean
+  ( module Skeletor.Variable.Types.Boolean
 
   , Bool
   , String
@@ -98,10 +98,10 @@ BooleanB True
 >>> "disabled" :: Boolean
 BooleanB False
 >>> "enabled" :: Boolean
-BooleanS True
+BooleanB True
 
 >>> "-1" :: Boolean
-BooleanB "-1"
+BooleanS "-1"
 >>> "+1" :: Boolean
 BooleanS "+1"
 

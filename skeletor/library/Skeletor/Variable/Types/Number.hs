@@ -7,7 +7,7 @@
 
 --------------------------------------------------
 
-{- |
+{- | /Number-like/ template\/configuration variables.
 
 Types:
 
@@ -20,9 +20,9 @@ Optics:
 
 -}
 
-module Skeletor.Types.Number
+module Skeletor.Variable.Types.Number
 
-  ( module Skeletor.Types.Number
+  ( module Skeletor.Variable.Types.Number
 
   , Integer
   , Rational

@@ -21,7 +21,7 @@ module Skeletor
   , module Skeletor.Haskell
 
     -- * Data@type@s and Type@class@es.
-  , module Skeletor.Types
+  , module Skeletor.Variable.Types
 
   ) where
 
@@ -29,7 +29,7 @@ module Skeletor
 -- Exports ---------------------------------------
 --------------------------------------------------
 
-import Skeletor.Types
+import Skeletor.Variable.Types
 import Skeletor.Core
 import Skeletor.Haskell
 
