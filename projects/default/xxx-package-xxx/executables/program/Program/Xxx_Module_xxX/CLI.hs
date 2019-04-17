@@ -143,13 +143,17 @@ pCommand = do
 pOptions :: P.Parser Options
 pOptions = do
 
-  verbosity <- (P.flag Concise Verbose) (mconcat
+  ------------------------------
+
+  verbose <- (P.flag Concise Verbose) (mconcat
 
         [ P.long    "verbose"
         , P.short   'v'
         , embolden
         , P.help    "Enable verbose messages. (Includes network progress from downloading any resources. Includes printing the config that's derived from the invocation of this command: (1), parsing these command-line options; and (2), defaulting the values of any optional options.). {{{ -v }}} abbreviates \"verbose\"."
         ])
+
+  ------------------------------
 
   dryrun <- (P.flag TrueRun DryRun) (mconcat
 
@@ -158,6 +162,18 @@ pOptions = do
         , embolden
         , P.help    "Disable effects. Whether the execution will just be a 'dry-run' (i.e. most effects are disabled, instead they are printed out). {{{ -i }}} abbreviates \"information\"."
         ])
+
+  ------------------------------
+
+  force <- (P.flag RespectExisting OverwriteExisting) (mconcat
+
+        [ P.long    "force"
+        , P.short   'f'
+        , P.style   P.bold
+        , P.help    "Overwrite FILE. Whether existing files will be overwritten, or preserved (prompting for confirmation). {{{ -f }}} abbreviates \"forcefully overwrite\"."
+        ])
+
+  ------------------------------
 
   return Options{..}
 
@@ -210,3 +226,23 @@ pSrcDst = do
 --------------------------------------------------
 -- EOF -------------------------------------------
 --------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

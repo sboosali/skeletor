@@ -2518,13 +2518,24 @@ data LocationFile
 --------------------------------------------------
 
 
+sedTemplate
+
+  (TemplateBinding [ ("xxx-package-xxx", "example-package")
+                   , ("Xxx_Module_xxX",  "ExamplePackage")
+                   ])
+
+  SrcDst { input  = "~/haskell/skeletor/projects/default/xxx-package-xxx/xxx-package-xxx.cabal"
+         , output = "/tmp/skeletor/default/xxx-package-xxx/xxx-package-xxx.cabal"
+         }
 
 --------------------------------------------------
 
+sedTemplate (TemplateBinding [ ("xxx-package-xxx", "example-package"), ("Xxx_Module_xxX",  "ExamplePackage") ]) (SrcDst { input  = "~/haskell/skeletor/projects/default/xxx-package-xxx/xxx-package-xxx.cabal", output = "/tmp/skeletor/default/xxx-package-xxx/xxx-package-xxx.cabal" })
 
 
 --------------------------------------------------
 
+$ tar -cv -f old/skeletor.tar ./skeletor
 
 
 --------------------------------------------------

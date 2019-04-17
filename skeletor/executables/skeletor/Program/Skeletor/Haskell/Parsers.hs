@@ -41,11 +41,10 @@ module Program.Skeletor.Haskell.Parsers
 import Program.Skeletor.Haskell.Types hiding (URI)
 import Program.Skeletor.Haskell.Utilities
 
-import Skeletor.Haskell.Project
-
 --------------------------------------------------
 
 import Skeletor.Haskell
+import Skeletor.Haskell.Project
 
 --------------------------------------------------
 -- Imports (External) ----------------------------

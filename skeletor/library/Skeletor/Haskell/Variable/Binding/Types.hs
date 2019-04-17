@@ -50,7 +50,6 @@ newtype TemplateBinding = TemplateBinding
   deriving newtype  (Eq,Ord)
   deriving newtype  (NFData)
 
-
 --------------------------------------------------
 --------------------------------------------------
 

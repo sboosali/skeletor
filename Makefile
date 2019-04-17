@@ -81,6 +81,8 @@ CabalBench	?=$(Cabal) new-bench $(CabalOptions) --enable-benchmarks
 
 CabalHaddock	?=$(Cabal) new-haddock $(CabalOptions) --enable-documentation
 
+CabalInstall    ?=$(Cabal) -v --overwrite-policy=always new-install
+
 ################################################## Programs
 
 Nix      ?=nix

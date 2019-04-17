@@ -106,8 +106,7 @@ data-files: golden/*.txt
 
 --------------------------------------------------
 
---TODO add images
--- extra-doc-files: docs/
+extra-doc-files: images/*.png
 
 --------------------------------------------------
 -- Repository ------------------------------------

@@ -801,46 +801,82 @@ executable skeletor-haskell
 
  ------------------------------
 
-  main-is:             Main.hs
-
-  hs-source-dirs:      executables/skeletor
+  hs-source-dirs: ./executables/skeletor
+  main-is:        Program/Skeletor/Haskell/Main.hs
 
  ------------------------------
 
-  other-modules: Program.Skeletor.Haskell.Main
+  other-modules: Program.Skeletor.Haskell.Types
+
                  Program.Skeletor.Haskell.CLI
                  Program.Skeletor.Haskell.IO
 
-                 Program.Skeletor.Haskell.Types
-                 Program.Skeletor.Haskell.Constants
-
-                 Program.Skeletor.Haskell.Utilities
-                 Program.Skeletor.Haskell.Prelude
-
                  Program.Skeletor.Haskell.Parsers
+
+                 Program.Skeletor.Haskell.Prelude
+                 Program.Skeletor.Haskell.Utilities
+                 Program.Skeletor.Haskell.Constants
 
  ------------------------------
 
   build-depends: skeletor
+
+               -----------------
+
                , spiros
-               , optparse-applicative
+
+               -----------------
+
+               , optparse-applicative ^>= 0.14
+               , attoparsec           ^>= 0.13
+
+               -----------------
+
+               , ansi-wl-pprint       ^>= 0.6
+               , formatting           ^>= 6.3
+
+               -----------------
+
+               , lens         ^>= 4.17
+               , generic-lens ^>= 1.1
+
+               -----------------
+
+               , zlib
+               , tar
+               , zip-archive
+
+               -----------------
+
+               , http-client
+               , http-client-tls
+               , http-types
+               , wreq
+
+               , modern-uri
+               , aeson
+
+               -----------------
+
+               , filepath
+               , directory
+
+               , unix-compat
+               , filemanip
+
+               -----------------
+
+               , containers ^>= 0.6
 
                , text
                , case-insensitive
-               , directory
-               , filepath
-               , unix-compat
-               , filemanip
-               , modern-uri
+               , bytestring
+
+               , binary
 
                , time
 
-               , attoparsec
-               , megaparsec
-
-                -- TODO rm attoparsec, export helpers from library
-
-               , generic-lens
+               -----------------
 
  ------------------------------
  

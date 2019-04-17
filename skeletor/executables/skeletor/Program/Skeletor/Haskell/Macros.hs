@@ -91,7 +91,7 @@ shell cmdln = do
 
   stdout <- P.readCreateProcess (P.shell cmdln) stdin
 
-  return (strip stdout)
+  return (lrstrip stdout)
 
   where
 

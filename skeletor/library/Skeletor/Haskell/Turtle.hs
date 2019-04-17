@@ -1,5 +1,4 @@
 --------------------------------------------------
---------------------------------------------------
 
 {-| 
 
@@ -55,24 +54,65 @@ import Prelude_skeletor hiding (Text)
 
 {-| Run @sed@ on the given template file with the given substitutions.
 
-e.g.
+e.g.:
 
 @
-sedTemplate
+sedDirectory
+
+  (TemplateBinding [ ("xxx-package-xxx", "example-package")
+                   , ("Xxx_Module_xxX",  "ExamplePackage")
+                   ])
+
+  SrcDst { input  = "~/haskell/skeletor/projects/default"
+         , output = "/tmp/skeletor/default"
+         }
+@
+
+or as a one-liner:
+
+@
+
+sedDirectory (TemplateBinding [ ("xxx-package-xxx", "example-package"), ("Xxx_Module_xxX",  "ExamplePackage") ]) (SrcDst { input  = "~/haskell/skeletor/projects/default/", output = "/tmp/skeletor/default" })
+@
+
+-}
+
+sedDirectory :: TemplateBinding -> SrcDst -> IO ()
+sedDirectory (TemplateBinding bindings) SrcDst{ src=inputDirectory, dst=outputDirectory } =
+
+  _
+
+--------------------------------------------------
+
+{-| Run @sed@ on the given template file with the given substitutions.
+
+Applies substitutions to both file /contents/ and file /names/.
+
+e.g.:
+
+@
+sedFile
 
   (TemplateBinding [ ("xxx-package-xxx", "example-package")
                    , ("Xxx_Module_xxX",  "ExamplePackage")
                    ])
 
   SrcDst { input  = "~/haskell/skeletor/projects/default/xxx-package-xxx/xxx-package-xxx.cabal"
-         , output = "/tmp/skeletor/default/xxx-package-xxx/xxx-package-xxx.cabal"
+         , output = "/tmp/skeletor/default/example-package/example-package.cabal"
          }
+@
+
+or as a one-liner:
+
+@
+
+sedFile (TemplateBinding [ ("xxx-package-xxx", "example-package"), ("Xxx_Module_xxX",  "ExamplePackage") ]) (SrcDst { input  = "~/haskell/skeletor/projects/default/xxx-package-xxx/xxx-package-xxx.cabal", output = "/tmp/skeletor/default/example-package/example-package.cabal" })
 @
 
 -}
 
-sedTemplate :: TemplateBinding -> SrcDst -> IO ()
-sedTemplate (TemplateBinding bindings) SrcDst{ src=input, dst=output } =
+sedFile :: TemplateBinding -> SrcDst -> IO ()
+sedFile (TemplateBinding bindings) SrcDst{ src=input, dst=output } =
 
   program
 
