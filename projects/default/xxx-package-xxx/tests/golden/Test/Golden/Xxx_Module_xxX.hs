@@ -11,13 +11,14 @@ See <https://ro-che.info/articles/2017-12-04-golden-tests>.
 module Test.Golden.Xxx_Module_xxX where
 
 --------------------------------------------------
+-- Imports ---------------------------------------
 --------------------------------------------------
 
 import Xxx_Module_xxX
 
 --------------------------------------------------
 
-import Prelude_xxx_package_xxx
+import Prelude_xxx_package_xxx hiding ( ByteString )
 
 import qualified Paths_xxx_package_xxx as Paths
 
@@ -30,12 +31,14 @@ import qualified "tasty-golden" Test.Tasty.Golden as Tasty
 
 --------------------------------------------------
 
-import qualified "bytestring" Data.ByteString.Lazy as ByteString
-import           "bytestring" Data.ByteString.Lazy (ByteString)
+import qualified "filepath" System.FilePath as File
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
 
-import qualified "filepath" System.FilePath as File
+import qualified "bytestring" Data.ByteString.Lazy as ByteString
+import           "bytestring" Data.ByteString.Lazy ( ByteString )
 
 --------------------------------------------------
 -- Constants -------------------------------------

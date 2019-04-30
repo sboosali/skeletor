@@ -33,7 +33,7 @@ import Program.Xxx_Module_xxX.Core
 
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Prelude
+import Program.Xxx_Module_xxX.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

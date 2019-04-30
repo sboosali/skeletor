@@ -27,7 +27,7 @@ import Program.Xxx_Module_xxX.Options (getConfig)
 
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Prelude
+import Program.Xxx_Module_xxX.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------

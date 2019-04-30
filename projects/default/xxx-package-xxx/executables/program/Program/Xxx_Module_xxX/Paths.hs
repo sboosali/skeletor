@@ -13,9 +13,8 @@ module Program.Xxx_Module_xxX.Paths
 
   ( -- * Application Metadata
 
-    subdirectory_Xxx_Program_xxX
-  , name_Xxx_Program_xxX
-  , version_Xxx_Program_xxX
+    application
+  , currentApplicationSubdirectory
 
   , getMyApplicationDataDirectory
   , getMyApplicationConfigDirectory
@@ -43,42 +42,43 @@ import qualified "directory" System.Directory as Directory
 
 --------------------------------------------------
 
-import qualified "base" Data.Version as Version
-import           "base" Data.Version (Version)
-
 import qualified "base" System.Info  as IO
 
 --------------------------------------------------
 -- Definitions -----------------------------------
 --------------------------------------------------
 
+
 application :: ApplicationInformation
-application = ApplicationInformation{..}
+application = defaultApplicationInformation application0
   where
 
-  name                  = "xxx_program_xxx_name"
-  version               = "xxx_program_xxx_version"
-  license               = "xxx_program_xxx_license"
-  vendor                = ""
+  application0 :: ApplicationInformation0
+  application0 = def{ name0, license0, version0, vendor0, executable0, interface0, platforms0 }
+    where
 
-  executable            = "xxx_program_xxx_executableName"
-  interface             = ApplicationCLI
-  platforms             = [ DesktopLinux, DesktopWindows, DesktopMacintosh ]
-
-  posixSubDirectory     = "" -- "myapplication/"
-  windowsSubDirectory   = "" -- "sboosali/My Application/"
-  macintoshSubDirectory = "" -- "io.sboosali.My-Application/"
+    name0        = "__PROGRAM__"
+    license0     = "Apache-2.0"
+    version0     = "0.0.0"
+    vendor0      = "sboosali.io"
+    executable0  = Just "xxx-program-xxx"
+    interface0   = Just ApplicationCLI
+    platforms0   = Just allDesktopPlatforms
 
 --------------------------------------------------
 
-subdirectory_Xxx_Program_xxX :: IO FilePath
-subdirectory_Xxx_Program_xxX = do
+currentApplicationSubdirectory :: IO FilePath
+currentApplicationSubdirectory = do
 
   platform <- getRuntimeApplicationPlatform
 
-  let directory = subdirectoryOfMyApplicationFor platform
+  let directory = platform & maybe defaultDirectory subdirectoryOfMyApplicationFor
 
   return directory
+
+  where
+
+  defaultDirectory = "." <> (application & executable)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -111,7 +111,7 @@ getMyApplicationCacheDirectory = getMyApplicationDirectoryFor Directory.XdgCache
 getMyApplicationDirectoryFor :: Directory.XdgDirectory -> FilePath -> IO FilePath
 getMyApplicationDirectoryFor xdg path = do
 
-  subdirectory <- subdirectory_Xxx_Program_xxX
+  subdirectory <- currentApplicationSubdirectory
 
   let relativePath = subdirectory File.</> path
 
@@ -124,10 +124,6 @@ getMyApplicationDirectoryFor xdg path = do
 --createDirectoryIfMissing
 
 --------------------------------------------------
---------------------------------------------------
-
-type ApplicationName = String
-
 --------------------------------------------------
 
 {- | Return this application's (platform-specific, user-writeable) subdirectory (a.k.a. namespace), given:
@@ -173,9 +169,10 @@ data ApplicationPlatform
 --------------------------------------------------
 
 getRuntimeApplicationPlatform :: IO (Maybe ApplicationPlatform)
-getRuntimeApplicationPlatform = do
+getRuntimeApplicationPlatform = return platform
+  where
 
-  return IO.os >>= \case
+  platform = IO.os & \case
 
     "linux"   -> Just PosixPlatform
 

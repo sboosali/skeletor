@@ -79,6 +79,9 @@ extra-source-files: LICENSE
                   , CHANGELOG.md
                   , CONTRIBUTING.md
 
+                  , ./share/man/man1/xxx-program-xxx.1
+                  , ./share/bash-completion/xxx-program-xxx.bash
+
   --TODO: how to include project files (parent directory) in package?
   --
   --                 ../Makefile
@@ -589,12 +592,14 @@ library
 
 --other-modules: -- NOTE these intenal modules are exposed for the test-components.
 
+                  --------------
+
                   Internal.Xxx_Module_xxX
                   Prelude_xxx_package_xxx
 
- -----------------------------
+                  Paths_xxx_package_xxx
 
- exposed-modules: Paths_xxx_package_xxx
+ -----------------------------
 
  if !flag(develop)
     autogen-modules: Paths_xxx_package_xxx
@@ -849,13 +854,21 @@ executable xxx-program-xxx
 
                -----------------
 
-               , bytestring
-               , filepath
-               , directory
+               , containers ^>= 0.6
+
+               , bytestring ^>= 0.10
+
+               , binary     ^>= 0.8
+
+               , filepath   ^>= 1.4
+               , directory  ^>= 1.3
+
+               , time        >= 1.8
 
                -----------------
 
                , optparse-applicative ^>= 0.14
+               , ansi-wl-pprint       ^>= 0.6
                , attoparsec           ^>= 0.13
 
                -----------------
@@ -866,7 +879,8 @@ executable xxx-program-xxx
 
                -----------------
 
-               , lens
+               , lens         ^>= 4.17
+               , generic-lens ^>= 1.1
 
                -----------------
 

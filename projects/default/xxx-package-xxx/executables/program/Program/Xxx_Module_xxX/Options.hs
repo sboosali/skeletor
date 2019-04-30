@@ -22,7 +22,7 @@ import Program.Xxx_Module_xxX.Types
 
 --------------------------------------------------
 
-import Program.Skeletor.Haskell.Prelude
+import Program.Xxx_Module_xxX.Prelude
 
 --------------------------------------------------
 -- Imports: External -----------------------------
