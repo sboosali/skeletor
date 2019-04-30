@@ -52,7 +52,7 @@ import Prelude_skeletor hiding (Text)
 -- Definitions -----------------------------------
 --------------------------------------------------
 
-{-| Run @sed@ on the given template file with the given substitutions.
+{-| Run @sed@ (recursively) on the given directory of template file, with the given substitutions.
 
 e.g.:
 
@@ -176,4 +176,5 @@ textsToLines ts = ts & concatMap go
   go = H.textToLines > NonEmpty.toList
 
 --------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

@@ -40,9 +40,11 @@ import Program.Skeletor.Haskell.Macros
 #endif
 
 --------------------------------------------------
+-- Imports ---------------------------------------
+--------------------------------------------------
 
-import qualified "base" Data.Version as Version
-import           "base" Data.Version (Version (..))
+-- import qualified "base" Data.Version as Version
+-- import           "base" Data.Version (Version (..))
 
 --------------------------------------------------
 -- Constants -------------------------------------

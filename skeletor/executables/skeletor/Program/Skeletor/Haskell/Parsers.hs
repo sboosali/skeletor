@@ -55,7 +55,7 @@ import qualified "attoparsec" Data.Attoparsec.Text as Attoparsec
 --------------------------------------------------
 
 import qualified "megaparsec" Text.Megaparsec       as Megaparsec
---import qualified "megaparsec" Text.Megaparsec.Error as Megaparsec
+import qualified "megaparsec" Text.Megaparsec.Error as Megaparsec
 
 --------------------------------------------------
 
