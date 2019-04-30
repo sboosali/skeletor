@@ -2680,30 +2680,268 @@ _S = L.iso from into
 --------------------------------------------------
 
 
-
---------------------------------------------------
-
-
-
---------------------------------------------------
-
+    posixSubDirectory     = "" -- "myapplication/"
+    windowsSubDirectory   = "" -- "sboosali/My Application/"
+    macintoshSubDirectory = "" -- "io.sboosali.My-Application/"
 
 
 --------------------------------------------------
 
 
 
---------------------------------------------------
-
-
-
---------------------------------------------------
-
+  defaultDirectory = "." <> (defaultName & maybe "" id)
+  defaultName      = (application & executable) <|> (application & program)
 
 
 --------------------------------------------------
 
 
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------
+
+{-| The "builtin" /mapping-styles/ between /configuration-variables/ and /template-variables/.
+
+These mapping-styles include:
+
+* @HaskellModule@: Haskell Modules are class-cased (i.e. @ClassCase@).
+* @HaskellPackage@: Haskell Packages are lisp-cased (i.e. @lisp-case@).
+* @HaskellModuleAutogen@: Haskell Modules which should contain some non-@ClassCase@d identifier(frequently, they contain the name of their package, or otherwise are auto-generated) are TODO-cased (i.e. @To_do_case@). e.g. for the package @some-package@, there is @Paths_some_package@ that @Cabal@ can autogen.
+*
+
+The template variables' (ad-hoc) delimiter does "mirroring" whenever possible. By which we mean, when the delimiter is a pair of braces, like in other templating engine syntax (e.g. @{@ and @}@ in @Mustache@ templates), the left brace and right brace are single-character mirror-images. Since this templating engine (generally) uses some alphanumeric sequence for its delimeter, each "lexical context" (see below) specifies its own mirroring. Mirroring is ultimately optional, but it improves readability of the template, by making each template variable visually-distinct from the rest of the (non-variable) template (the "template constants").
+
+That is:
+
+* in the lexical context of @ClassCase@, the delimiter @"xxx"@ is mirrored as: @"Xxx"@ on the left and  @"xxX"@ on the right.
+* in the lexical context of @lisp-case@, the delimiter @"xxx"@ is mirrored as: @"xxx-"@ on the left and  @"-xxx"@ on the right.
+* in the lexical context of @snake_case@, the delimiter @"xxx"@ is mirrored as: @"xxx_"@ on the left and  @"_xxx"@ on the right (like @lisp-case@).
+
+and so on. for example:
+
+* a configuration-variable @"abc-def"@, with the @HaskellModule@ variable-type (corresponding to the @ClassCase@ variable-style), becomes template-variable @"XxxAbcDefxxX"@.
+* a configuration-variable @"abc-def"@, with the @HaskellPackage@ variable-type (corresponding to the @lisp-case@ variable-style), becomes template-variable @"xxx-abc-def-xxx"@.
+* a configuration-variable @"abc-def"@, with the @HaskellModuleAutogen@ variable-type (corresponding to the @TODO_case@ variable-style), becomes template-variable @"XxxAbc_DefxxX"@.
+* a configuration-variable @"abc-def"@, with the @RawText@ variable-type (corresponding to the \"trivial\" variable-style), becomes template-variable @"xxxabcdefxxx"@.
+
+-}
+
+defaultVariableStyles :: [Variable]
+defaultVariableStyles = []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------
+
+newtype ConfigurationVariableName = ConfigurationVariableName
+
+  String
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+--------------------------------------------------
+
+-- | @= 'coerce'@
+instance IsString ConfigurationVariableName where fromString = coerce
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data ConfigurationVariableType
+
+  = StringConfigurationVariable
+  | PathConfigurationVariable
+  | BooleanConfigurationVariable
+  | NumberConfigurationVariable  
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--TODO-- Refinement Types:
+-- for numbers, strings, .
+-- for lists, records, .
+-- see LiquidHaskell?
+
+--------------------------------------------------
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data TemplateVariable = TemplateVariable
+
+  { name :: TemplateVariableName
+  , kind :: TemplateVariableKind
+  }
+
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+newtype TemplateVariableName = TemplateVariableName
+
+  String
+
+  deriving stock    (Show,Read,Lift,Generic)
+  deriving newtype  (Eq,Ord,Semigroup,Monoid)
+  deriving newtype  (NFData,Hashable)
+
+--------------------------------------------------
+
+-- | @= 'coerce'@
+instance IsString TemplateVariableName where fromString = coerce
+
+--------------------------------------------------
+
+{-|
+
+@
+@
+
+-}
+
+data TemplateVariableKind
+
+  = HaskellModuleVariable        -- e.g. Module, ModuleAbbreviation
+  | HaskellPackageVariable       -- e.g. Package
+  | HaskellModuleAutogenVariable -- e.g. PackageUnderscores
+
+  | CabalComponentVariable      -- e.g. DefaultTarget
+  | CabalExecutableVariable     -- e.g. ExecutableName, Program
+  | CabalTextVariable           -- e.g. Synopsis, Author, Categories
+  | CabalMultilineTextVariable  -- e.g. Description
+
+  | URIVariable                 -- e.g. 
+  | URLSegmentVariable          -- e.g. UserName, RepositoryName
+  | EmailVariable               -- 
+  | CopyrightVariable           -- e.g. Copyright
+  
+  | PathVariable                -- e.g. ModulePath
+
+  | TextVariable                -- e.g. Author
+  | RawTextVariable             -- e.g. 
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+--------------------------------------------------
+
+{-| The lexical style of a variable.
+
+@
+@
+
+-}
+
+data TemplateVariableStyle
+
+  = AnyStyle
+  | ClassCaseStyle
+  | CamelCaseStyle
+  | SnakeCaseStyle
+  | LispCaseStyle
+
+  deriving stock    (Enum,Bounded,Ix)
+  deriving stock    (Show,Read,Eq,Ord,Lift,Generic)
+  deriving anyclass (NFData,Hashable)
+
+
+--------------------------------------------------
+
+
+data MetaConfigurationVariableType
+
+  = WhichLicense
+  | WhichVersionControlSystem
+  | WhetherPackageInSubdirectory
+  | WhichPrelude
+ 
+
+
+data Path
+
+  = PathBytes ByteString
+  | PathChars Text
+  
+--------------------------------------------------
+
+data PathPOSIX
+
+data PathWIN32
+
+--------------------------------------------------
+
+data Path
+
+  = PathPOSIX ByteString
+  | PathWIN32 Text
+
+
+#------------------------------------------------#
+
+man:
+
+	@mkdir -p $(ManpageDirectory)/man1
+	pandoc --standalone --from=markdown --to=man ./xxx-package-xxx/docs/man/xxx-program-xxx.1.md | gzip > ./xxx-package-xxx/share/man/man1/xxx-program-xxx.1.gz
+
+.PHONY: man
+
+
+--------------------------------------------------
+-- Configuration ---------------------------------
+--------------------------------------------------
+
+constraints: connection >= 0.3
 
 --------------------------------------------------
 

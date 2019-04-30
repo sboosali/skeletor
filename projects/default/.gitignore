@@ -1,18 +1,14 @@
 ##################################################
 # « sboosali »
 
-.sboo/
-ignore/
-temporary/
-
-##################################################
-# ghcid
-
-*.ghcid
-.ghcid.d/
+gitignored/
 
 ##################################################
 # Haskell
+
+dist-newstyle/
+dist/
+.stack-work/
 
 .ghc.environment.*
 cabal.project.local
@@ -24,13 +20,13 @@ report.html
 .cabal-sandbox/
 cabal.sandbox.config
 cabal.config
-dist-newstyle/
-dist/
-.stack-work/
 .styx/
 *.hp
 *.prof
 *.svg
+
+*.ghcid
+.ghcid.d/
 
 ##################################################
 # nix
@@ -66,4 +62,4 @@ TAGS
 
 *.save
 
-##################################################
+#################################################

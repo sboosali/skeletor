@@ -192,6 +192,35 @@ import qualified "skeletor" Skeletor
 ...
 ```
 
+## Resources
+
+Resources (files, environment variables, websites, port numbers, etc) which this program depends on or makes use of.
+
+Files:
+
+* `~/.config/skeletor/haskell/skeletor-haskell.ini`
+* `~/.local/share/skeletor/haskell/projects/simple.tar.gz`
+* `~/.cache/skeletor/haskell/*.{tar,gz,zip,tar.gz}`
+
+Environment Variables
+
+* `$https_proxy`
+* `$http_proxy`
+* `$all_proxy`
+* `$XDG_CONFIG_HOME` — Defaults to `~/.config/` on *Linux* and to `%UserProfile%\AppData\Roaming\` on *Windows*.
+* `$XDG_DATA_HOME` — Defaults to `~/.local/share/` on *Linux* and to `%UserProfile%\AppData\Roaming\` on *Windows*.
+* `$XDG_CACHE_HOME` — Defaults to `~/.cache/` on *Linux* and to `%UserProfile%\AppData\Local\` on *Windows*.
+
+Websites:
+
+* <https://github.com/sboosali/skeletor/tree/master/release/**.tar.gz>
+
+Ports:
+
+* `443` — for `HTTPS` connections.
+* `80` — for `HTTP` connections. 
+
+(The lists above are not necessarily exhaustive.)
 
 ## "Specification" (Work In Progress)
 
