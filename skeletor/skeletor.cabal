@@ -217,8 +217,8 @@ data-files: data/.gitignore
 -- REPOSITORY
 --------------------------------------------------
 
-homepage:            http://github.com/sboosali/skeletor#readme
-bug-reports:         http://github.com/sboosali/skeletor/issues
+homepage:            https://github.com/sboosali/skeletor#readme
+bug-reports:         https://github.com/sboosali/skeletor/issues
 
 source-repository head
   type:     git
@@ -511,6 +511,7 @@ library
 
                   Skeletor.Variable
                   Skeletor.Variable.Types
+                  Skeletor.Variable.Types.Path
                   Skeletor.Variable.Types.Number
                   Skeletor.Variable.Types.Boolean
 
@@ -581,6 +582,9 @@ library
                   Skeletor.Haskell
                   Skeletor.Haskell.Types
                   Skeletor.Haskell.Errors
+
+                  Skeletor.Haskell.Project
+                  Skeletor.Haskell.Project.Types
 
                   Skeletor.Haskell.Core
                   Skeletor.Haskell.Derived
@@ -715,7 +719,6 @@ library
 
              , lens
              , generic-lens
-             , dhall
 
    --------------------
    -- parsing libraries.
@@ -734,6 +737,13 @@ library
 
           -- , raaz >= 0.2.1 && < 0.3
           -- , cryptonite
+
+   --------------------
+   -- configuration libraries.
+   --------------------
+
+             , configurator
+--             , dhall
 
    --------------------
    -- (miscellaneous libraries).
@@ -863,6 +873,7 @@ executable skeletor-haskell
 
                , optparse-applicative ^>= 0.14
                , attoparsec           ^>= 0.13
+               , megaparsec           ^>= 7.0
 
                -----------------
 
@@ -892,6 +903,12 @@ executable skeletor-haskell
 
                -----------------
 
+               , conduit      ^>= 1.3
+               , http-conduit ^>= 2.3
+               , resourcet    ^>= 1.2
+
+               -----------------
+
                , filepath
                , directory
 
@@ -902,9 +919,10 @@ executable skeletor-haskell
 
                , containers ^>= 0.6
 
+               , bytestring   ^>= 0.10
+
                , text
                , case-insensitive
-               , bytestring
 
                , binary
 
@@ -931,4 +949,5 @@ executable skeletor-haskell
  ------------------------------
 
 --------------------------------------------------
+-- EOF -------------------------------------------
 --------------------------------------------------

@@ -269,7 +269,31 @@ skeletor-haskell:
 
 .PHONY: skeletor-haskell
 
+#================================================#
+
+xxx-package-xxx:
+
+	$(Cabal) new-build "xxx-package-xxx:lib:xxx-package-xxx"
+
+.PHONY: xxx-package-xxx
+
 #------------------------------------------------#
+
+xxx-program-xxx:
+
+	$(Cabal) new-run "xxx-package-xxx:exe:xxx-program-xxx"
+
+.PHONY: xxx-program-xxx
+
+#------------------------------------------------#
+
+xxx-doctest-xxx:
+
+	$(Cabal) new-test --enable-tests "xxx-package-xxx:test:doc"
+
+.PHONY: xxx-doctest-xxx
+
+#================================================#
 
 # skeletor-elisp:
 # 	$(Cabal) new-run skeletor-elisp

@@ -1,6 +1,6 @@
 ##################################################
 
-resolver: lts-13.13
+resolver: lts-13.17
           # ^ (ghc-8.6.4)
 
 #------------------------------------------------#
@@ -13,15 +13,14 @@ packages:
 
 extra-deps:
 
-- git:     https://github.com/sboosali/spiros.git
-  commit:  0158ed5109c8b90c21347180aa84a891276ec007
-  subdirs:
-    - spiros
+# - git:     https://github.com/sboosali/spiros.git
+#   commit:  0158ed5109c8b90c21347180aa84a891276ec007
+#   subdirs:
+#     - spiros
 
-# - ../spiros/spiros/
+- ../spiros/spiros/
+- ../enumerate/enumerate
 
-##################################################
-
-
+- th-lift-instances-0.1.11@sha256:b292498b7dd1bc609e6618e00641bd918722ca2af19a216376e5fdb0a9ae9251
 
 ##################################################
