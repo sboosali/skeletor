@@ -2945,7 +2945,13 @@ constraints: connection >= 0.3
 
 --------------------------------------------------
 
+# `skeletor`
 
+## Summary
+
+`skeletor` is a *scaffolding program* for *buildable scaffolds*.
+
+## Keywords
 
 --------------------------------------------------
 
